@@ -133,3 +133,20 @@ FOREIGN KEY (customer_id) REFERENCES customer(customer_id);
 -- drop the sequence 
 --DROP SEQUENCE seq_booking_id; 
 
+-- add foreign keys and primary key in table bookingroomguest
+ALTER TABLE bookingroomguest
+ADD CONSTRAINT FK_bookingroomguest_booking
+FOREIGN KEY (booking_id) REFERENCES booking(booking_id);
+
+/*
+ALTER TABLE bookingroomguest
+ADD CONSTRAINT FK_bookingroomguest_room
+FOREIGN KEY (room_number) REFERENCES room(room_number);
+*/
+
+ALTER TABLE bookingroomguest
+ADD CONSTRAINT FK_bookingroomguest_guest
+FOREIGN KEY (guest_id) REFERENCES guest(guest_id);
+
+ALTER TABLE bookingroomguest
+ADD CONSTRAINT PK_Person PRIMARY KEY (booking_id,room_number,guest_id);
