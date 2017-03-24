@@ -150,3 +150,20 @@ FOREIGN KEY (guest_id) REFERENCES guest(guest_id);
 
 ALTER TABLE bookingroomguest
 ADD CONSTRAINT PK_Person PRIMARY KEY (booking_id,room_number,guest_id);
+
+
+
+-- Create trigger on table guest in ordre to creat guest id automatically
+CREATE OR REPLACE TRIGGER tri_guest_id
+  BEFORE INSERT ON guest
+  FOR EACH ROW
+BEGIN
+  :new.guest_id := seq_guest_id.nextval;
+END;
+
+INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id) 
+    VALUES (NULL, 'Miss', 'Xuelin', 'Situ', '006');
+    
+    drop trigger tri_guest_id;
+    
+    drop sequence guest_sequence;
