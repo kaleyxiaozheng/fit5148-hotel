@@ -5,9 +5,7 @@
  */
 package hotelappfit5148;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 
 /**
@@ -59,5 +57,9 @@ public class DBConnection {
         }
         
         return result;
+    }
+    
+    public static ResultSet selectRecords(String sqlStatement){
+        
     }
 }
