@@ -18,6 +18,12 @@ CREATE TABLE Membership (
 );
 CREATE SEQUENCE membership_sequence START WITH 1 INCREMENT BY 1 MINVALUE 1 NOMAXVALUE NOCYCLE CACHE 2;
 CREATE INDEX idx_membership_tier_credit ON Membership (tier_credit);
+
+INSERT INTO membership VALUES (Membership_Sequence.nextVal, 'Bronze', 500, 90.00, 'Free breakfast');
+INSERT INTO membership VALUES (Membership_Sequence.nextVal, 'Silver', 1000, 95.00, 'Free buffet');
+INSERT INTO membership VALUES (Membership_Sequence.nextVal, 'Gold', 5000, 80.00, 'Access all facilities');
+INSERT INTO membership VALUES (Membership_Sequence.nextVal, 'Platinum', 10000, 85.00, 'Access all facilities + pick up');
+INSERT INTO membership VALUES (Membership_Sequence.nextVal, 'VIP', 20000, 70.00, 'Upgrade to Presidential suite');
 --End of creating table Membership
 
 --Start of creating table Customer
@@ -42,17 +48,17 @@ CREATE TABLE Customer (
 );
 
 CREATE SEQUENCE customer_sequence START WITH 1 INCREMENT BY 1 MINVALUE 1 NOMAXVALUE NOCYCLE CACHE 2;
--- CREATE OR REPLACE TRIGGER customer_on_insert
---     BEFORE INSERT ON Customer
---     FOR EACH ROW
--- BEGIN
---     SELECT customer_sequence.nextval
---     INTO :new.id
---     FROM dual;
--- END;
---ALTER TRIGGER customer_on_insert ENABLE;
 
-
+INSERT INTO CUSTOMER VALUES (Customer_Sequence.nextVal, 'MR', 'Tom','Hiddleston', '001', TO_date('09/02/1981','DD/MM/YYYY')
+,'Australa', 'Melbourn','Caulfield',1234,1,800,12345678,'tom.hiddleson@test.com');
+INSERT INTO CUSTOMER VALUES (Customer_Sequence.nextVal, 'MR', 'Hugh','Jackman', '002', TO_date('12/10/1968','DD/MM/YYYY')
+,'Australa', 'Melbourn','Clayton',2345,2,1200,12345678,'hugh.jackman@test.com');
+INSERT INTO CUSTOMER VALUES (Customer_Sequence.nextVal, 'MR', 'James','Mcavoy', '003', TO_date('21/04/1979','DD/MM/YYYY')
+,'Australa', 'Sydney','CBD',3456,3,6000,12345678,'james.mcavoy@test.com');
+INSERT INTO CUSTOMER VALUES (Customer_Sequence.nextVal, 'MR', 'Eddie','Redmayne', '004', TO_date('06/01/1982','DD/MM/YYYY')
+,'Australa', 'Adelaide','CBD',1234,4,12000,12345678,'eddie.redmayne@test.com');
+INSERT INTO CUSTOMER VALUES (Customer_Sequence.nextVal, 'MR', 'Ryan','Reynolds', '005', TO_date('23/10/1976','DD/MM/YYYY')
+,'Australa', 'Canberra','CBD',1234,5,25000,12345678,'ryan.reynolds@test.com');
 
 --End of creating table Customer
 
@@ -62,20 +68,30 @@ CREATE TABLE Guest (
   title VARCHAR(10),
   first_name VARCHAR(30),
   last_name VARCHAR(30),
-  citizen_id NUMBER(20),
+  citizen_id NUMBER(20) UNIQUE NOT NULL,
   dob DATE,
   country VARCHAR(20),
   city VARCHAR(20),
   street VARCHAR(50),
-  email VARCHAR(50),
-  CONSTRAINT fk_citizen_id FOREIGN KEY (citizen_id) references Customer (citizen_id)
+  email VARCHAR(50)
 );
 CREATE SEQUENCE guest_sequence START WITH 1 INCREMENT BY 1 MINVALUE 1 NOMAXVALUE NOCYCLE CACHE 2;
 CREATE INDEX idx_guest_name ON Guest (first_name, last_name);
+
+INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id) 
+    VALUES (guest_sequence.nextVal, 'Miss', 'Xuelin', 'Situ', '006');
+INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id) 
+    VALUES (guest_sequence.nextVal, 'MR', 'Ryan', 'Reynolds', '005');
+INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id) 
+    VALUES (guest_sequence.nextVal, 'MR', 'Eddie', 'Redmayne', '004');
+INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id) 
+    VALUES (guest_sequence.nextVal, 'Miss', 'Thao', 'Thao', '007');
+INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id) 
+    VALUES (guest_sequence.nextVal, 'Miss', 'Kaley', 'Kaley', '008');
 --End of creating table Guest
 
 --Create stored procedure to update customer email
-create or replace PROCEDURE updateCustomerEmail(
+CREATE OR REPLACE PROCEDURE updateCustomerEmail(
   in_customer_id IN CUSTOMER.CUSTOMER_ID%TYPE,
   in_email IN CUSTOMER.EMAIL%TYPE,
   out_status OUT VARCHAR)
