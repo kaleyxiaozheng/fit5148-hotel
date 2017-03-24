@@ -23,7 +23,7 @@ public class DBConnection {
     private static final String DB_USER = "S27530264";
     private static final String DB_PASSWORD = "student";
  
-    public static Connection getDBConnection(String databaseName) {
+    private static Connection getDBConnection(String databaseName) {
         Connection dbConnection = null;
         try {
             Class.forName(DB_DRIVER);
@@ -59,7 +59,19 @@ public class DBConnection {
         return result;
     }
     
-    public static ResultSet selectRecords(String sqlStatement){
+    public static ResultSet selectRecords(String dbName, String sqlStatement){
+        Connection dbConnection = null;
+        PreparedStatement preparedStatement = null;
+        try{
+            dbConnection = getDBConnection(dbName);
+            preparedStatement = dbConnection.prepareStatement(sqlStatement);
+            
+            ResultSet rs = preparedStatement.executeQuery();
+            return rs;
+        }catch (SQLException ex){
+            ex.printStackTrace();
+        }
         
+        return null;
     }
 }
