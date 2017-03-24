@@ -1,3 +1,33 @@
+CREATE TABLE  bookingRoomGuest (
+  booking_id number(6),
+  room_number varchar(10),
+  guest_id number(6)
+);
+----------------------------------------
+/*begin 
+  execute immediate 'drop table hotel';
+exception
+  when others then
+    if sqlcode != -942 then
+      raise;
+    end if;
+end;
+/
+*/
+CREATE TABLE  hotel (
+  hotel_id number(6),
+  name varchar(50),
+  hotel_type varchar(20),
+  construction_year number(6),
+  country varchar(20),
+  city varchar(20),
+  address varchar(50),
+  contact_number varchar(20),
+  email varchar(50),
+  CONSTRAINT hotel_pk PRIMARY KEY (hotel_id)
+);
+----------------------------------------------
+
 -- Create booking table
 /*DELIMITER //
     begin 
@@ -73,4 +103,4 @@ CREATE SEQUENCE seq_booking_id start with 1 INCREMENT BY 1;
 
 --------------------------------------------
 -- insert data into table of booking
-INSERT INTO booking VALUES()
+INSERT INTO booking VALUES(seq_booking_id, 1, 1, )
