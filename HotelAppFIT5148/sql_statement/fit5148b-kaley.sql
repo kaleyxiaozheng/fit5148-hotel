@@ -1,3 +1,4 @@
+-- Create table 
 CREATE TABLE  bookingRoomGuest (
   booking_id number(6),
   room_number varchar(10),
@@ -103,4 +104,6 @@ CREATE SEQUENCE seq_booking_id start with 1 INCREMENT BY 1;
 
 --------------------------------------------
 -- insert data into table of booking
-INSERT INTO booking VALUES(seq_booking_id, 1, 1, )
+INSERT INTO booking VALUES(seq_booking_id.NEXTVAL, 1, 1, TO_DATE('12/03/2017', 'DD/MM/YYYY'), TO_DATE('24/03/2017', 'DD/MM/YYYY'), 2000, "s");
+
+INSERT INTO booking VALUES(seq_booking_id.NEXTVAL, 1, 1, TO_DATE('12/03/2017', 'DD/MM/YYYY'), TO_DATE('24/03/2017', 'DD/MM/YYYY'), 2000, "s");
