@@ -12,12 +12,12 @@
 CREATE TABLE Membership (
   tier_id NUMBER(6) PRIMARY KEY,
   membership_tier VARCHAR(20) NOT NULL UNIQUE,
-  tier_credit VARCHAR(10) NOT NULL,
+  tier_credit NUMBER(10) NOT NULL,
   discount NUMBER(4,2) NOT NULL,
   other_rewards VARCHAR(255)
 );
 CREATE SEQUENCE membership_sequence START WITH 1 INCREMENT BY 1 MINVALUE 1 NOMAXVALUE NOCYCLE CACHE 2;
-
+CREATE INDEX idx_membership_tier_credit ON Membership (tier_credit);
 --End of creating table Membership
 
 --Start of creating table Customer
@@ -71,6 +71,7 @@ CREATE TABLE Guest (
   CONSTRAINT fk_citizen_id FOREIGN KEY (citizen_id) references Customer (citizen_id)
 );
 CREATE SEQUENCE guest_sequence START WITH 1 INCREMENT BY 1 MINVALUE 1 NOMAXVALUE NOCYCLE CACHE 2;
+CREATE INDEX idx_guest_name ON Guest (first_name, last_name);
 --End of creating table Guest
 
 --Create stored procedure to update customer email
