@@ -23,9 +23,7 @@ CREATE OR REPLACE TRIGGER membership_auto_increment
   BEFORE INSERT ON Membership
   FOR EACH ROW
 BEGIN
-    IF :new.tier_id = null THEN
-        :new.tier_id := membership_sequence.nextval;
-    END IF;
+    :new.tier_id := membership_sequence.nextval;
 END;
 
 INSERT INTO membership VALUES (NULL, 'Bronze', 500, 90.00, 'Free breakfast');
@@ -62,9 +60,7 @@ CREATE OR REPLACE TRIGGER customer_auto_increment_insert
   BEFORE INSERT ON Customer
   FOR EACH ROW
 BEGIN
-    IF :new.customer_id = NULL THEN
-        :new.customer_id := customer_sequence.nextval;
-    END IF;
+    :new.customer_id := customer_sequence.nextval;
 END;
 
 INSERT INTO CUSTOMER VALUES (NULL, 'MR', 'Tom','Hiddleston', '001', TO_date('09/02/1981','DD/MM/YYYY')
