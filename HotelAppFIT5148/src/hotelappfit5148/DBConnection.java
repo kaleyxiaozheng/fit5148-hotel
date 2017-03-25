@@ -20,10 +20,10 @@ public class DBConnection {
             = "jdbc:oracle:thin:@hippo.its.monash.edu.au:1521:FIT5148A";
     private static final String DB_CONNECTION_FIT5148B
             = "jdbc:oracle:thin:@hippo.its.monash.edu.au:1521:FIT5148B";
-    private static final String DB_USER = "S27530264";
+    private static final String DB_USER = "student01";
     private static final String DB_PASSWORD = "student";
  
-    private static Connection getDBConnection(String databaseName) {
+    public static Connection getDBConnection(String databaseName) {
         Connection dbConnection = null;
         try {
             Class.forName(DB_DRIVER);
