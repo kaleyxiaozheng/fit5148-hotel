@@ -5,11 +5,8 @@
  */
 package hotelappfit5148;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.sql.*;
+
 
 /**
  *
@@ -19,12 +16,14 @@ public class DBConnection {
     
     private static final String DB_DRIVER
             = "oracle.jdbc.driver.OracleDriver";
-    private static final String DB_CONNECTION
+    private static final String DB_CONNECTION_FIT5148A
             = "jdbc:oracle:thin:@hippo.its.monash.edu.au:1521:FIT5148A";
+    private static final String DB_CONNECTION_FIT5148B
+            = "jdbc:oracle:thin:@hippo.its.monash.edu.au:1521:FIT5148B";
     private static final String DB_USER = "S27530264";
     private static final String DB_PASSWORD = "student";
  
-    public static Connection getDBConnection() {
+    private static Connection getDBConnection(String databaseName) {
         Connection dbConnection = null;
         try {
             Class.forName(DB_DRIVER);
@@ -33,7 +32,11 @@ public class DBConnection {
         }
 
         try {
-            dbConnection = DriverManager.getConnection(DB_CONNECTION, DB_USER,DB_PASSWORD);
+            if ("FIT5148A".equalsIgnoreCase(databaseName))
+                dbConnection = DriverManager.getConnection(DB_CONNECTION_FIT5148A, DB_USER, DB_PASSWORD);
+            else
+                dbConnection = DriverManager.getConnection(DB_CONNECTION_FIT5148B, DB_USER, DB_PASSWORD);
+            
             return dbConnection;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -54,5 +57,21 @@ public class DBConnection {
         }
         
         return result;
+    }
+    
+    public static ResultSet selectRecords(String dbName, String sqlStatement){
+        Connection dbConnection = null;
+        PreparedStatement preparedStatement = null;
+        try{
+            dbConnection = getDBConnection(dbName);
+            preparedStatement = dbConnection.prepareStatement(sqlStatement);
+            
+            ResultSet rs = preparedStatement.executeQuery();
+            return rs;
+        }catch (SQLException ex){
+            ex.printStackTrace();
+        }
+        
+        return null;
     }
 }
