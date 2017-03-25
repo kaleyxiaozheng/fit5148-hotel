@@ -96,9 +96,7 @@ CREATE OR REPLACE TRIGGER guest_auto_increment_insert
   BEFORE INSERT ON Guest
   FOR EACH ROW
 BEGIN
-    IF :new.guest_id = NULL THEN
-        :new.guest_id := guest_sequence.nextval;
-    END IF;
+    :new.guest_id := guest_sequence.nextval;
 END;
 
 INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id) 
