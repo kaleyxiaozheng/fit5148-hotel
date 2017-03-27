@@ -65,6 +65,11 @@ public class NewHotel extends javax.swing.JFrame {
         });
 
         CancelButton.setText("Cancel");
+        CancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CancelButtonActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Name *");
 
@@ -241,15 +246,24 @@ public class NewHotel extends javax.swing.JFrame {
             Long hotel_id = null;
             if (null != hotel_id_set && hotel_id_set.next()) {
                  hotel_id = hotel_id_set.getLong(1);
-            }
-            
+            }           
             hotel.setHotelId(hotel_id);
+            JOptionPane.showMessageDialog(null, "Create successfully.");
+            System.out.print("lol");
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+        
+        this.dispose();
+//        new UpdateHotel(hotel).setVisible(true);
 
 
     }//GEN-LAST:event_newHotelButtonActionPerformed
+
+    private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
+        // TODO add your handling code here:
+       this.dispose();
+    }//GEN-LAST:event_CancelButtonActionPerformed
 
     /**
      * @param args the command line arguments

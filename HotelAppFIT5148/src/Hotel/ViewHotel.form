@@ -137,9 +137,6 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Update"/>
       </Properties>
-      <AccessibilityProperties>
-        <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Update"/>
-      </AccessibilityProperties>
     </Component>
     <Component class="javax.swing.JButton" name="jButton4">
       <Properties>

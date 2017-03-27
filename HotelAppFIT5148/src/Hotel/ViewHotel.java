@@ -193,6 +193,30 @@ public class ViewHotel extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         new NewHotel().setVisible(true);
+        
+        conn = DBConnection.getDBConnection("FIT5148A");
+        
+        try {
+            DriverManager.registerDriver(new OracleDriver());
+            stmt = conn.createStatement();
+            ResultSet rset = stmt.executeQuery("select hotel_id, hotel_name, hotel_type, "
+                    + "construction_year, country, city, address, "
+                    + "contact_number, email from hotel");
+            
+            ResultSetMetaData mdata = rset.getMetaData();
+            int numberOfColumns = mdata.getColumnCount();
+            while (rset.next()) {
+                Object[] rowData = new Object[numberOfColumns];
+                for (int i = 0; i < rowData.length; i++) {
+                    rowData[i] = rset.getObject(i + 1);
+                }
+                dtm.addRow(rowData);
+            }
+            
+        } catch (SQLException f) {
+            System.out.println(f.getMessage());
+        }
+        
     }//GEN-LAST:event_jButton2ActionPerformed
     
     public List<String> getHotelType() {
