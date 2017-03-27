@@ -40,7 +40,7 @@ CREATE TABLE Customer (
   first_name VARCHAR(30) NOT NULL,
   last_name VARCHAR(30),
   citizen_id NUMBER(20) NOT NULL,
-  dob VARCHAR(10),
+  dob DATE,
   country VARCHAR(20),
   city VARCHAR(20),
   street VARCHAR(50),
@@ -63,15 +63,15 @@ BEGIN
     :new.customer_id := customer_sequence.nextval;
 END;
 
-INSERT INTO CUSTOMER VALUES (NULL, 'MR', 'Tom','Hiddleston', '001', TO_date('09/02/1981','DD/MM/YYYY')
+INSERT INTO CUSTOMER VALUES (NULL, 'MR', 'Tom','Hiddleston', '001', TO_date('1981/02/09','yyyy/mm/dd')
 ,'Australa', 'Melbourn','Caulfield',1234,1,800,12345678,'tom.hiddleson@test.com');
-INSERT INTO CUSTOMER VALUES (NULL, 'MR', 'Hugh','Jackman', '002', TO_date('12/10/1968','DD/MM/YYYY')
+INSERT INTO CUSTOMER VALUES (NULL, 'MR', 'Hugh','Jackman', '002', TO_date('1968/10/12','yyyy/mm/dd')
 ,'Australa', 'Melbourn','Clayton',2345,2,1200,12345678,'hugh.jackman@test.com');
-INSERT INTO CUSTOMER VALUES (NULL, 'MR', 'James','Mcavoy', '003', TO_date('21/04/1979','DD/MM/YYYY')
+INSERT INTO CUSTOMER VALUES (NULL, 'MR', 'James','Mcavoy', '003', TO_date('1979/04/21','yyyy/mm/dd')
 ,'Australa', 'Sydney','CBD',3456,3,6000,12345678,'james.mcavoy@test.com');
-INSERT INTO CUSTOMER VALUES (NULL, 'MR', 'Eddie','Redmayne', '004', TO_date('06/01/1982','DD/MM/YYYY')
+INSERT INTO CUSTOMER VALUES (NULL, 'MR', 'Eddie','Redmayne', '004', TO_date('1982/01/06','yyyy/mm/dd')
 ,'Australa', 'Adelaide','CBD',1234,4,12000,12345678,'eddie.redmayne@test.com');
-INSERT INTO CUSTOMER VALUES (NULL, 'MR', 'Ryan','Reynolds', '005', TO_date('23/10/1976','DD/MM/YYYY')
+INSERT INTO CUSTOMER VALUES (NULL, 'MR', 'Ryan','Reynolds', '005', TO_date('1976/10/23','yyyy/mm/dd')
 ,'Australa', 'Canberra','CBD',1234,5,25000,12345678,'ryan.reynolds@test.com');
 
 --End of creating table Customer
