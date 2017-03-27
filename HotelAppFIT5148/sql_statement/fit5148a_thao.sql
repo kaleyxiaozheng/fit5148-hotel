@@ -10,7 +10,7 @@ end;
 /
 CREATE TABLE  hotel (
   hotel_id number(6) not null,
-  hotel_name varchar(50),
+  hotel_name varchar(50) not null,
   hotel_type varchar(20),
   construction_year number(6),
   country varchar(20),
