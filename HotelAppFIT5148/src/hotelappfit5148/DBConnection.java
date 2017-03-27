@@ -9,13 +9,12 @@ import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  *
  * @author situsnow
  */
 public class DBConnection {
-    
+
     private static final String DB_DRIVER
             = "oracle.jdbc.driver.OracleDriver";
     private static final String DB_CONNECTION_FIT5148A
@@ -24,7 +23,7 @@ public class DBConnection {
             = "jdbc:oracle:thin:@hippo.its.monash.edu.au:1521:FIT5148B";
     private static final String DB_USER = "student01";
     private static final String DB_PASSWORD = "student";
- 
+
     public static Connection getDBConnection(String databaseName) {
         Connection dbConnection = null;
         try {
@@ -34,19 +33,20 @@ public class DBConnection {
         }
 
         try {
-            if ("FIT5148A".equalsIgnoreCase(databaseName))
+            if ("FIT5148A".equalsIgnoreCase(databaseName)) {
                 dbConnection = DriverManager.getConnection(DB_CONNECTION_FIT5148A, DB_USER, DB_PASSWORD);
-            else
+            } else {
                 dbConnection = DriverManager.getConnection(DB_CONNECTION_FIT5148B, DB_USER, DB_PASSWORD);
-            
+            }
+
             return dbConnection;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return dbConnection;
     }
-    
-    public static boolean closeDBConnection(Connection dbConnection){
+
+    public static boolean closeDBConnection(Connection dbConnection) {
         boolean result = false;
         if (dbConnection != null) {
             try {
@@ -57,23 +57,65 @@ public class DBConnection {
                 result = false;
             }
         }
-        
+
         return result;
     }
-    
-    public static ResultSet selectRecords(String dbName, String sqlStatement){
+
+    public static ResultSet selectRecords(String dbName, String sqlStatement) throws SQLException {
         Connection dbConnection = null;
         PreparedStatement preparedStatement = null;
-        try{
+        try {
             dbConnection = getDBConnection(dbName);
             preparedStatement = dbConnection.prepareStatement(sqlStatement);
-            
+
             ResultSet rs = preparedStatement.executeQuery();
             return rs;
-        }catch (SQLException ex){
+        } catch (SQLException ex) {
             ex.printStackTrace();
+        } 
+//        finally {
+//
+//            if (preparedStatement != null) {
+//                preparedStatement.close();
+//            }
+//
+//            if (dbConnection != null) {
+//                dbConnection.close();
+//            }
+//
+//        }
+
+        return null;
+    }
+
+    public static ResultSet insertRecord(String dbName, PreparedStatement prepareStatement) throws SQLException {
+
+        Connection dbConnection = null;
+        try {
+            dbConnection = getDBConnection(dbName);
+            // execute insert SQL stetement
+            prepareStatement.executeUpdate();
+
+            System.out.println("Record is inserted into table!");
+            return prepareStatement.getGeneratedKeys();
+
+        } catch (SQLException e) {
+
+            System.out.println(e.getMessage());
+
+        } finally {
+
+//            if (prepareStatement != null) {
+//                prepareStatement.close();
+//            }
+//
+//            if (dbConnection != null) {
+//                dbConnection.close();
+//            }
+
         }
         
         return null;
+
     }
 }

@@ -5,7 +5,11 @@
  */
 package Hotel;
 
+import hotelappfit5148.DBConnection;
 import javax.swing.JOptionPane;
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -203,21 +207,48 @@ public class NewHotel extends javax.swing.JFrame {
     private void newHotelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newHotelButtonActionPerformed
         // TODO add your handling code here:
         HotelBean hotel = new HotelBean();
-        if (hotelNameText.getSelectedText() == null){
+        if (hotelNameText.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Please enter hotel name.");
             return;
         }
-        hotel.setAddress(addressText.getSelectedText());
-        hotel.setCity(cityText.getSelectedText());
-        hotel.setConstructionYear(constructionYearText.getSelectedText());
-        hotel.setContactNumber(contactNumberText.getSelectedText());
-        hotel.setCountry(countryText.getSelectedText());
-        hotel.setEmail(emailText.getSelectedText());
-        hotel.setHotelName(hotelNameText.getSelectedText().replaceAll("\\s",""));
+        hotel.setAddress(addressText.getText().trim());
+        hotel.setCity(cityText.getText().trim());
+        hotel.setConstructionYear(Integer.parseInt(constructionYearText.getText().trim()));
+        hotel.setContactNumber(contactNumberText.getText().trim());
+        hotel.setCountry(countryText.getText().trim());
+        hotel.setEmail(emailText.getText().trim());
+        hotel.setHotelName(hotelNameText.getText().trim());
         hotel.setHotelType(String.valueOf(typeComboBox.getSelectedItem()));
-        
-        
-        
+
+        PreparedStatement preparedStatement = null;
+
+        String insertTableSQL = "INSERT INTO hotel"
+                + "(hotel_name, hotel_type, construction_year, country, city, address, contact_number, email) VALUES"
+                + "(?,?,?,?,?,?,?,?)";
+
+        try {
+            preparedStatement = DBConnection.getDBConnection("FIT5148A").prepareStatement(insertTableSQL, new String[]{"hotel_id"});
+            preparedStatement.setString(1, hotel.getHotelName());
+            preparedStatement.setString(2, hotel.getHotelType());
+            preparedStatement.setInt(3, hotel.getConstructionYear());
+            preparedStatement.setString(4, hotel.getCountry());
+            preparedStatement.setString(5, hotel.getCity());
+            preparedStatement.setString(6, hotel.getAddress());
+            preparedStatement.setString(7, hotel.getContactNumber());
+            preparedStatement.setString(8, hotel.getEmail());
+
+            ResultSet hotel_id_set = DBConnection.insertRecord("FIT5148A", preparedStatement);
+            Long hotel_id = null;
+            if (null != hotel_id_set && hotel_id_set.next()) {
+                 hotel_id = hotel_id_set.getLong(1);
+            }
+            
+            hotel.setHotelId(hotel_id);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+
     }//GEN-LAST:event_newHotelButtonActionPerformed
 
     /**

@@ -11,17 +11,17 @@ package Hotel;
  */
 public class HotelBean {
     
-    private int hotelId;
+    private Long hotelId;
     private String hotelName;
     private String hotelType;
-    private String constructionYear;
+    private int constructionYear;
     private String country;
     private String city;
     private String address;
     private String contactNumber;
     private String email;
 
-    public HotelBean(int hotelId, String hotelName, String hotelType, String constructionYear, String country, String city, String address, String contactNumber, String email) {
+    public HotelBean(Long hotelId, String hotelName, String hotelType, int constructionYear, String country, String city, String address, String contactNumber, String email) {
         this.hotelId = hotelId;
         this.hotelName = hotelName;
         this.hotelType = hotelType;
@@ -38,11 +38,11 @@ public class HotelBean {
     
     
 
-    public int getHotelId() {
+    public Long getHotelId() {
         return hotelId;
     }
 
-    public void setHotelId(int hotelId) {
+    public void setHotelId(Long hotelId) {
         this.hotelId = hotelId;
     }
 
@@ -62,11 +62,11 @@ public class HotelBean {
         this.hotelType = hotelType;
     }
 
-    public String getConstructionYear() {
+    public int getConstructionYear() {
         return constructionYear;
     }
 
-    public void setConstructionYear(String constructionYear) {
+    public void setConstructionYear(int constructionYear) {
         this.constructionYear = constructionYear;
     }
 
