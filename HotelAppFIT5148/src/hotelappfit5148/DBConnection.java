@@ -88,34 +88,36 @@ public class DBConnection {
         return null;
     }
 
-    public static ResultSet insertRecord(String dbName, PreparedStatement prepareStatement) throws SQLException {
-
-        Connection dbConnection = null;
-        try {
-            dbConnection = getDBConnection(dbName);
-            // execute insert SQL stetement
-            prepareStatement.executeUpdate();
-
-            System.out.println("Record is inserted into table!");
-            return prepareStatement.getGeneratedKeys();
-
-        } catch (SQLException e) {
-
-            System.out.println(e.getMessage());
-
-        } finally {
-
-//            if (prepareStatement != null) {
-//                prepareStatement.close();
-//            }
+//    public static ResultSet insertRecord(String dbName, PreparedStatement prepareStatement) throws SQLException {
 //
-//            if (dbConnection != null) {
-//                dbConnection.close();
-//            }
-
-        }
-        
-        return null;
-
-    }
+//        Connection dbConnection = null;
+//        try {
+//            dbConnection = getDBConnection(dbName);
+//            // execute insert SQL stetement
+//            prepareStatement.executeUpdate();
+//
+//            System.out.println("Record is inserted into table!");
+//            return prepareStatement.getGeneratedKeys();
+//
+//        } catch (SQLException e) {
+//
+//            System.out.println(e.getMessage());
+//
+//        } finally {
+//
+////            if (prepareStatement != null) {
+////                prepareStatement.close();
+////            }
+////
+////            if (dbConnection != null) {
+////                dbConnection.close();
+////            }
+//
+//        }
+//        
+//        return null;
+//
+//    }
+    
+    
 }

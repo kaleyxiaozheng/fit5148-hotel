@@ -11,13 +11,14 @@ import oracle.jdbc.OracleDriver;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author thaonguyen
  */
 public class ViewHotel extends javax.swing.JFrame {
-    
+
     Object columnHeaders[] = {"HOTEL_ID", "HOTEL_NAME", "HOTEL_TYPE", "CONSTUCTION_YEAR", "COUNTRY", "CITY", "ADDRESS", "CONTACT_NUMBER", "EMAIL"};
     Object data[][] = {{}};
     DefaultTableModel dtm = new DefaultTableModel(data, columnHeaders);
@@ -30,14 +31,14 @@ public class ViewHotel extends javax.swing.JFrame {
     public ViewHotel() {
         initComponents();
         conn = DBConnection.getDBConnection("FIT5148A");
-        
+        dtm.setRowCount(0);
         try {
             DriverManager.registerDriver(new OracleDriver());
             stmt = conn.createStatement();
             ResultSet rset = stmt.executeQuery("select hotel_id, hotel_name, hotel_type, "
                     + "construction_year, country, city, address, "
-                    + "contact_number, email from hotel");
-            
+                    + "contact_number, email from hotel  order by hotel_id DESC");
+
             ResultSetMetaData mdata = rset.getMetaData();
             int numberOfColumns = mdata.getColumnCount();
             while (rset.next()) {
@@ -47,7 +48,7 @@ public class ViewHotel extends javax.swing.JFrame {
                 }
                 dtm.addRow(rowData);
             }
-            
+
         } catch (SQLException f) {
             System.out.println(f.getMessage());
         }
@@ -62,20 +63,20 @@ public class ViewHotel extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
+        HotelScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jComboBox2 = new javax.swing.JComboBox();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        searchButton = new javax.swing.JButton();
+        newHotel = new javax.swing.JButton();
+        updateHotel = new javax.swing.JButton();
+        deleteHotel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTable1.setModel(dtm);
-        jScrollPane1.setViewportView(jTable1);
+        HotelScrollPane1.setViewportView(jTable1);
 
         jLabel1.setText("View Hotel");
 
@@ -86,23 +87,28 @@ public class ViewHotel extends javax.swing.JFrame {
         typeListCombox.addAll(getHotelType());
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(typeListCombox.toArray()));
 
-        jButton1.setText("Search");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        searchButton.setText("Search");
+        searchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                searchButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setText("New Hotel");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        newHotel.setText("New Hotel");
+        newHotel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                newHotelActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Update");
+        updateHotel.setText("Update");
+        updateHotel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateHotelActionPerformed(evt);
+            }
+        });
 
-        jButton4.setText("Delete");
+        deleteHotel.setText("Delete");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -111,7 +117,7 @@ public class ViewHotel extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 808, Short.MAX_VALUE)
+                    .addComponent(HotelScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 808, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel2)
@@ -119,16 +125,16 @@ public class ViewHotel extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton1)
+                        .addComponent(searchButton)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(179, 179, 179)
-                .addComponent(jButton2)
+                .addComponent(newHotel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3)
+                .addComponent(updateHotel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4)
+                .addComponent(deleteHotel)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -140,28 +146,27 @@ public class ViewHotel extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
-                .addGap(50, 50, 50)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchButton))
+                .addGap(59, 59, 59)
+                .addComponent(HotelScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
-                .addContainerGap(27, Short.MAX_VALUE))
+                    .addComponent(newHotel)
+                    .addComponent(updateHotel)
+                    .addComponent(deleteHotel))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         jLabel1.getAccessibleContext().setAccessibleName("viewHotelLabel");
         jLabel1.getAccessibleContext().setAccessibleDescription("");
-        jButton3.getAccessibleContext().setAccessibleName("Update");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         // TODO add your handling code here:
         dtm.setRowCount(0);
-        
+
         try {
             // TODO add your handling code here:
 
@@ -172,7 +177,7 @@ public class ViewHotel extends javax.swing.JFrame {
             if (!"None".equals(selectedHotelType)) {
                 sbSQL.append(" where hotel_type = '" + selectedHotelType + "'");
             }
-            
+            sbSQL.append(" order by hotel_id DESC");
             ResultSet rset = DBConnection.selectRecords("FIT5148A", sbSQL.toString());
             ResultSetMetaData mdata = rset.getMetaData();
             int numberOfColumns = mdata.getColumnCount();
@@ -186,23 +191,22 @@ public class ViewHotel extends javax.swing.JFrame {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        
 
-    }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_searchButtonActionPerformed
+
+    private void newHotelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newHotelActionPerformed
         // TODO add your handling code here:
         new NewHotel().setVisible(true);
-        
+        dtm.setRowCount(0);
         conn = DBConnection.getDBConnection("FIT5148A");
-        
         try {
             DriverManager.registerDriver(new OracleDriver());
             stmt = conn.createStatement();
             ResultSet rset = stmt.executeQuery("select hotel_id, hotel_name, hotel_type, "
                     + "construction_year, country, city, address, "
-                    + "contact_number, email from hotel");
-            
+                    + "contact_number, email from hotel order by hotel_id DESC");
+
             ResultSetMetaData mdata = rset.getMetaData();
             int numberOfColumns = mdata.getColumnCount();
             while (rset.next()) {
@@ -212,19 +216,55 @@ public class ViewHotel extends javax.swing.JFrame {
                 }
                 dtm.addRow(rowData);
             }
-            
+            conn.close();
+
         } catch (SQLException f) {
             System.out.println(f.getMessage());
         }
-        
-    }//GEN-LAST:event_jButton2ActionPerformed
-    
+
+    }//GEN-LAST:event_newHotelActionPerformed
+
+    private void updateHotelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateHotelActionPerformed
+        // TODO add your handling code here:
+        int selectedRowCount = jTable1.getSelectedRowCount();
+        if (selectedRowCount != 1) {
+            JOptionPane.showMessageDialog(null, "Please select one record.");
+        } else {
+            HotelBean hotel = this.constructHotelBean();
+            /* Create and display the form */
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    new UpdateHotel(hotel).setVisible(true);
+                }
+            });
+        }
+    }//GEN-LAST:event_updateHotelActionPerformed
+
+    private HotelBean constructHotelBean() {
+        HotelBean hotel = new HotelBean();
+
+        int selectedHotel = jTable1.getSelectedRow();
+
+//        System.out.print(selectedHotel.);
+        hotel.setHotelId(Long.parseLong(jTable1.getModel().getValueAt(selectedHotel, 0).toString()));
+        hotel.setHotelName((String) jTable1.getModel().getValueAt(selectedHotel, 1));
+        hotel.setHotelType((String) jTable1.getModel().getValueAt(selectedHotel, 2));
+        hotel.setConstructionYear(Integer.parseInt(jTable1.getModel().getValueAt(selectedHotel, 3).toString()));
+        hotel.setCountry((String) jTable1.getModel().getValueAt(selectedHotel, 4));
+        hotel.setCity((String) jTable1.getModel().getValueAt(selectedHotel, 5));
+        hotel.setAddress((String) jTable1.getModel().getValueAt(selectedHotel, 6));
+        hotel.setContactNumber((String) jTable1.getModel().getValueAt(selectedHotel, 7));
+        hotel.setEmail((String) jTable1.getModel().getValueAt(selectedHotel, 8));
+
+        return hotel;
+    }
+
     public List<String> getHotelType() {
         String getHotelType = "select distinct hotel_type from hotel order by hotel_type";
-        
+
         try {
             ResultSet rset = DBConnection.selectRecords("FIT5148A", getHotelType);
-            
+
             List<String> hotelTypeList = new ArrayList<String>();
             while (rset.next()) {
                 hotelTypeList.add(rset.getString(1));
@@ -234,7 +274,7 @@ public class ViewHotel extends javax.swing.JFrame {
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
-        
+
         return null;
     }
 
@@ -274,14 +314,14 @@ public class ViewHotel extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JScrollPane HotelScrollPane1;
+    private javax.swing.JButton deleteHotel;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JButton newHotel;
+    private javax.swing.JButton searchButton;
+    private javax.swing.JButton updateHotel;
     // End of variables declaration//GEN-END:variables
 }

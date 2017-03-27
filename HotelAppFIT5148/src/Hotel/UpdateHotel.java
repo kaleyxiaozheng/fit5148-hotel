@@ -5,6 +5,13 @@
  */
 package Hotel;
 
+import hotelappfit5148.DBConnection;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author thaonguyen
@@ -14,9 +21,11 @@ public class UpdateHotel extends javax.swing.JFrame {
     /**
      * Creates new form UpdateHotel
      */
-    public UpdateHotel(HotelBean hotel) {        
+    private HotelBean hotel;
+
+    public UpdateHotel(HotelBean hotel) {
         initComponents();
-        
+        this.hotel = hotel;
         this.addressText.setText(hotel.getAddress());
         this.cityText.setText(hotel.getCity());
         this.constructionYearText.setText(Integer.toString(hotel.getConstructionYear()));
@@ -25,8 +34,7 @@ public class UpdateHotel extends javax.swing.JFrame {
         this.emailText.setText(hotel.getEmail());
         this.hotelNameText.setText(hotel.getHotelName());
         this.hotelIdLable.setText("Hotel number " + hotel.getHotelId().toString());
-        
-        
+
     }
 
     /**
@@ -100,6 +108,11 @@ public class UpdateHotel extends javax.swing.JFrame {
         });
 
         Save.setText("Save");
+        Save.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SaveActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -218,6 +231,60 @@ public class UpdateHotel extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_closeActionPerformed
+
+    private void SaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveActionPerformed
+        // TODO add your handling code here:
+
+        // TODO add your handling code here:
+        HotelBean hotel = new HotelBean();
+        if (hotelNameText.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter hotel name.");
+            return;
+        }
+        hotel.setAddress(addressText.getText().trim());
+        hotel.setCity(cityText.getText().trim());
+        hotel.setConstructionYear(Integer.parseInt(constructionYearText.getText().trim()));
+        hotel.setContactNumber(contactNumberText.getText().trim());
+        hotel.setCountry(countryText.getText().trim());
+        hotel.setEmail(emailText.getText().trim());
+        hotel.setHotelName(hotelNameText.getText().trim());
+        hotel.setHotelType(String.valueOf(typeComboBox.getSelectedItem()));
+
+        PreparedStatement preparedStatement = null;
+        Connection dbConnection = DBConnection.getDBConnection("FIT5148A");
+        String insertTableSQL = "update  hotel"
+                + "(hotel_name, hotel_type, construction_year, country, city, address, contact_number, email) VALUES"
+                + "(?,?,?,?,?,?,?,?)";
+
+        try {
+            preparedStatement = dbConnection.prepareStatement(insertTableSQL, new String[]{"hotel_id"});
+            preparedStatement.setString(1, hotel.getHotelName());
+            preparedStatement.setString(2, hotel.getHotelType());
+            preparedStatement.setInt(3, hotel.getConstructionYear());
+            preparedStatement.setString(4, hotel.getCountry());
+            preparedStatement.setString(5, hotel.getCity());
+            preparedStatement.setString(6, hotel.getAddress());
+            preparedStatement.setString(7, hotel.getContactNumber());
+            preparedStatement.setString(8, hotel.getEmail());
+            preparedStatement.executeUpdate();
+            ResultSet hotel_id_set = preparedStatement.getGeneratedKeys();
+//                    = DBConnection.insertRecord("FIT5148A", preparedStatement);
+            Long hotel_id = null;
+            if (null != hotel_id_set && hotel_id_set.next()) {
+                hotel_id = hotel_id_set.getLong(1);
+            }
+            hotel.setHotelId(hotel_id);
+            JOptionPane.showMessageDialog(null, "Create successfully.");
+            preparedStatement.close();
+            DBConnection.closeDBConnection(dbConnection);
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        this.dispose();
+//        new UpdateHotel(hotel).setVisible(true);
+
+    }//GEN-LAST:event_SaveActionPerformed
 
     /**
      * @param args the command line arguments

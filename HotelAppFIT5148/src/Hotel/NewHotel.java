@@ -226,13 +226,14 @@ public class NewHotel extends javax.swing.JFrame {
         hotel.setHotelType(String.valueOf(typeComboBox.getSelectedItem()));
 
         PreparedStatement preparedStatement = null;
-
+Connection dbConnection = DBConnection.getDBConnection("FIT5148A");
         String insertTableSQL = "INSERT INTO hotel"
                 + "(hotel_name, hotel_type, construction_year, country, city, address, contact_number, email) VALUES"
                 + "(?,?,?,?,?,?,?,?)";
 
         try {
-            preparedStatement = DBConnection.getDBConnection("FIT5148A").prepareStatement(insertTableSQL, new String[]{"hotel_id"});
+//            preparedStatement = DBConnection.getDBConnection("FIT5148A").prepareStatement(insertTableSQL, new String[]{"hotel_id"});
+            preparedStatement = dbConnection.prepareStatement(insertTableSQL, new String[]{"hotel_id"});
             preparedStatement.setString(1, hotel.getHotelName());
             preparedStatement.setString(2, hotel.getHotelType());
             preparedStatement.setInt(3, hotel.getConstructionYear());
@@ -242,14 +243,17 @@ public class NewHotel extends javax.swing.JFrame {
             preparedStatement.setString(7, hotel.getContactNumber());
             preparedStatement.setString(8, hotel.getEmail());
 
-            ResultSet hotel_id_set = DBConnection.insertRecord("FIT5148A", preparedStatement);
+//            ResultSet hotel_id_set = DBConnection.insertRecord("FIT5148A", preparedStatement);
+            preparedStatement.executeUpdate();
+            ResultSet hotel_id_set = preparedStatement.getGeneratedKeys();
             Long hotel_id = null;
             if (null != hotel_id_set && hotel_id_set.next()) {
                  hotel_id = hotel_id_set.getLong(1);
             }           
             hotel.setHotelId(hotel_id);
             JOptionPane.showMessageDialog(null, "Create successfully.");
-            System.out.print("lol");
+            preparedStatement.close();
+            DBConnection.closeDBConnection(dbConnection);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
