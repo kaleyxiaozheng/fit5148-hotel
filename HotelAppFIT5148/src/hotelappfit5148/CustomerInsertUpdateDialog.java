@@ -37,6 +37,7 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
         jTextField3.setText(customer.getLastName());
         jTextField4.setText(String.valueOf(customer.getCitizenID()));
         
+        
         try {
             Date dob = new SimpleDateFormat("dd-MMM-yy").parse(customer.getDOB());
             jXDatePicker1.setDate(dob);

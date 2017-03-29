@@ -31,6 +31,7 @@ public class CustomerFrame extends javax.swing.JFrame {
      */
     public CustomerFrame() {
         initComponents();
+        
     }
 
     /**
