@@ -5,7 +5,7 @@
  */
 package Hotel;
 
-import hotelappfit5148.DBConnection;
+import hotelappfit5148.Database;
 import javax.swing.table.DefaultTableModel;
 import oracle.jdbc.OracleDriver;
 import java.sql.*;
@@ -30,7 +30,7 @@ public class ViewHotel extends javax.swing.JFrame {
      */
     public ViewHotel() {
         initComponents();
-        conn = DBConnection.getDBConnection("FIT5148A");
+        conn = Database.getInstance().getDBConnection("FIT5148A");
         dtm.setRowCount(0);
         try {
             DriverManager.registerDriver(new OracleDriver());
@@ -83,7 +83,7 @@ public class ViewHotel extends javax.swing.JFrame {
         jLabel2.setText("Hotel Type");
 
         List<String> typeListCombox = new ArrayList<String>();
-        typeListCombox.add("None");
+        typeListCombox.add("All Types");
         typeListCombox.addAll(getHotelType());
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(typeListCombox.toArray()));
 
@@ -174,11 +174,11 @@ public class ViewHotel extends javax.swing.JFrame {
             StringBuffer sbSQL = new StringBuffer("select hotel_id, hotel_name, hotel_type, "
                     + "construction_year, country, city, address, "
                     + "contact_number, email from hotel");
-            if (!"None".equals(selectedHotelType)) {
+            if (!"All Types".equals(selectedHotelType)) {
                 sbSQL.append(" where hotel_type = '" + selectedHotelType + "'");
             }
             sbSQL.append(" order by hotel_id DESC");
-            ResultSet rset = DBConnection.selectRecords("FIT5148A", sbSQL.toString());
+            ResultSet rset = Database.getInstance().selectRecords("FIT5148A", sbSQL.toString());
             ResultSetMetaData mdata = rset.getMetaData();
             int numberOfColumns = mdata.getColumnCount();
             while (rset.next()) {
@@ -197,30 +197,35 @@ public class ViewHotel extends javax.swing.JFrame {
 
     private void newHotelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newHotelActionPerformed
         // TODO add your handling code here:
-        new NewHotel().setVisible(true);
-        dtm.setRowCount(0);
-        conn = DBConnection.getDBConnection("FIT5148A");
-        try {
-            DriverManager.registerDriver(new OracleDriver());
-            stmt = conn.createStatement();
-            ResultSet rset = stmt.executeQuery("select hotel_id, hotel_name, hotel_type, "
-                    + "construction_year, country, city, address, "
-                    + "contact_number, email from hotel order by hotel_id DESC");
-
-            ResultSetMetaData mdata = rset.getMetaData();
-            int numberOfColumns = mdata.getColumnCount();
-            while (rset.next()) {
-                Object[] rowData = new Object[numberOfColumns];
-                for (int i = 0; i < rowData.length; i++) {
-                    rowData[i] = rset.getObject(i + 1);
-                }
-                dtm.addRow(rowData);
-            }
-            conn.close();
-
-        } catch (SQLException f) {
-            System.out.println(f.getMessage());
-        }
+        NewHotel hotelForm = new NewHotel();
+        hotelForm.setVisible(true);
+        
+//        NewHotelDialog newHotelDialog = new NewHotelDialog();
+//        newHotelDialog.setVisible(true);
+//        
+//        dtm.setRowCount(0);
+//        conn = DBConnection.getDBConnection("FIT5148A");
+//        try {
+//            DriverManager.registerDriver(new OracleDriver());
+//            stmt = conn.createStatement();
+//            ResultSet rset = stmt.executeQuery("select hotel_id, hotel_name, hotel_type, "
+//                    + "construction_year, country, city, address, "
+//                    + "contact_number, email from hotel order by hotel_id DESC");
+//
+//            ResultSetMetaData mdata = rset.getMetaData();
+//            int numberOfColumns = mdata.getColumnCount();
+//            while (rset.next()) {
+//                Object[] rowData = new Object[numberOfColumns];
+//                for (int i = 0; i < rowData.length; i++) {
+//                    rowData[i] = rset.getObject(i + 1);
+//                }
+//                dtm.addRow(rowData);
+//            }
+//            conn.close();
+//
+//        } catch (SQLException f) {
+//            System.out.println(f.getMessage());
+//        }
 
     }//GEN-LAST:event_newHotelActionPerformed
 
@@ -263,7 +268,7 @@ public class ViewHotel extends javax.swing.JFrame {
         String getHotelType = "select distinct hotel_type from hotel order by hotel_type";
 
         try {
-            ResultSet rset = DBConnection.selectRecords("FIT5148A", getHotelType);
+            ResultSet rset = Database.getInstance().selectRecords("FIT5148A", getHotelType);
 
             List<String> hotelTypeList = new ArrayList<String>();
             while (rset.next()) {

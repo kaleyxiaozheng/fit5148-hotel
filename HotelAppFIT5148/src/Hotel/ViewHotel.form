@@ -114,7 +114,7 @@
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="List&lt;String&gt; typeListCombox = new ArrayList&lt;String&gt;(); &#xa;typeListCombox.add(&quot;None&quot;);&#xa;typeListCombox.addAll(getHotelType());"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="List&lt;String&gt; typeListCombox = new ArrayList&lt;String&gt;(); &#xa;typeListCombox.add(&quot;All Types&quot;);&#xa;typeListCombox.addAll(getHotelType());"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="searchButton">

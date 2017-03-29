@@ -5,7 +5,7 @@
  */
 package Hotel;
 
-import hotelappfit5148.DBConnection;
+import hotelappfit5148.Database;
 import javax.swing.JOptionPane;
 import java.sql.*;
 import java.util.logging.Level;
@@ -226,7 +226,7 @@ public class NewHotel extends javax.swing.JFrame {
         hotel.setHotelType(String.valueOf(typeComboBox.getSelectedItem()));
 
         PreparedStatement preparedStatement = null;
-Connection dbConnection = DBConnection.getDBConnection("FIT5148A");
+Connection dbConnection = Database.getInstance().getDBConnection("FIT5148A");
         String insertTableSQL = "INSERT INTO hotel"
                 + "(hotel_name, hotel_type, construction_year, country, city, address, contact_number, email) VALUES"
                 + "(?,?,?,?,?,?,?,?)";
@@ -253,12 +253,12 @@ Connection dbConnection = DBConnection.getDBConnection("FIT5148A");
             hotel.setHotelId(hotel_id);
             JOptionPane.showMessageDialog(null, "Create successfully.");
             preparedStatement.close();
-            DBConnection.closeDBConnection(dbConnection);
+            Database.getInstance().closeDBConnection();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
         
-        this.dispose();
+//        this.dispose();
 //        new UpdateHotel(hotel).setVisible(true);
 
 

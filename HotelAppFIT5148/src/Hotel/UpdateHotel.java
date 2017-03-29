@@ -5,7 +5,7 @@
  */
 package Hotel;
 
-import hotelappfit5148.DBConnection;
+import hotelappfit5148.Database;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -251,7 +251,7 @@ public class UpdateHotel extends javax.swing.JFrame {
         hotel.setHotelType(String.valueOf(typeComboBox.getSelectedItem()));
 
         PreparedStatement preparedStatement = null;
-        Connection dbConnection = DBConnection.getDBConnection("FIT5148A");
+        Connection dbConnection = Database.getInstance().getDBConnection("FIT5148A");
         String insertTableSQL = "update  hotel"
                 + "(hotel_name, hotel_type, construction_year, country, city, address, contact_number, email) VALUES"
                 + "(?,?,?,?,?,?,?,?)";
@@ -276,7 +276,7 @@ public class UpdateHotel extends javax.swing.JFrame {
             hotel.setHotelId(hotel_id);
             JOptionPane.showMessageDialog(null, "Create successfully.");
             preparedStatement.close();
-            DBConnection.closeDBConnection(dbConnection);
+            Database.getInstance().closeDBConnection();
 
         } catch (SQLException ex) {
             ex.printStackTrace();
