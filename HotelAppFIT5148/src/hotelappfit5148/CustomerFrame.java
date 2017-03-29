@@ -140,7 +140,7 @@ public class CustomerFrame extends javax.swing.JFrame {
             
             viewCustSQL = sbSQL.toString();
             
-            ResultSet rset = DBConnection.selectRecords("FIT5148B", viewCustSQL);
+            ResultSet rset = Database.getInstance().selectRecords("FIT5148B", viewCustSQL);
             ResultSetMetaData mdata = rset.getMetaData();
             int numberOfColumns = mdata.getColumnCount();
             while (rset.next()) {
@@ -252,7 +252,7 @@ public class CustomerFrame extends javax.swing.JFrame {
         String getTierSQL = "SELECT MEMBERSHIP_TIER FROM MEMBERSHIP";
         
         try{
-            ResultSet rset = DBConnection.selectRecords("FIT5148B", getTierSQL);
+            ResultSet rset = Database.getInstance().selectRecords("FIT5148B", getTierSQL);
             
             List<String> membershipList = new ArrayList<String>();
             while(rset.next()){
