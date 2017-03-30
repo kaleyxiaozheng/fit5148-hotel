@@ -23,22 +23,28 @@ import oracle.jdbc.OracleDriver;
  */
 public class Searching extends javax.swing.JPanel {
     private List countriesAndCities;
-    private List roomAndRate;
+    private List room_Type;
     /**
      * Creates new form Searching
      */
     public Searching() {
         initComponents();
         countriesAndCities = initHotel();
-       // roomAndRate = initRoom();
+        room_Type = initRoom();
         
         jComboBox2.removeAllItems();
         jComboBox1.removeAllItems();
+        jComboBox4.removeAllItems();
         
         for(Iterator iterator = countriesAndCities.iterator(); iterator.hasNext();){
               String[] cc = (String[])iterator.next();
               jComboBox2.addItem(cc[0]);
               jComboBox1.addItem(cc[1]);  
+        }
+        
+        for(Iterator iterator = room_Type.iterator(); iterator.hasNext();){
+            String room = iterator.next().toString();
+            jComboBox4.addItem(room);
         }
     }
     
@@ -70,31 +76,29 @@ public class Searching extends javax.swing.JPanel {
     }
     
     // Access room type and rate range
-//    public List initRoom(){
-//        List roomAndRate = new ArrayList();
-//        try {
-//            DriverManager.registerDriver(new OracleDriver());
-//            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
-//            DatabaseMetaData md = conn.getMetaData();
-//
-//            ResultSet rs = md.getTables(null, null, "%", null);
-//            Statement stmt = conn.createStatement();
-//
-//            ResultSet rset = stmt.executeQuery("select country, city from room");
-//            ResultSetMetaData metadata = rset.getMetaData();
-//            while (rset.next()) {
-//                String[] rsets = new String[2];
-//                rsets[0] = rset.getString(1);
-//                rsets[1] = rset.getString(2);
-//                roomAndRate.add(rsets);
-//            }
-//        } catch (SQLException f) {
-//            System.out.println(f.getMessage());
-//            f.printStackTrace();
-//        }
-//        return roomAndRate;
-//        
-//    }
+    public List initRoom(){
+        List roomType= new ArrayList();
+        try {
+            DriverManager.registerDriver(new OracleDriver());
+            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+            DatabaseMetaData md = conn.getMetaData();
+
+            ResultSet rs = md.getTables(null, null, "%", null);
+            Statement stmt = conn.createStatement();
+
+            ResultSet rset = stmt.executeQuery("select room_type from room");
+            ResultSetMetaData metadata = rset.getMetaData();
+            while (rset.next()) {
+                String room_type = rset.getString(1);
+                roomType.add(room_type);
+            }
+        } catch (SQLException f) {
+            System.out.println(f.getMessage());
+            f.printStackTrace();
+        }
+        return roomType;
+        
+    }
     
     
     /**
@@ -149,9 +153,9 @@ public class Searching extends javax.swing.JPanel {
             }
         });
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1-200", "200-400", "400-600", "600-800", "800-1000", ">1000" }));
 
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "item1", "item2", "item3", "item4" }));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
