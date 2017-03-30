@@ -58,6 +58,7 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(700, 500));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -102,6 +103,11 @@ public class MainFrame extends javax.swing.JFrame {
         jMenu2.setText("Customer");
 
         jMenuItem5.setText("Customer");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem5);
 
         jMenuItem6.setText("Guest");
@@ -234,6 +240,17 @@ public class MainFrame extends javax.swing.JFrame {
 
         jPanel2.revalidate();
     }//GEN-LAST:event_jMenuItem9ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        // TODO add your handling code here:
+        dispose();
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new CustomerFrame().setVisible(true);
+            }
+        });
+        
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     /**
      * @param args the command line arguments
