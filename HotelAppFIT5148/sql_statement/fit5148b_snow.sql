@@ -63,15 +63,15 @@ BEGIN
     :new.customer_id := customer_sequence.nextval;
 END;
 
-INSERT INTO CUSTOMER VALUES (NULL, 'MR', 'Tom','Hiddleston', '001', TO_date('1981/02/09','yyyy/mm/dd')
+INSERT INTO CUSTOMER VALUES (NULL, 'MR', 'Tom','Hiddleston', 1, TO_date('1981/02/09','yyyy/mm/dd')
 ,'Australa', 'Melbourn','Caulfield',1234,1,800,12345678,'tom.hiddleson@test.com');
-INSERT INTO CUSTOMER VALUES (NULL, 'MR', 'Hugh','Jackman', '002', TO_date('1968/10/12','yyyy/mm/dd')
+INSERT INTO CUSTOMER VALUES (NULL, 'MR', 'Hugh','Jackman', 2, TO_date('1968/10/12','yyyy/mm/dd')
 ,'Australa', 'Melbourn','Clayton',2345,2,1200,12345678,'hugh.jackman@test.com');
-INSERT INTO CUSTOMER VALUES (NULL, 'MR', 'James','Mcavoy', '003', TO_date('1979/04/21','yyyy/mm/dd')
+INSERT INTO CUSTOMER VALUES (NULL, 'MR', 'James','Mcavoy', 3, TO_date('1979/04/21','yyyy/mm/dd')
 ,'Australa', 'Sydney','CBD',3456,3,6000,12345678,'james.mcavoy@test.com');
-INSERT INTO CUSTOMER VALUES (NULL, 'MR', 'Eddie','Redmayne', '004', TO_date('1982/01/06','yyyy/mm/dd')
+INSERT INTO CUSTOMER VALUES (NULL, 'MR', 'Eddie','Redmayne', 4, TO_date('1982/01/06','yyyy/mm/dd')
 ,'Australa', 'Adelaide','CBD',1234,4,12000,12345678,'eddie.redmayne@test.com');
-INSERT INTO CUSTOMER VALUES (NULL, 'MR', 'Ryan','Reynolds', '005', TO_date('1976/10/23','yyyy/mm/dd')
+INSERT INTO CUSTOMER VALUES (NULL, 'MR', 'Ryan','Reynolds', 5, TO_date('1976/10/23','yyyy/mm/dd')
 ,'Australa', 'Canberra','CBD',1234,5,25000,12345678,'ryan.reynolds@test.com');
 
 --End of creating table Customer
@@ -130,4 +130,36 @@ BEGIN
   END IF;
 END;
 
+CREATE OR REPLACE PROCEDURE insertOrUpdateCustomer(
+  in_cust_id IN CUSTOMER.CUSTOMER_ID%TYPE,
+  in_title IN CUSTOMER.TITLE%TYPE,
+  in_first_name IN CUSTOMER.FIRST_NAME%TYPE,
+  in_last_name IN CUSTOMER.LAST_NAME%TYPE,
+  in_citizen_id IN CUSTOMER.CITIZEN_ID%TYPE,
+  in_dob IN VARCHAR2,
+  in_country IN CUSTOMER.COUNTRY%TYPE,
+  in_city IN CUSTOMER.CITY%TYPE,
+  in_street IN CUSTOMER.STREET%TYPE,
+  in_postal_code IN CUSTOMER.POSTAL_CODE%TYPE,
+  in_phone IN CUSTOMER.PHONE_NUM%TYPE,
+  in_email IN CUSTOMER.EMAIL%TYPE,
+  in_action IN VARCHAR2)
+AS
+  temp NUMBER;
+BEGIN
+  IF in_action = 'Insert' THEN
+    --By default, the membership is Bronze and credit is 0
+    SELECT TIER_ID INTO temp FROM MEMBERSHIP WHERE MEMBERSHIP_TIER = 'Bronze';
+  
+    INSERT INTO CUSTOMER VALUES (NULL, in_title, in_first_name,in_last_name, in_citizen_id, 
+    TO_DATE(in_dob,'yyyy/mm/dd') ,in_country, in_city, in_street, in_postal_code, temp, 0, 
+    in_phone, in_email);
+  ELSE
+    --Membership and credit is not allowed to update manually
+    UPDATE CUSTOMER SET TITLE = in_title, FIRST_NAME = in_first_name, LAST_NAME = in_last_name,
+    CITIZEN_ID = in_citizen_id, DOB = TO_date(in_dob,'yyyy/mm/dd'), COUNTRY = in_country,
+    CITY = in_city, STREET = in_street, POSTAL_CODE = in_postal_code, PHONE_NUM = in_phone,
+    EMAIL = in_email WHERE CUSTOMER_ID = in_cust_id;
+  END IF;
+END;
 --End of stored procedure

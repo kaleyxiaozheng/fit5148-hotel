@@ -31,8 +31,11 @@ public class Database {
     private static Database dbIsntance;
     private static Connection con_5148A;
     private static Connection con_5148B;
-    private static PreparedStatement stmt;
+    private static PreparedStatement pstmt;
     private static ResultSet rs;
+    private static CallableStatement cstmt;
+    
+    private static String CALLSP_INSERTORUPDATECUSTOMER = "{call insertOrUpdateCustomer(?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 
     private Database() {
         // private constructor //
@@ -71,48 +74,41 @@ public class Database {
         return null;
     }
 
-    public boolean closeDBConnection() {
-        boolean result = false;
+    public void closeDBConnection() {
+        //boolean result = false;
 
         try {
             if (rs != null) {
                 rs.close();
-                result = true;
-            };
-            if (stmt != null) {
-                stmt.close();
-                result = true;
-            };
-
+            }
+            if (pstmt != null) {
+                pstmt.close();                
+            }
+            
+            if (cstmt != null){
+                cstmt.close();
+            }
+            
             if (con_5148A != null) {
-                con_5148A.close();
-                result = true;
-            };
+                con_5148A.close();                
+            }
             if (con_5148B != null) {
-                con_5148B.close();
-                result = true;
-            };
+                con_5148B.close();                
+            }
 
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-            result = false;
-        }
-
-        return result;
+            System.out.println(ex.getMessage());            
+        }        
     }
 
     public ResultSet selectRecords(String dbName, String sqlStatement) throws SQLException {
         Connection dbConnection = null;
         try {
-            dbConnection = getDBConnection(dbName);
-            
-//            if(dbConnection == null){
-//                System.out.print("lol");
-//            }
+            dbConnection = getDBConnection(dbName);            
 //            
-            stmt = dbConnection.prepareStatement(sqlStatement);
+            pstmt = dbConnection.prepareStatement(sqlStatement);
 
-            rs = stmt.executeQuery();
+            rs = pstmt.executeQuery();
             return rs;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -121,4 +117,35 @@ public class Database {
         return null;
     }
 
+    public boolean callSPInsertOrUpdateCustomer(CustomerBean customer, String dbName, String action){
+        Connection dbConnection = null;
+        
+        try{
+            dbConnection = getDBConnection(dbName);
+            cstmt = dbConnection.prepareCall(CALLSP_INSERTORUPDATECUSTOMER);
+            
+            cstmt.setInt(1, customer.getCustomer_id());
+            cstmt.setString(2, customer.getTitle());
+            cstmt.setString(3, customer.getFirstName());
+            cstmt.setString(4, customer.getLastName());
+            cstmt.setInt(5, customer.getCitizenID());
+            cstmt.setString(6, customer.getDOB());
+            cstmt.setString(7, customer.getCountry());
+            cstmt.setString(8, customer.getCity());
+            cstmt.setString(9, customer.getStreet());
+            cstmt.setInt(10, customer.getPostalCode());
+            cstmt.setInt(11, customer.getPhoneNumber());
+            cstmt.setString(12, customer.getEmail());
+            
+            cstmt.setString(13, action);
+            
+            cstmt.executeUpdate();
+            return true;
+            
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        } 
+        
+    }
 }

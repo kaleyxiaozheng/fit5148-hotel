@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import javax.swing.DefaultComboBoxModel;
 /**
  *
@@ -25,15 +26,22 @@ public class CustomerFrame extends javax.swing.JFrame {
         "PostalCode", "MembershipTier","MembershipCredit", "Phone", "Email"};
     Object data[][] = {{}};
     DefaultTableModel dtm = new DefaultTableModel(data, columnHeaders);
+    public final static String ALL_TIER = "All Tier";
     public final static String SELECT_CUSTOMER = "SELECT CUSTOMER_ID, TITLE, FIRST_NAME, LAST_NAME, "
                     + "CITIZEN_ID, DOB, COUNTRY, CITY, STREET, POSTAL_CODE, "
-                    + "TIER_ID, MEMBERSHIP_CREDITS, PHONE_NUM, EMAIL FROM CUSTOMER";
-    public final static String SELECT_CUSTOMER_WITH_TIER = " WHERE EXISTS (SELECT * FROM MEMBERSHIP WHERE CUSTOMER.TIER_ID = "
-                        + "MEMBERSHIP.TIER_ID AND MEMBERSHIP.MEMBERSHIP_TIER = '";
+                    + "MEMBERSHIP_TIER, MEMBERSHIP_CREDITS, PHONE_NUM, EMAIL FROM CUSTOMER "
+            + "INNER JOIN MEMBERSHIP ON CUSTOMER.TIER_ID = MEMBERSHIP.TIER_ID";
+    public final static String SELECT_CUSTOMER_WITH_TIER = " AND MEMBERSHIP.MEMBERSHIP_TIER = '";
     public final static String SELECT_MEMBERSHIP_TIER = "SELECT MEMBERSHIP_TIER FROM MEMBERSHIP";
     
     public final static String UPDATE_CUST = "Update";
     public final static String INSERT_CUST = "Insert";
+    
+    public final static String DB_DATE_FORMAT = "yyyy/MM/dd";
+    
+    public final static String MULTIPLE_SELECTION = "Please select one customer only.";
+    public final static String NO_SELECTION = "Please select at least one customer.";
+    //public final static String DISPLAY_DATE_FORMAT = "dd-MMM-yy";
     
     
     /**
@@ -79,6 +87,11 @@ public class CustomerFrame extends javax.swing.JFrame {
         jLabel1.setText("Membership Tier");
 
         jButton2.setText("Insert Customer");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Update Customer");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -130,6 +143,17 @@ public class CustomerFrame extends javax.swing.JFrame {
         setBounds(0, 0, 1200, 422);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        String action = "Insert";
+            /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new CustomerInsertUpdateDialog(null, action).setVisible(true);
+            }
+        });
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
         try {
             // TODO add your handling code here:
@@ -141,8 +165,8 @@ public class CustomerFrame extends javax.swing.JFrame {
             String selectedMembershipTier = String.valueOf(jComboBox1.getSelectedItem());
             StringBuffer sbSQL = new StringBuffer(SELECT_CUSTOMER);
             String viewCustSQL = "";
-            if (!"".equals(selectedMembershipTier)){
-                sbSQL.append(SELECT_CUSTOMER_WITH_TIER + selectedMembershipTier +"')");
+            if (!ALL_TIER.equals(selectedMembershipTier)){
+                sbSQL.append(SELECT_CUSTOMER_WITH_TIER + selectedMembershipTier +"'");
             }    
             
             viewCustSQL = sbSQL.toString();
@@ -165,26 +189,14 @@ public class CustomerFrame extends javax.swing.JFrame {
             ex.printStackTrace();
         }
     }
-    
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-        String action = "Insert";
-            /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new CustomerInsertUpdateDialog(null, action).setVisible(true);
-            }
-        });
-        
-    }
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:        
         int selectedRowCount = jTable1.getSelectedRowCount();
         if (selectedRowCount > 1){
-            JOptionPane.showMessageDialog(null, "Please select one customer only.");
+            JOptionPane.showMessageDialog(null, MULTIPLE_SELECTION);
         }else if (selectedRowCount == 0){
-            JOptionPane.showMessageDialog(null, "Please select at least one customer.");
+            JOptionPane.showMessageDialog(null, NO_SELECTION);
         }else{
             CustomerBean customer = this.constructCustomerBean();
             /* Create and display the form */
@@ -206,12 +218,16 @@ public class CustomerFrame extends javax.swing.JFrame {
         customer.setFirstName((String)jTable1.getModel().getValueAt(selectedCustomer, 2));
         customer.setLastName((String)jTable1.getModel().getValueAt(selectedCustomer, 3));
         customer.setCitizenID(((BigDecimal)jTable1.getModel().getValueAt(selectedCustomer, 4)).intValue());
-        customer.setDOB((String)jTable1.getModel().getValueAt(selectedCustomer, 5));
+        
+        //Cast SQL Date format
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DB_DATE_FORMAT);        
+        customer.setDOB(dateFormat.format(jTable1.getModel().getValueAt(selectedCustomer, 5)));
+        
         customer.setCountry((String)jTable1.getModel().getValueAt(selectedCustomer, 6));
         customer.setCity((String)jTable1.getModel().getValueAt(selectedCustomer, 7));
         customer.setStreet((String)jTable1.getModel().getValueAt(selectedCustomer, 8));
         customer.setPostalCode(((BigDecimal)jTable1.getModel().getValueAt(selectedCustomer, 9)).intValue());
-        customer.setTier_id(((BigDecimal)jTable1.getModel().getValueAt(selectedCustomer, 10)).intValue());
+        customer.setMembership((String)jTable1.getModel().getValueAt(selectedCustomer, 10));
         customer.setMembershipCredit(((BigDecimal)jTable1.getModel().getValueAt(selectedCustomer, 11)).intValue());
         customer.setPhoneNumber(((BigDecimal)jTable1.getModel().getValueAt(selectedCustomer, 12)).intValue());
         customer.setEmail((String)jTable1.getModel().getValueAt(selectedCustomer, 13));
@@ -263,6 +279,7 @@ public class CustomerFrame extends javax.swing.JFrame {
             ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, SELECT_MEMBERSHIP_TIER);
             
             List<String> membershipList = new ArrayList<String>();
+            membershipList.add(ALL_TIER);
             while(rset.next()){
                 membershipList.add(rset.getString(1));
             }

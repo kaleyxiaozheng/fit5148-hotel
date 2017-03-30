@@ -5,6 +5,8 @@
  */
 package hotelappfit5148;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,6 +20,14 @@ import javax.swing.JOptionPane;
  */
 public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
 
+    public final static String CHECK_CUST_EXISTANCE_B4INSERT = "SELECT COUNT(1) "
+            + "FROM CUSTOMER WHERE CITIZEN_ID = ";
+    private final static String CUSTOMER_INSERT_UPDATE_S = "Customer added/updated successfully. Please go back to Customer page and refresh.";
+    private final static String CUSTOMER_INSERT_UPDATE_F = "Failed to add/update customer. Please double check the information";
+    private final static String EXISTED_CITIZEN = "Citizen Id is existed for other customer, please double check";
+    private final static String INVALID_CITIZEN_ID = "Please input digit for Citizen ID.";
+    private final static String DISCARD_CHANGE = "Your change will be discarded. Please click Yes if you want to stay.";
+    private final static String EMPTY_CITIZEN_ID = "Please input Citizen ID for this customer.";
     /**
      * Creates new form CustomerInsertUpdateDialog
      */
@@ -25,23 +35,25 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
         initComponents();
         if (CustomerFrame.UPDATE_CUST.equals(action)){
             initCustomerInformation(customer);
+            jButton1.setVisible(false);
+        }else{
+            jButton2.setVisible(false);
         }
         
     }
     
     public void initCustomerInformation (CustomerBean customer){
-        //TODO, ID is non-editable
+        
         jTextField1.setText(String.valueOf(customer.getCustomer_id()));
-        //jTextField1.setEditable(false);
-        jTextField1.setEnabled(false);
+        
+        
         jComboBox1.setSelectedItem(customer.getTitle());
         jTextField2.setText(customer.getFirstName());
         jTextField3.setText(customer.getLastName());
         jTextField4.setText(String.valueOf(customer.getCitizenID()));
         
-        
         try {
-            Date dob = new SimpleDateFormat("dd-MMM-yy").parse(customer.getDOB());
+            Date dob = new SimpleDateFormat(CustomerFrame.DB_DATE_FORMAT).parse(customer.getDOB());
             jXDatePicker1.setDate(dob);
         } catch (ParseException ex) {
             Logger.getLogger(CustomerInsertUpdateDialog.class.getName()).log(Level.SEVERE, null, ex);
@@ -52,7 +64,6 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
         jTextField7.setText(customer.getStreet());
         jTextField8.setText(String.valueOf(customer.getPostalCode()));
         
-        //TODO: get actual membership from DB and make it non-editable for both membership and credit
         jTextField9.setText(String.valueOf(customer.getMembership()));
         jTextField10.setText(String.valueOf(customer.getMembershipCredit()));
         jTextField11.setText(String.valueOf(customer.getPhoneNumber()));
@@ -105,6 +116,7 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
 
         jLabel2.setText("Customer ID");
 
+        jTextField1.setEnabled(false);
         jTextField1.setSize(new java.awt.Dimension(20, 20));
 
         jLabel3.setText("Title");
@@ -131,7 +143,11 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
 
         jLabel12.setText("Membership");
 
+        jTextField9.setEnabled(false);
+
         jLabel13.setText("Credit");
+
+        jTextField10.setEnabled(false);
 
         jLabel14.setText("Phone");
 
@@ -294,22 +310,115 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:        
-        int cancelInput = JOptionPane.showConfirmDialog(null, 
-                "Your change will be discarded. Please click No if you want to stay.", 
-                "Discard Input", JOptionPane.YES_NO_OPTION);
-        if (cancelInput == 0){
+        int cancelInput = JOptionPane.showConfirmDialog(null, DISCARD_CHANGE, null, JOptionPane.YES_NO_OPTION);
+        if (JOptionPane.NO_OPTION == cancelInput){
             dispose();
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here: Insert here, check if citizen id exist
+        // TODO add your handling code here:
+        String citizenID = jTextField4.getText();
+        if (null == citizenID || "".equals(citizenID)){
+            JOptionPane.showMessageDialog(null, EMPTY_CITIZEN_ID);
+            return;
+        }
+        boolean citizenId_Numeric = citizenID.chars().allMatch(Character :: isDigit);
+        if (citizenId_Numeric == true){
+            if (!checkCitizenID(citizenID)){
+                boolean insertResult = performInsertOrUpdate(CustomerFrame.INSERT_CUST);
+                if (insertResult == true){
+                    JOptionPane.showMessageDialog(null, CUSTOMER_INSERT_UPDATE_S);
+                    dispose();
+                }else{
+                    JOptionPane.showMessageDialog(null, CUSTOMER_INSERT_UPDATE_F);
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, EXISTED_CITIZEN);
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, INVALID_CITIZEN_ID);
+            
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here: update here
+        boolean updateResult = performInsertOrUpdate(CustomerFrame.UPDATE_CUST);
+        if (updateResult == true){
+            JOptionPane.showMessageDialog(null, CUSTOMER_INSERT_UPDATE_S);
+            dispose();
+        }else{
+            JOptionPane.showMessageDialog(null, CUSTOMER_INSERT_UPDATE_F);
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private boolean performInsertOrUpdate(String action){
+        CustomerBean customer = getUserInputOfCustomer();
+        boolean result = Database.getInstance().callSPInsertOrUpdateCustomer(customer, 
+                        Database.DB_FIT5148B, action);
+        Database.getInstance().closeDBConnection();
+        
+        return result;
+        
+    }
+    private boolean checkCitizenID(String citizenId){
+        //If exist, return true; else return false
+        try {
+            int number = 1;
+            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, 
+                    CHECK_CUST_EXISTANCE_B4INSERT + citizenId);
+            if (rset.next()){
+                number = rset.getInt(1);
+            }            
+            Database.getInstance().closeDBConnection();
+            
+            if (number == 0){
+                return false;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        
+        return true;
+    }
+    private CustomerBean getUserInputOfCustomer(){
+        CustomerBean cust = new CustomerBean();
+        
+        if (null != jTextField1.getText() && !"".equals(jTextField1.getText())){
+            cust.setCustomer_id(Integer.valueOf(jTextField1.getText()));
+        }
+        
+        cust.setTitle((String)jComboBox1.getSelectedItem());
+        cust.setFirstName(jTextField2.getText());
+        cust.setLastName(jTextField3.getText());
+        cust.setCitizenID(Integer.valueOf(jTextField4.getText()));
+        
+        if (jXDatePicker1.getDate() != null){
+            Date dob = jXDatePicker1.getDate();
+            SimpleDateFormat dateFormat = new SimpleDateFormat(CustomerFrame.DB_DATE_FORMAT);
+            cust.setDOB(dateFormat.format(dob));
+        }
+        
+        cust.setCountry(jTextField5.getText());
+        cust.setCity(jTextField6.getText());
+        cust.setStreet(jTextField7.getText());
+        if("".equals(jTextField8.getText())){
+            cust.setPostalCode(0);
+        }else{
+            cust.setPostalCode(Integer.valueOf(jTextField8.getText()));
+        }
+        if("".equals(jTextField11.getText())){
+            cust.setPhoneNumber(0);
+        }else{
+            cust.setPhoneNumber(Integer.valueOf(jTextField11.getText()));
+        }
+        
+        cust.setEmail(jTextField12.getText());
+        
+        return cust;
+    }
+    
     /**
      * @param args the command line arguments
      */
