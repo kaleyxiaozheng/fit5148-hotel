@@ -6,3 +6,5 @@ SELECT room_type, price from room@FIT5148B r, hotel@FIT5148A h WHERE h.country =
 
 
 SELECT hotel_name, room_number, room_type, price from room@FIT5148B r, hotel@FIT5148A h WHERE h.country =  'USA' and h.city = 'New York' and h.hotel_id = r.hotel_id;
+
+SELECT hotel_name, room_number, room_type, price from room@FIT5148B r, hotel@FIT5148A h WHERE h.country =  'USA' and h.city = 'New York' and h.hotel_id = r.hotel_id and r.room_type = 'Single';

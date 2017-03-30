@@ -167,14 +167,9 @@ public class Searching extends javax.swing.JPanel {
         jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "item1", "item2", "item3", "item4" }));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
+            new Object [0][0],
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Hotel name", "Room number", "Room type", "Price"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -271,6 +266,10 @@ public class Searching extends javax.swing.JPanel {
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
     private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
+        
+       DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+        
         String country = String.valueOf(jComboBox2.getSelectedItem());
         String city = String.valueOf(jComboBox1.getSelectedItem());
         String room_type = String.valueOf(jComboBox4.getSelectedItem());
@@ -295,9 +294,9 @@ public class Searching extends javax.swing.JPanel {
             
             //List cc = new ArrayList();
             
-            String search = "SELECT hotel_name, room_number, room_type, price from room@FIT5148B r, hotel@FIT5148A h WHERE h.country =  '" + country + "' and h.city = '" + city + "'" + " and h.hotel_id = r.hotel_id";
+            String search = "SELECT hotel_name, room_number, room_type, price from room@FIT5148B r, hotel@FIT5148A h WHERE h.country =  '" + country + "' and h.city = '" + city + "'" + " and h.hotel_id = r.hotel_id and r.room_type = '" + room_type + "'";
             
-            System.out.println(search);
+            //System.out.println(search);
             
             Connection conn = Database.getInstance().getDBConnection("FIT5148A");
             Statement stat = conn.createStatement();
@@ -310,9 +309,9 @@ public class Searching extends javax.swing.JPanel {
                 rsets[2] = rset.getString(3);
                 rsets[3] = rset.getString(4);
                 
-                System.out.println(rsets[0] + ", " + rsets[1] + ", " + rsets[2] + ", " + rsets[3]);
+                //System.out.println(rsets[0] + ", " + rsets[1] + ", " + rsets[2] + ", " + rsets[3]);
                 
-                DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
+                //DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
                 model.addRow(rsets);
                 //cc.add(rsets);
             }
