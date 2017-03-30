@@ -289,10 +289,8 @@ public class Searching extends javax.swing.JPanel {
             avail = "false";
         }
         
-        //System.out.println(country + ", " + city + ", " + check_in + ", " + check_out + ", " + room_type + ", " + rate_range + avail);
         try {
             
-            //List cc = new ArrayList();
             
             String search = "SELECT hotel_name, room_number, room_type, price from room@FIT5148B r, hotel@FIT5148A h WHERE h.country =  '" + country + "' and h.city = '" + city + "'" + " and h.hotel_id = r.hotel_id and r.room_type = '" + room_type + "'";
             
@@ -311,9 +309,7 @@ public class Searching extends javax.swing.JPanel {
                 
                 //System.out.println(rsets[0] + ", " + rsets[1] + ", " + rsets[2] + ", " + rsets[3]);
                 
-                //DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
                 model.addRow(rsets);
-                //cc.add(rsets);
             }
             
         } catch (SQLException ex) {
