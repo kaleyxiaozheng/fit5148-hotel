@@ -16,6 +16,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 import oracle.jdbc.OracleDriver;
 
 /**
@@ -287,7 +290,37 @@ public class Searching extends javax.swing.JPanel {
             avail = "false";
         }
         
-        System.out.println(country + ", " + city + ", " + check_in + ", " + check_out + ", " + room_type + ", " + rate_range + avail);
+        //System.out.println(country + ", " + city + ", " + check_in + ", " + check_out + ", " + room_type + ", " + rate_range + avail);
+        try {
+            
+            //List cc = new ArrayList();
+            
+            String search = "SELECT hotel_name, room_number, room_type, price from room@FIT5148B r, hotel@FIT5148A h WHERE h.country =  '" + country + "' and h.city = '" + city + "'" + " and h.hotel_id = r.hotel_id";
+            
+            System.out.println(search);
+            
+            Connection conn = Database.getInstance().getDBConnection("FIT5148A");
+            Statement stat = conn.createStatement();
+            ResultSet rset = stat.executeQuery(search);
+            ResultSetMetaData metadata = rset.getMetaData();
+            while (rset.next()) {
+                String[] rsets = new String[4];
+                rsets[0] = rset.getString(1);
+                rsets[1] = rset.getString(2);
+                rsets[2] = rset.getString(3);
+                rsets[3] = rset.getString(4);
+                
+                System.out.println(rsets[0] + ", " + rsets[1] + ", " + rsets[2] + ", " + rsets[3]);
+                
+                DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
+                model.addRow(rsets);
+                //cc.add(rsets);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Searching.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_searchActionPerformed
 
 
