@@ -5,12 +5,24 @@
  */
 package hotelappfit5148;
 
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author situsnow
  */
 public class MembershipFrame extends javax.swing.JFrame {
 
+    Object columnHeaders[] = {"TIER_ID", "MEMBERSHIP_TIER", "TIER_CREDIT", "DISCOUNT", "OTHER_REWARDS"};
+    Object data[][] = {{}};
+    DefaultTableModel dtm = new DefaultTableModel(data, columnHeaders);
+    
+    public final static String DIGIT_CREDIT_ONLY = "Please input digit for available credit only.";
+    
+    public final static String SELECT_MEMBERSHIP = "SELECT TIER_ID, MEMBERSHIP_TIER, "
+            + "TIER_CREDIT, DISCOUNT, OTHER_REWARDS FROM MEMBERSHIP";
+    public final static String SELECT_MEMBERSHIP_BY_CREDIT = " WHERE TIER_CREDIT >";
     /**
      * Creates new form MembershipFrame
      */
@@ -43,24 +55,22 @@ public class MembershipFrame extends javax.swing.JFrame {
 
         jLabel1.setText("Avaiable Credit");
 
-        jTextField1.setText("jTextField1");
-
         jButton1.setText("Search");
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
-        ));
+        });
+
+        jTable1.setModel(dtm);
         jScrollPane1.setViewportView(jTable1);
 
         jButton2.setText("Homepage");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Insert Membership");
 
@@ -89,8 +99,8 @@ public class MembershipFrame extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addGap(18, 18, 18)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton1)
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addContainerGap())
@@ -145,6 +155,30 @@ public class MembershipFrame extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        dispose();        
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new MainFrame().setVisible(true);
+            }
+        });
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        String availCredit = jTextField1.getText();
+        if("".equals(availCredit)){
+            
+        }
+        boolean availCredit_Numeric = availCredit.chars().allMatch(Character :: isDigit);
+        if(availCredit_Numeric == false){
+            JOptionPane.showMessageDialog(null, DIGIT_CREDIT_ONLY);
+        }else{
+            
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

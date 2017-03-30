@@ -5,6 +5,8 @@
  */
 package hotelappfit5148;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -28,6 +30,9 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
     private final static String INVALID_CITIZEN_ID = "Please input digit for Citizen ID.";
     private final static String DISCARD_CHANGE = "Your change will be discarded. Please click Yes if you want to stay.";
     private final static String EMPTY_CITIZEN_ID = "Please input Citizen ID for this customer.";
+    
+    private static CallableStatement cstmt;
+    private static String CALLSP_INSERTORUPDATECUSTOMER = "{call insertOrUpdateCustomer(?,?,?,?,?,?,?,?,?,?,?,?,?)}";
     /**
      * Creates new form CustomerInsertUpdateDialog
      */
@@ -355,7 +360,7 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
 
     private boolean performInsertOrUpdate(String action){
         CustomerBean customer = getUserInputOfCustomer();
-        boolean result = Database.getInstance().callSPInsertOrUpdateCustomer(customer, 
+        boolean result = callSPInsertOrUpdateCustomer(customer, 
                         Database.DB_FIT5148B, action);
         Database.getInstance().closeDBConnection();
         
@@ -417,6 +422,40 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
         cust.setEmail(jTextField12.getText());
         
         return cust;
+    }
+    
+    public boolean callSPInsertOrUpdateCustomer(CustomerBean customer, String dbName, String action){
+        Connection dbConnection = null;
+        
+        try{
+            dbConnection = Database.getInstance().getDBConnection(dbName);
+            cstmt = dbConnection.prepareCall(CALLSP_INSERTORUPDATECUSTOMER);
+            
+            cstmt.setInt(1, customer.getCustomer_id());
+            cstmt.setString(2, customer.getTitle());
+            cstmt.setString(3, customer.getFirstName());
+            cstmt.setString(4, customer.getLastName());
+            cstmt.setInt(5, customer.getCitizenID());
+            cstmt.setString(6, customer.getDOB());
+            cstmt.setString(7, customer.getCountry());
+            cstmt.setString(8, customer.getCity());
+            cstmt.setString(9, customer.getStreet());
+            cstmt.setInt(10, customer.getPostalCode());
+            cstmt.setInt(11, customer.getPhoneNumber());
+            cstmt.setString(12, customer.getEmail());
+            
+            cstmt.setString(13, action);
+            
+            cstmt.executeUpdate();
+            
+            cstmt.close();
+            return true;
+            
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        } 
+        
     }
     
     /**
