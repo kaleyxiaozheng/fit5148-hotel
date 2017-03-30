@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package Hotel;
-
 import hotelappfit5148.Database;
 import javax.swing.table.DefaultTableModel;
 import oracle.jdbc.OracleDriver;
@@ -12,28 +11,25 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
-
 /**
  *
  * @author thaonguyen
  */
-public class ViewHotel  extends javax.swing.JFrame {
-
+public class HotelPanel extends javax.swing.JPanel {
     Object columnHeaders[] = {"HOTEL_ID", "HOTEL_NAME", "HOTEL_TYPE", "CONSTUCTION_YEAR", "COUNTRY", "CITY", "ADDRESS", "CONTACT_NUMBER", "EMAIL"};
     Object data[][] = {{}};
     DefaultTableModel dtm = new DefaultTableModel(data, columnHeaders);
     Connection conn = null;
     Statement stmt = null;
-
     /**
-     * Creates new form ViewHotel
+     * Creates new form HotelPanel
      */
-    public ViewHotel() {
+    public HotelPanel() {
         initComponents();
         showAllHotelToTable();
     }
-
-    private void showAllHotelToTable() {
+    
+        private void showAllHotelToTable() {
         conn = Database.getInstance().getDBConnection("FIT5148A");
         dtm.setRowCount(0);
         try {
@@ -77,8 +73,6 @@ public class ViewHotel  extends javax.swing.JFrame {
         updateHotel = new javax.swing.JButton();
         deleteHotel = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
         jTable1.setModel(dtm);
         HotelScrollPane1.setViewportView(jTable1);
 
@@ -114,14 +108,14 @@ public class ViewHotel  extends javax.swing.JFrame {
 
         deleteHotel.setText("Delete");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(HotelScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 808, Short.MAX_VALUE)
+                    .addComponent(HotelScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel2)
@@ -139,12 +133,12 @@ public class ViewHotel  extends javax.swing.JFrame {
                 .addComponent(updateHotel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(deleteHotel)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(264, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -157,14 +151,8 @@ public class ViewHotel  extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(newHotel)
                     .addComponent(updateHotel)
-                    .addComponent(deleteHotel))
-                .addContainerGap(18, Short.MAX_VALUE))
+                    .addComponent(deleteHotel)))
         );
-
-        jLabel1.getAccessibleContext().setAccessibleName("viewHotelLabel");
-        jLabel1.getAccessibleContext().setAccessibleDescription("");
-
-        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
@@ -176,8 +164,8 @@ public class ViewHotel  extends javax.swing.JFrame {
 
             String selectedHotelType = String.valueOf(jComboBox2.getSelectedItem());
             StringBuffer sbSQL = new StringBuffer("select hotel_id, hotel_name, hotel_type, "
-                    + "construction_year, country, city, address, "
-                    + "contact_number, email from hotel");
+                + "construction_year, country, city, address, "
+                + "contact_number, email from hotel");
             if (!"All Types".equals(selectedHotelType)) {
                 sbSQL.append(" where hotel_type = '" + selectedHotelType + "'");
             }
@@ -196,7 +184,6 @@ public class ViewHotel  extends javax.swing.JFrame {
             ex.printStackTrace();
         }
 
-
     }//GEN-LAST:event_searchButtonActionPerformed
 
     private void newHotelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newHotelActionPerformed
@@ -204,33 +191,32 @@ public class ViewHotel  extends javax.swing.JFrame {
         NewHotel hotelForm = new NewHotel();
         hotelForm.setVisible(true);
 
-//        NewHotelDialog newHotelDialog = new NewHotelDialog();
-//        newHotelDialog.setVisible(true);
-//        
-//        dtm.setRowCount(0);
-//        conn = DBConnection.getDBConnection("FIT5148A");
-//        try {
-//            DriverManager.registerDriver(new OracleDriver());
-//            stmt = conn.createStatement();
-//            ResultSet rset = stmt.executeQuery("select hotel_id, hotel_name, hotel_type, "
-//                    + "construction_year, country, city, address, "
-//                    + "contact_number, email from hotel order by hotel_id DESC");
-//
-//            ResultSetMetaData mdata = rset.getMetaData();
-//            int numberOfColumns = mdata.getColumnCount();
-//            while (rset.next()) {
-//                Object[] rowData = new Object[numberOfColumns];
-//                for (int i = 0; i < rowData.length; i++) {
-//                    rowData[i] = rset.getObject(i + 1);
-//                }
-//                dtm.addRow(rowData);
-//            }
-//            conn.close();
-//
-//        } catch (SQLException f) {
-//            System.out.println(f.getMessage());
-//        }
-
+        //        NewHotelDialog newHotelDialog = new NewHotelDialog();
+        //        newHotelDialog.setVisible(true);
+        //
+        //        dtm.setRowCount(0);
+        //        conn = DBConnection.getDBConnection("FIT5148A");
+        //        try {
+            //            DriverManager.registerDriver(new OracleDriver());
+            //            stmt = conn.createStatement();
+            //            ResultSet rset = stmt.executeQuery("select hotel_id, hotel_name, hotel_type, "
+                //                    + "construction_year, country, city, address, "
+                //                    + "contact_number, email from hotel order by hotel_id DESC");
+            //
+            //            ResultSetMetaData mdata = rset.getMetaData();
+            //            int numberOfColumns = mdata.getColumnCount();
+            //            while (rset.next()) {
+                //                Object[] rowData = new Object[numberOfColumns];
+                //                for (int i = 0; i < rowData.length; i++) {
+                    //                    rowData[i] = rset.getObject(i + 1);
+                    //                }
+                //                dtm.addRow(rowData);
+                //            }
+            //            conn.close();
+            //
+            //        } catch (SQLException f) {
+            //            System.out.println(f.getMessage());
+            //        }
     }//GEN-LAST:event_newHotelActionPerformed
 
     private void updateHotelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateHotelActionPerformed
@@ -249,7 +235,7 @@ public class ViewHotel  extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_updateHotelActionPerformed
 
-    private HotelBean constructHotelBean() {
+   private HotelBean constructHotelBean() {
         HotelBean hotel = new HotelBean();
 
         int selectedHotel = jTable1.getSelectedRow();
@@ -286,42 +272,6 @@ public class ViewHotel  extends javax.swing.JFrame {
 
         return null;
     }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ViewHotel.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ViewHotel.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ViewHotel.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ViewHotel.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ViewHotel().setVisible(true);
-            }
-        });
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane HotelScrollPane1;
     private javax.swing.JButton deleteHotel;

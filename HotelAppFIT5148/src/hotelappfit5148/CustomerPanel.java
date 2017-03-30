@@ -16,7 +16,7 @@ import javax.swing.DefaultComboBoxModel;
  *
  * @author situsnow
  */
-public class CustomerFrame extends javax.swing.JFrame {
+public class CustomerPanel extends javax.swing.JPanel {
     
     Object columnHeaders[] = {"CUSTOMER_ID","Title", "First Name", "Last Name",
         "Citizen Id", "DateOfBirth", "Country", "City", "Street",
@@ -32,8 +32,8 @@ public class CustomerFrame extends javax.swing.JFrame {
     public final static String SELECT_MEMBERSHIP_TIER = "SELECT MEMBERSHIP_TIER FROM MEMBERSHIP";
     public final static String DELETE_CUSTOMER = "DELETE CUSTOMER WHERE CUSTOMER_ID = ";
     
-    public final static String UPDATE_CUST = "Update";
-    public final static String INSERT_CUST = "Insert";
+    public final static String UPDATE_CUST = "UpdateCustomer";
+    public final static String INSERT_CUST = "InsertCustomer";
     
     public final static String DB_DATE_FORMAT = "yyyy/MM/dd";
     
@@ -43,12 +43,11 @@ public class CustomerFrame extends javax.swing.JFrame {
     public final static String UPDATE_CUSTOMER_S = "Customer is deleted. Please refresh.";
     public final static String UPDATE_CUSTOMER_F = "Fail to delete customer, please re-try later.";
     
-    private static CallableStatement cstmt;
-    private static String CALLSP_INSERTORUPDATECUSTOMER = "{call insertOrUpdateCustomer(?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+    
     /**
      * Creates new form Customer
      */
-    public CustomerFrame() {
+    public CustomerPanel() {
         initComponents();
         
     }
@@ -69,14 +68,12 @@ public class CustomerFrame extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(700, 500));
+        setPreferredSize(new java.awt.Dimension(701, 500));
         setSize(800,500);
 
-        jComboBox1.setModel(new DefaultComboBoxModel(CustomerFrame.getMembershipTier()));
+        jComboBox1.setModel(new DefaultComboBoxModel(CustomerPanel.getMembershipTier()));
 
         jButton1.setText("Search Customer");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -104,13 +101,6 @@ public class CustomerFrame extends javax.swing.JFrame {
             }
         });
 
-        jButton4.setLabel("Homepage");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
-
         jButton5.setText("Delete Customer");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -118,80 +108,60 @@ public class CustomerFrame extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jButton4))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(126, 126, 126)
-                                .addComponent(jButton2)
-                                .addGap(34, 34, 34)
-                                .addComponent(jButton3)
-                                .addGap(40, 40, 40)
-                                .addComponent(jButton5)))
-                        .addGap(0, 161, Short.MAX_VALUE)))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(114, 114, 114)
+                .addComponent(jButton2)
+                .addGap(34, 34, 34)
+                .addComponent(jButton3)
+                .addGap(40, 40, 40)
+                .addComponent(jButton5)
+                .addGap(0, 65, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
                     .addComponent(jButton3)
                     .addComponent(jButton5))
-                .addGap(15, 15, 15))
+                .addContainerGap())
         );
-
-        setBounds(0, 0, 814, 422);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        String action = "Insert";
-            /* Create and display the form */
+        
+        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CustomerInsertUpdateDialog(null, action).setVisible(true);
+                new CustomerInsertUpdateDialog(null, INSERT_CUST).setVisible(true);
             }
         });
     }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-        dispose();        
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MainFrame().setVisible(true);
-            }
-        });
-    }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
@@ -211,6 +181,7 @@ public class CustomerFrame extends javax.swing.JFrame {
                 
                 boolean updateResult = Database.getInstance().updateTable(Database.DB_FIT5148B, sb.toString());
                 
+                Database.getInstance().closeDBConnection();
                 if (updateResult == true){
                     JOptionPane.showMessageDialog(null, UPDATE_CUSTOMER_S);
                 }else{
@@ -248,10 +219,11 @@ public class CustomerFrame extends javax.swing.JFrame {
                 dtm.addRow(rowData);
             }
             
+            rset.close();
             //Close connection
             Database.getInstance().closeDBConnection();
         } catch (SQLException ex) {
-            //Logger.getLogger(CustomerFrame.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(CustomerPanel.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
         }
     }
@@ -318,13 +290,13 @@ public class CustomerFrame extends javax.swing.JFrame {
 //                }
 //            }
 //        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(CustomerFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//            java.util.logging.Logger.getLogger(CustomerPanel.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 //        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(CustomerFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//            java.util.logging.Logger.getLogger(CustomerPanel.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 //        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(CustomerFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//            java.util.logging.Logger.getLogger(CustomerPanel.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 //        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(CustomerFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//            java.util.logging.Logger.getLogger(CustomerPanel.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 //        }
 //        //</editor-fold>
 //        //</editor-fold>
@@ -334,7 +306,7 @@ public class CustomerFrame extends javax.swing.JFrame {
 //        /* Create and display the form */
 //        java.awt.EventQueue.invokeLater(new Runnable() {
 //            public void run() {
-//                new CustomerFrame().setVisible(true);
+//                new CustomerPanel().setVisible(true);
 //            }
 //        });
 //    }
@@ -349,7 +321,7 @@ public class CustomerFrame extends javax.swing.JFrame {
             while(rset.next()){
                 membershipList.add(rset.getString(1));
             }
-            
+            rset.close();
             Database.getInstance().closeDBConnection();
             String[] result = membershipList.toArray(new String[membershipList.size()]);
             return result;
@@ -360,45 +332,12 @@ public class CustomerFrame extends javax.swing.JFrame {
         return null;
     }
     
-    public boolean callSPInsertOrUpdateCustomer(CustomerBean customer, String dbName, String action){
-        Connection dbConnection = null;
-        
-        try{
-            dbConnection = Database.getInstance().getDBConnection(dbName);
-            cstmt = dbConnection.prepareCall(CALLSP_INSERTORUPDATECUSTOMER);
-            
-            cstmt.setInt(1, customer.getCustomer_id());
-            cstmt.setString(2, customer.getTitle());
-            cstmt.setString(3, customer.getFirstName());
-            cstmt.setString(4, customer.getLastName());
-            cstmt.setInt(5, customer.getCitizenID());
-            cstmt.setString(6, customer.getDOB());
-            cstmt.setString(7, customer.getCountry());
-            cstmt.setString(8, customer.getCity());
-            cstmt.setString(9, customer.getStreet());
-            cstmt.setInt(10, customer.getPostalCode());
-            cstmt.setInt(11, customer.getPhoneNumber());
-            cstmt.setString(12, customer.getEmail());
-            
-            cstmt.setString(13, action);
-            
-            cstmt.executeUpdate();
-            
-            cstmt.close();
-            return true;
-            
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return false;
-        } 
-        
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;

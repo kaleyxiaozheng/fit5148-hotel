@@ -32,13 +32,13 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
     private final static String EMPTY_CITIZEN_ID = "Please input Citizen ID for this customer.";
     
     private static CallableStatement cstmt;
-    private static String CALLSP_INSERTORUPDATECUSTOMER = "{call insertOrUpdateCustomer(?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+    private final static String CALLSP_INSERTORUPDATECUSTOMER = "{call insertOrUpdateCustomer(?,?,?,?,?,?,?,?,?,?,?,?,?)}";
     /**
      * Creates new form CustomerInsertUpdateDialog
      */
     public CustomerInsertUpdateDialog(CustomerBean customer, String action) {
         initComponents();
-        if (CustomerFrame.UPDATE_CUST.equals(action)){
+        if (CustomerPanel.UPDATE_CUST.equals(action)){
             initCustomerInformation(customer);
             jButton1.setVisible(false);
         }else{
@@ -58,7 +58,7 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
         jTextField4.setText(String.valueOf(customer.getCitizenID()));
         
         try {
-            Date dob = new SimpleDateFormat(CustomerFrame.DB_DATE_FORMAT).parse(customer.getDOB());
+            Date dob = new SimpleDateFormat(CustomerPanel.DB_DATE_FORMAT).parse(customer.getDOB());
             jXDatePicker1.setDate(dob);
         } catch (ParseException ex) {
             Logger.getLogger(CustomerInsertUpdateDialog.class.getName()).log(Level.SEVERE, null, ex);
@@ -331,7 +331,7 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
         boolean citizenId_Numeric = citizenID.chars().allMatch(Character :: isDigit);
         if (citizenId_Numeric == true){
             if (!checkCitizenID(citizenID)){
-                boolean insertResult = performInsertOrUpdate(CustomerFrame.INSERT_CUST);
+                boolean insertResult = performInsertOrUpdate(CustomerPanel.INSERT_CUST);
                 if (insertResult == true){
                     JOptionPane.showMessageDialog(null, CUSTOMER_INSERT_UPDATE_S);
                     dispose();
@@ -349,7 +349,7 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here: update here
-        boolean updateResult = performInsertOrUpdate(CustomerFrame.UPDATE_CUST);
+        boolean updateResult = performInsertOrUpdate(CustomerPanel.UPDATE_CUST);
         if (updateResult == true){
             JOptionPane.showMessageDialog(null, CUSTOMER_INSERT_UPDATE_S);
             dispose();
@@ -375,7 +375,8 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
                     CHECK_CUST_EXISTANCE_B4INSERT + citizenId);
             if (rset.next()){
                 number = rset.getInt(1);
-            }            
+            }
+            rset.close();
             Database.getInstance().closeDBConnection();
             
             if (number == 0){
@@ -401,7 +402,7 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
         
         if (jXDatePicker1.getDate() != null){
             Date dob = jXDatePicker1.getDate();
-            SimpleDateFormat dateFormat = new SimpleDateFormat(CustomerFrame.DB_DATE_FORMAT);
+            SimpleDateFormat dateFormat = new SimpleDateFormat(CustomerPanel.DB_DATE_FORMAT);
             cust.setDOB(dateFormat.format(dob));
         }
         
