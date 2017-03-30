@@ -23,12 +23,14 @@ import oracle.jdbc.OracleDriver;
  */
 public class Searching extends javax.swing.JPanel {
     private List countriesAndCities;
+    private List roomAndRate;
     /**
      * Creates new form Searching
      */
     public Searching() {
         initComponents();
-        countriesAndCities = initDatabase();
+        countriesAndCities = initHotel();
+        roomAndRate = initRoom();
         
         jComboBox2.removeAllItems();
         jComboBox1.removeAllItems();
@@ -40,8 +42,9 @@ public class Searching extends javax.swing.JPanel {
         }
     }
     
-    // Access database and get hotel name, hotel country, hotel city, room type, rate range
-    public List initDatabase(){
+    // Access hotel country and hotel city
+    public List initHotel(){
+        
         List countriesAndCities = new ArrayList();
         try {
             DriverManager.registerDriver(new OracleDriver());
@@ -66,7 +69,34 @@ public class Searching extends javax.swing.JPanel {
         return countriesAndCities;
     }
     
-
+    // Access room type and rate range
+//    public List initRoom(){
+//        List roomAndRate = new ArrayList();
+//        try {
+//            DriverManager.registerDriver(new OracleDriver());
+//            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+//            DatabaseMetaData md = conn.getMetaData();
+//
+//            ResultSet rs = md.getTables(null, null, "%", null);
+//            Statement stmt = conn.createStatement();
+//
+//            ResultSet rset = stmt.executeQuery("select country, city from room");
+//            ResultSetMetaData metadata = rset.getMetaData();
+//            while (rset.next()) {
+//                String[] rsets = new String[2];
+//                rsets[0] = rset.getString(1);
+//                rsets[1] = rset.getString(2);
+//                roomAndRate.add(rsets);
+//            }
+//        } catch (SQLException f) {
+//            System.out.println(f.getMessage());
+//            f.printStackTrace();
+//        }
+//        return roomAndRate;
+//        
+//    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
