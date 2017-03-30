@@ -116,6 +116,23 @@ public class Database {
        
         return null;
     }
+    
+    public boolean updateTable(String dbName, String sqlStatement){
+        Connection dbConnection = null;
+        
+        try{
+            dbConnection = getDBConnection(dbName);            
+//            
+            pstmt = dbConnection.prepareStatement(sqlStatement);
+
+            pstmt.executeUpdate(sqlStatement);
+            
+            return true;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } 
+        return false;
+    }
 
     public boolean callSPInsertOrUpdateCustomer(CustomerBean customer, String dbName, String action){
         Connection dbConnection = null;
