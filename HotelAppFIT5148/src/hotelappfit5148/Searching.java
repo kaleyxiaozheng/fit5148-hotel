@@ -30,7 +30,7 @@ public class Searching extends javax.swing.JPanel {
     public Searching() {
         initComponents();
         countriesAndCities = initHotel();
-        roomAndRate = initRoom();
+       // roomAndRate = initRoom();
         
         jComboBox2.removeAllItems();
         jComboBox1.removeAllItems();
