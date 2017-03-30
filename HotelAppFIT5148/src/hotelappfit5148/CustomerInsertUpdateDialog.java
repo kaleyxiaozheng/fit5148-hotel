@@ -23,7 +23,7 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
      */
     public CustomerInsertUpdateDialog(CustomerBean customer, String action) {
         initComponents();
-        if ("Update".equals(action)){
+        if (CustomerFrame.UPDATE_CUST.equals(action)){
             initCustomerInformation(customer);
         }
         
@@ -32,6 +32,8 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
     public void initCustomerInformation (CustomerBean customer){
         //TODO, ID is non-editable
         jTextField1.setText(String.valueOf(customer.getCustomer_id()));
+        //jTextField1.setEditable(false);
+        jTextField1.setEnabled(false);
         jComboBox1.setSelectedItem(customer.getTitle());
         jTextField2.setText(customer.getFirstName());
         jTextField3.setText(customer.getLastName());
@@ -136,8 +138,18 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
         jLabel15.setText("Email");
 
         jButton1.setText("Create");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Update");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Cancel");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -289,6 +301,14 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
             dispose();
         }
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here: Insert here, check if citizen id exist
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here: update here
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments

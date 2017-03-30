@@ -24,8 +24,18 @@ public class CustomerFrame extends javax.swing.JFrame {
         "Citizen Id", "DateOfBirth", "Country", "City", "Street",
         "PostalCode", "MembershipTier","MembershipCredit", "Phone", "Email"};
     Object data[][] = {{}};
-    DefaultTableModel dtm = new DefaultTableModel(data,
-    columnHeaders);
+    DefaultTableModel dtm = new DefaultTableModel(data, columnHeaders);
+    public final static String SELECT_CUSTOMER = "SELECT CUSTOMER_ID, TITLE, FIRST_NAME, LAST_NAME, "
+                    + "CITIZEN_ID, DOB, COUNTRY, CITY, STREET, POSTAL_CODE, "
+                    + "TIER_ID, MEMBERSHIP_CREDITS, PHONE_NUM, EMAIL FROM CUSTOMER";
+    public final static String SELECT_CUSTOMER_WITH_TIER = " WHERE EXISTS (SELECT * FROM MEMBERSHIP WHERE CUSTOMER.TIER_ID = "
+                        + "MEMBERSHIP.TIER_ID AND MEMBERSHIP.MEMBERSHIP_TIER = '";
+    public final static String SELECT_MEMBERSHIP_TIER = "SELECT MEMBERSHIP_TIER FROM MEMBERSHIP";
+    
+    public final static String UPDATE_CUST = "Update";
+    public final static String INSERT_CUST = "Insert";
+    
+    
     /**
      * Creates new form Customer
      */
@@ -129,18 +139,15 @@ public class CustomerFrame extends javax.swing.JFrame {
             }
             
             String selectedMembershipTier = String.valueOf(jComboBox1.getSelectedItem());
-            StringBuffer sbSQL = new StringBuffer("SELECT CUSTOMER_ID, TITLE, FIRST_NAME, LAST_NAME, "
-                    + "CITIZEN_ID, DOB, COUNTRY, CITY, STREET, POSTAL_CODE, "
-                    + "TIER_ID, MEMBERSHIP_CREDITS, PHONE_NUM, EMAIL FROM CUSTOMER");
+            StringBuffer sbSQL = new StringBuffer(SELECT_CUSTOMER);
             String viewCustSQL = "";
             if (!"".equals(selectedMembershipTier)){
-                sbSQL.append(" WHERE EXISTS (SELECT * FROM MEMBERSHIP WHERE CUSTOMER.TIER_ID = "
-                        + "MEMBERSHIP.TIER_ID AND MEMBERSHIP.MEMBERSHIP_TIER = '" + selectedMembershipTier +"')");
+                sbSQL.append(SELECT_CUSTOMER_WITH_TIER + selectedMembershipTier +"')");
             }    
             
             viewCustSQL = sbSQL.toString();
             
-            ResultSet rset = Database.getInstance().selectRecords("FIT5148B", viewCustSQL);
+            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, viewCustSQL);
             ResultSetMetaData mdata = rset.getMetaData();
             int numberOfColumns = mdata.getColumnCount();
             while (rset.next()) {
@@ -150,6 +157,9 @@ public class CustomerFrame extends javax.swing.JFrame {
                 }
                 dtm.addRow(rowData);
             }
+            
+            //Close connection
+            Database.getInstance().closeDBConnection();
         } catch (SQLException ex) {
             //Logger.getLogger(CustomerFrame.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
@@ -169,8 +179,7 @@ public class CustomerFrame extends javax.swing.JFrame {
     }
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-        String action = "Update";
+        // TODO add your handling code here:        
         int selectedRowCount = jTable1.getSelectedRowCount();
         if (selectedRowCount > 1){
             JOptionPane.showMessageDialog(null, "Please select one customer only.");
@@ -181,7 +190,7 @@ public class CustomerFrame extends javax.swing.JFrame {
             /* Create and display the form */
             java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {
-                    new CustomerInsertUpdateDialog(customer, action).setVisible(true);
+                    new CustomerInsertUpdateDialog(customer, UPDATE_CUST).setVisible(true);
                 }
             });
         }
@@ -248,16 +257,17 @@ public class CustomerFrame extends javax.swing.JFrame {
         });
     }
     
-    public static String[] getMembershipTier(){
-        String getTierSQL = "SELECT MEMBERSHIP_TIER FROM MEMBERSHIP";
+    public static String[] getMembershipTier(){        
         
         try{
-            ResultSet rset = Database.getInstance().selectRecords("FIT5148B", getTierSQL);
+            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, SELECT_MEMBERSHIP_TIER);
             
             List<String> membershipList = new ArrayList<String>();
             while(rset.next()){
                 membershipList.add(rset.getString(1));
-            }           
+            }
+            
+            Database.getInstance().closeDBConnection();
             String[] result = membershipList.toArray(new String[membershipList.size()]);
             return result;
         }catch (SQLException ex){
