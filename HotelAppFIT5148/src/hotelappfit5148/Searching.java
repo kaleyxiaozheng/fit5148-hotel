@@ -5,8 +5,17 @@
  */
 package hotelappfit5148;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import oracle.jdbc.OracleDriver;
 
 /**
  *
@@ -17,9 +26,10 @@ public class Searching extends javax.swing.JPanel {
     /**
      * Creates new form Searching
      */
-    public Searching(List countriesAndCities) {
-        this.countriesAndCities = countriesAndCities;
+    public Searching() {
         initComponents();
+        countriesAndCities = initDatabase();
+        
         jComboBox2.removeAllItems();
         jComboBox1.removeAllItems();
         
@@ -29,6 +39,33 @@ public class Searching extends javax.swing.JPanel {
               jComboBox1.addItem(cc[1]);  
         }
     }
+    
+    // Access database and get hotel name, hotel country, hotel city, room type, rate range
+    public List initDatabase(){
+        List countriesAndCities = new ArrayList();
+        try {
+            DriverManager.registerDriver(new OracleDriver());
+            Connection conn = Database.getInstance().getDBConnection("FIT5148A");
+            DatabaseMetaData md = conn.getMetaData();
+
+            ResultSet rs = md.getTables(null, null, "%", null);
+            Statement stmt = conn.createStatement();
+
+            ResultSet rset = stmt.executeQuery("select country, city from hotel");
+            ResultSetMetaData metadata = rset.getMetaData();
+            while (rset.next()) {
+                String[] rsets = new String[2];
+                rsets[0] = rset.getString(1);
+                rsets[1] = rset.getString(2);
+                countriesAndCities.add(rsets);
+            }
+        } catch (SQLException f) {
+            System.out.println(f.getMessage());
+            f.printStackTrace();
+        }
+        return countriesAndCities;
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
