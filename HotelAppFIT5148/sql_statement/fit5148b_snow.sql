@@ -99,16 +99,16 @@ BEGIN
     :new.guest_id := guest_sequence.nextval;
 END;
 
-INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id) 
-    VALUES (NULL, 'Miss', 'Xuelin', 'Situ', '006');
-INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id) 
-    VALUES (NULL, 'MR', 'Ryan', 'Reynolds', '005');
-INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id) 
-    VALUES (NULL, 'MR', 'Eddie', 'Redmayne', '004');
-INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id) 
-    VALUES (NULL, 'Miss', 'Thao', 'Thao', '007');
-INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id) 
-    VALUES (NULL, 'Miss', 'Kaley', 'Kaley', '008');
+INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id, dob, country, city, street, email) 
+    VALUES (NULL, 'Miss', 'Xuelin', 'Situ', 6);
+INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id, dob, country, city, street, email) 
+    VALUES (NULL, 'MR', 'Ryan', 'Reynolds', 5);
+INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id, dob, country, city, street, email) 
+    VALUES (NULL, 'MR', 'Eddie', 'Redmayne', 4);
+INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id, dob, country, city, street, email) 
+    VALUES (NULL, 'Miss', 'Thao', 'Thao', 4);
+INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id, dob, country, city, street, email) 
+    VALUES (NULL, 'Miss', 'Kaley', 'Kaley', 8);
 --End of creating table Guest
 
 --Create stored procedure to update customer email
@@ -160,6 +160,27 @@ BEGIN
     CITIZEN_ID = in_citizen_id, DOB = TO_date(in_dob,'yyyy/mm/dd'), COUNTRY = in_country,
     CITY = in_city, STREET = in_street, POSTAL_CODE = in_postal_code, PHONE_NUM = in_phone,
     EMAIL = in_email WHERE CUSTOMER_ID = in_cust_id;
+  END IF;
+END;
+
+create or replace PROCEDURE insertOrUpdateMembership(
+  in_tier_id IN MEMBERSHIP.TIER_ID%TYPE,
+  in_membership_tier IN MEMBERSHIP.MEMBERSHIP_TIER%TYPE,
+  in_tier_credit IN MEMBERSHIP.TIER_CREDIT%TYPE,
+  in_discount IN MEMBERSHIP.DISCOUNT%TYPE,
+  in_other_rewards IN MEMBERSHIP.OTHER_REWARDS%TYPE,
+  in_action IN VARCHAR2)
+AS
+  temp NUMBER;
+BEGIN
+  IF in_action = 'InsertMembership' THEN
+    INSERT INTO MEMBERSHIP VALUES (NULL, in_membership_tier, in_tier_credit, in_discount, in_other_rewards);
+    
+  ELSE
+    
+      UPDATE MEMBERSHIP SET MEMBERSHIP_TIER = in_membership_tier, TIER_CREDIT = in_tier_credit,
+        DISCOUNT = in_discount, OTHER_REWARDS = in_other_rewards WHERE TIER_ID = in_tier_id;
+      
   END IF;
 END;
 --End of stored procedure

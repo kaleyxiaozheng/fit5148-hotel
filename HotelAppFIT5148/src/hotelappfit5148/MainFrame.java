@@ -53,7 +53,8 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(700, 500));
+        setPreferredSize(new java.awt.Dimension(750, 500));
+        setSize(new java.awt.Dimension(700, 500));
 
         jLabel1.setIcon(new ImageIcon("image/book-hotel-online.jpg"));
 
@@ -126,9 +127,19 @@ public class MainFrame extends javax.swing.JFrame {
         jMenu2.add(jMenuItem5);
 
         jMenuItem6.setText("Guest");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem6);
 
         jMenuItem7.setText("Membership");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem7);
 
         jMenuBar1.add(jMenu2);
@@ -183,7 +194,33 @@ public class MainFrame extends javax.swing.JFrame {
 //                new ViewHotel().setVisible(true);
 //            }
 //        });
-                jPanel2.removeAll();
+//        jPanel2.removeAll();
+//
+//        javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
+//
+//        HotelPanel hotelPanel = new HotelPanel();
+//
+//        jPanel2Layout.setHorizontalGroup(
+//                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+//                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+//                        .addComponent(hotelPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                        .addContainerGap())
+//        );
+//        jPanel2Layout.setVerticalGroup(
+//                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+//                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+//                        .addComponent(hotelPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                        .addContainerGap())
+//        );
+//
+//        jPanel2.revalidate();
+        loadHotelpanel();
+    }//GEN-LAST:event_hotelMenuActionPerformed
+
+    public void loadHotelpanel(){
+        jPanel2.removeAll();
 
         javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
 
@@ -205,14 +242,13 @@ public class MainFrame extends javax.swing.JFrame {
         );
 
         jPanel2.revalidate();
-    }//GEN-LAST:event_hotelMenuActionPerformed
-
+    }
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
 
         jPanel2.removeAll();
-        
+
         javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
- 
+
         Searching searching1 = new Searching();
 
         jPanel2Layout.setHorizontalGroup(
@@ -313,6 +349,32 @@ public class MainFrame extends javax.swing.JFrame {
 
         jPanel2.revalidate();
     }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        // TODO add your handling code here:
+        jPanel2.removeAll();
+
+        javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
+
+        GuestPanel guest = new GuestPanel();
+
+        jPanel2Layout.setHorizontalGroup(
+                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(guest, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(guest, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+        );
+
+        jPanel2.revalidate();
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     /**
      * @param args the command line arguments

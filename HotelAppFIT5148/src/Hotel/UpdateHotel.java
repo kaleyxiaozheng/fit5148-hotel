@@ -28,8 +28,8 @@ public class UpdateHotel extends javax.swing.JFrame {
         viewHotelDetail(hoteltempt);
 
     }
-    
-    private void viewHotelDetail(HotelBean hoteltempt){
+
+    private void viewHotelDetail(HotelBean hoteltempt) {
         this.hotel = hoteltempt;
         this.addressText.setText(hotel.getAddress());
         this.cityText.setText(hotel.getCity());
@@ -129,9 +129,12 @@ public class UpdateHotel extends javax.swing.JFrame {
                         .addComponent(hotelIdLable))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(136, 136, 136)
-                        .addComponent(close)
-                        .addGap(33, 33, 33)
-                        .addComponent(Save)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(constructionYearText)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(close)
+                                .addGap(33, 33, 33)
+                                .addComponent(Save)))))
                 .addContainerGap(214, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
@@ -158,7 +161,6 @@ public class UpdateHotel extends javax.swing.JFrame {
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(typeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(0, 0, Short.MAX_VALUE))
-                                .addComponent(constructionYearText)
                                 .addComponent(contactNumberText)
                                 .addComponent(emailText))
                             .addGap(36, 36, 36))
@@ -181,7 +183,9 @@ public class UpdateHotel extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(hotelIdLable)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 233, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
+                .addComponent(constructionYearText, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(96, 96, 96)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(close)
                     .addComponent(Save))
@@ -214,9 +218,7 @@ public class UpdateHotel extends javax.swing.JFrame {
                                 .addComponent(jLabel3)
                                 .addComponent(typeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(constructionYearText, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel4))
+                            .addComponent(jLabel4)
                             .addGap(18, 18, 18)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel8)
@@ -225,7 +227,7 @@ public class UpdateHotel extends javax.swing.JFrame {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel9)
                                 .addComponent(emailText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addContainerGap(54, Short.MAX_VALUE)))
+                    .addContainerGap(64, Short.MAX_VALUE)))
         );
 
         pack();
@@ -240,23 +242,31 @@ public class UpdateHotel extends javax.swing.JFrame {
         // TODO add your handling code here:
 
         // TODO add your handling code here:
-        HotelBean hotel = new HotelBean();
         if (hotelNameText.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Please enter required fields.");
             return;
         }
-        hotel.setAddress(addressText.getText().trim());
-        hotel.setCity(cityText.getText().trim());
-        hotel.setConstructionYear(Integer.parseInt(constructionYearText.getText().trim()));
-        hotel.setContactNumber(contactNumberText.getText().trim());
-        hotel.setCountry(countryText.getText().trim());
-        hotel.setEmail(emailText.getText().trim());
-        hotel.setHotelName(hotelNameText.getText().trim());
-        hotel.setHotelType(String.valueOf(typeComboBox.getSelectedItem()));
+        if (emailText.getText().trim().contains("@") == false) {
+            JOptionPane.showMessageDialog(null, "Please enter correct email.");
+            return;
+        }
 
+        try {
+            hotel.setAddress(addressText.getText().trim());
+            hotel.setCity(cityText.getText().trim());
+            hotel.setConstructionYear(Integer.parseInt(constructionYearText.getText().trim()));
+            hotel.setContactNumber(contactNumberText.getText().trim());
+            hotel.setCountry(countryText.getText().trim());
+            hotel.setEmail(emailText.getText().trim());
+            hotel.setHotelName(hotelNameText.getText().trim());
+            hotel.setHotelType(String.valueOf(typeComboBox.getSelectedItem()));
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Please enter correct data type.");
+            return;
+        }
         PreparedStatement preparedStatement = null;
         Connection dbConnection = Database.getInstance().getDBConnection("FIT5148A");
-        String insertTableSQL = "update  hotel set"
+        String insertTableSQL = "update  hotel set "
                 + "hotel_name = ?, hotel_type = ?, construction_year = ?, "
                 + "country = ?, city = ?, address = ?, contact_number = ?, email = ? where hotel_id = ?";
 
@@ -272,12 +282,7 @@ public class UpdateHotel extends javax.swing.JFrame {
             preparedStatement.setString(8, hotel.getEmail());
             preparedStatement.setLong(9, hotel.getHotelId());
             preparedStatement.executeUpdate();
-            ResultSet hotel_id_set = preparedStatement.getGeneratedKeys();
-            Long hotel_id = null;
-            if (null != hotel_id_set && hotel_id_set.next()) {
-                hotel_id = hotel_id_set.getLong(1);
-            }
-            hotel.setHotelId(hotel_id);
+
             JOptionPane.showMessageDialog(null, "Update successfully.");
             preparedStatement.close();
             Database.getInstance().closeDBConnection();

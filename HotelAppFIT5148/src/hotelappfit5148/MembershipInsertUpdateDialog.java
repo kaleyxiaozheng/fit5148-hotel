@@ -7,7 +7,10 @@ package hotelappfit5148;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -18,7 +21,15 @@ public class MembershipInsertUpdateDialog extends javax.swing.JDialog {
 
     private final static String DISCARD_CHANGE = "Your change will be discarded. Please click Yes if you want to stay.";
     private static CallableStatement cstmt;
-    private final static String CALLSP_INSERTORUPDATEMEMBERSHIP = "{call insertOrUpdateMembership(?,?,?,?,?,?,?)}";
+    private final static String CALLSP_INSERTORUPDATEMEMBERSHIP = "{call insertOrUpdateMembership(?,?,?,?,?,?)}";
+    
+    public final static String CHECK_MEMBERSHIP_EXISTANCE_B4INSERT = "SELECT COUNT(1) "
+            + "FROM MEMBERSHIP WHERE MEMBERSHIP_TIER = '";
+    private final static String EMPTY_MEMBERSHIP_TIER = "Please input tier for this membership.";
+    private final static String MEMBERSHIP_INSERT_UPDATE_S = "Membership added/updated successfully. Please go back to Membership page and refresh.";
+    private final static String MEMBERSHIP_INSERT_UPDATE_F = "Failed to add/update membership. Please double check the information";
+    private final static String SUCCESS = "S";
+    private final static String FAIL = "F";
     /**
      * Creates new form MembershipInsertUpdateDialog
      */
@@ -176,10 +187,18 @@ public class MembershipInsertUpdateDialog extends javax.swing.JDialog {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here: Update
+        performInsertOrUpdate(MembershipPanel.UPDATE_MEMBERSHIP);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here: Insert
+        if ("".equals(jTextField2.getText())){
+            JOptionPane.showMessageDialog(null, EMPTY_MEMBERSHIP_TIER);
+           
+        }else{
+            performInsertOrUpdate(MembershipPanel.INSERT_MEMBERSHIP);
+            
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private MembershipBean getUserInputOfMembership(){
@@ -196,6 +215,21 @@ public class MembershipInsertUpdateDialog extends javax.swing.JDialog {
         
         return membership;
     }
+    
+    private void performInsertOrUpdate(String action){
+        MembershipBean membership = getUserInputOfMembership();
+        boolean result = callSPInsertOrUpdateMembership(membership, 
+                        Database.DB_FIT5148B, action);
+        Database.getInstance().closeDBConnection();
+        
+        if (result == true){
+            JOptionPane.showMessageDialog(null, MEMBERSHIP_INSERT_UPDATE_S);
+            dispose();
+        }else{
+            JOptionPane.showMessageDialog(null, MEMBERSHIP_INSERT_UPDATE_F);
+        }
+
+    }
     public boolean callSPInsertOrUpdateMembership(MembershipBean membership, String dbName, String action){
         Connection dbConnection = null;
         
@@ -211,18 +245,40 @@ public class MembershipInsertUpdateDialog extends javax.swing.JDialog {
             cstmt.setString(5, membership.getOther_rewards());
             
             cstmt.setString(6, action);
-            cstmt.registerOutParameter(7, java.sql.Types.VARCHAR);
-            
+
             cstmt.executeUpdate();
-            
+
             cstmt.close();
+            
             return true;
             
         } catch (SQLException ex) {
             ex.printStackTrace();
             return false;
-        } 
+        }
         
+    }
+    
+    private boolean checkExistedMembership(String membershipTier){
+        int number = 1;
+        
+        try { 
+            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B,
+                    CHECK_MEMBERSHIP_EXISTANCE_B4INSERT + membershipTier + "'");
+            if (rset.next()){
+                number = rset.getInt(1);
+            }
+            rset.close();
+            Database.getInstance().closeDBConnection();
+            
+            if (number == 1){
+                return false;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MembershipInsertUpdateDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return true;
     }
     /**
      * @param args the command line arguments

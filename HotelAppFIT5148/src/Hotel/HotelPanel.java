@@ -4,7 +4,8 @@
  * and open the template in the editor.
  */
 package Hotel;
-import hotelappfit5148.Database;
+import hotelappfit5148.*;
+import java.math.BigDecimal;
 import javax.swing.table.DefaultTableModel;
 import oracle.jdbc.OracleDriver;
 import java.sql.*;
@@ -107,6 +108,11 @@ public class HotelPanel extends javax.swing.JPanel {
         });
 
         deleteHotel.setText("Delete");
+        deleteHotel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteHotelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -235,6 +241,35 @@ public class HotelPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_updateHotelActionPerformed
 
+    private void deleteHotelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteHotelActionPerformed
+        // TODO add your handling code here:
+        
+                int selectedRowCount = jTable1.getSelectedRowCount();
+        if (selectedRowCount > 1){
+            JOptionPane.showMessageDialog(null, ErrorMessage.MULTIPLE_SELECTION);
+        }else if (selectedRowCount == 0){
+            JOptionPane.showMessageDialog(null, ErrorMessage.NO_SELECTION);
+        }else{
+            int confirmDelete = JOptionPane.showConfirmDialog(null, ErrorMessage.CONFIRM_DELETE, null, JOptionPane.YES_NO_OPTION);
+            if (JOptionPane.YES_OPTION == confirmDelete){
+                int selectedHotel = jTable1.getSelectedRow();
+                Long hotelId = Long.parseLong(jTable1.getModel().getValueAt(selectedHotel, 0).toString());
+                
+                StringBuffer sb = new StringBuffer("delete hotel where hotel_id = ");
+                sb.append(hotelId);
+                
+                boolean deleteResult = Database.getInstance().updateTable(Database.DB_FIT5148A, sb.toString());
+                
+                if (deleteResult == true){
+                    JOptionPane.showMessageDialog(null, ErrorMessage.DELETE_S);
+                    this.showAllHotelToTable();
+                }else{
+                    JOptionPane.showMessageDialog(null, ErrorMessage.DELETE_F);
+                }
+            }
+        }
+    }//GEN-LAST:event_deleteHotelActionPerformed
+
    private HotelBean constructHotelBean() {
         HotelBean hotel = new HotelBean();
 
@@ -272,6 +307,8 @@ public class HotelPanel extends javax.swing.JPanel {
 
         return null;
     }
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane HotelScrollPane1;
     private javax.swing.JButton deleteHotel;

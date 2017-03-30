@@ -70,7 +70,7 @@ public class CustomerPanel extends javax.swing.JPanel {
         jButton3 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
 
-        setPreferredSize(new java.awt.Dimension(701, 500));
+        setPreferredSize(new java.awt.Dimension(700, 500));
         setSize(800,500);
 
         jComboBox1.setModel(new DefaultComboBoxModel(CustomerPanel.getMembershipTier()));

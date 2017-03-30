@@ -5,11 +5,12 @@
  */
 package Hotel;
 
-import hotelappfit5148.Database;
+import hotelappfit5148.*;
 import javax.swing.JOptionPane;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 
 /**
  *
@@ -65,6 +66,15 @@ public class NewHotel extends javax.swing.JFrame {
         });
 
         CancelButton.setText("Cancel");
+        CancelButton.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+                CancelButtonAncestorRemoved(evt);
+            }
+        });
         CancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CancelButtonActionPerformed(evt);
@@ -266,14 +276,17 @@ Connection dbConnection = Database.getInstance().getDBConnection("FIT5148A");
 
     private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
         // TODO add your handling code here:
-       this.dispose();
+       this.dispose();        
     }//GEN-LAST:event_CancelButtonActionPerformed
+
+    private void CancelButtonAncestorRemoved(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_CancelButtonAncestorRemoved
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CancelButtonAncestorRemoved
 
     
     @Override
     public void dispose() {
         super.dispose();
-        new ViewHotel().setVisible(true);
     }
 
     /**
