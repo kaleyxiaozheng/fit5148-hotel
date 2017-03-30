@@ -23,9 +23,14 @@ public class UpdateHotel extends javax.swing.JFrame {
      */
     private HotelBean hotel;
 
-    public UpdateHotel(HotelBean hotel) {
+    public UpdateHotel(HotelBean hoteltempt) {
         initComponents();
-        this.hotel = hotel;
+        viewHotelDetail(hoteltempt);
+
+    }
+    
+    private void viewHotelDetail(HotelBean hoteltempt){
+        this.hotel = hoteltempt;
         this.addressText.setText(hotel.getAddress());
         this.cityText.setText(hotel.getCity());
         this.constructionYearText.setText(Integer.toString(hotel.getConstructionYear()));
@@ -34,7 +39,6 @@ public class UpdateHotel extends javax.swing.JFrame {
         this.emailText.setText(hotel.getEmail());
         this.hotelNameText.setText(hotel.getHotelName());
         this.hotelIdLable.setText("Hotel number " + hotel.getHotelId().toString());
-
     }
 
     /**
@@ -238,7 +242,7 @@ public class UpdateHotel extends javax.swing.JFrame {
         // TODO add your handling code here:
         HotelBean hotel = new HotelBean();
         if (hotelNameText.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please enter hotel name.");
+            JOptionPane.showMessageDialog(null, "Please enter required fields.");
             return;
         }
         hotel.setAddress(addressText.getText().trim());
@@ -252,12 +256,12 @@ public class UpdateHotel extends javax.swing.JFrame {
 
         PreparedStatement preparedStatement = null;
         Connection dbConnection = Database.getInstance().getDBConnection("FIT5148A");
-        String insertTableSQL = "update  hotel"
-                + "(hotel_name, hotel_type, construction_year, country, city, address, contact_number, email) VALUES"
-                + "(?,?,?,?,?,?,?,?)";
+        String insertTableSQL = "update  hotel set"
+                + "hotel_name = ?, hotel_type = ?, construction_year = ?, "
+                + "country = ?, city = ?, address = ?, contact_number = ?, email = ? where hotel_id = ?";
 
         try {
-            preparedStatement = dbConnection.prepareStatement(insertTableSQL, new String[]{"hotel_id"});
+            preparedStatement = dbConnection.prepareStatement(insertTableSQL);
             preparedStatement.setString(1, hotel.getHotelName());
             preparedStatement.setString(2, hotel.getHotelType());
             preparedStatement.setInt(3, hotel.getConstructionYear());
@@ -266,15 +270,15 @@ public class UpdateHotel extends javax.swing.JFrame {
             preparedStatement.setString(6, hotel.getAddress());
             preparedStatement.setString(7, hotel.getContactNumber());
             preparedStatement.setString(8, hotel.getEmail());
+            preparedStatement.setLong(9, hotel.getHotelId());
             preparedStatement.executeUpdate();
             ResultSet hotel_id_set = preparedStatement.getGeneratedKeys();
-//                    = DBConnection.insertRecord("FIT5148A", preparedStatement);
             Long hotel_id = null;
             if (null != hotel_id_set && hotel_id_set.next()) {
                 hotel_id = hotel_id_set.getLong(1);
             }
             hotel.setHotelId(hotel_id);
-            JOptionPane.showMessageDialog(null, "Create successfully.");
+            JOptionPane.showMessageDialog(null, "Update successfully.");
             preparedStatement.close();
             Database.getInstance().closeDBConnection();
 
