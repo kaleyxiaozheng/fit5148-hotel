@@ -167,3 +167,7 @@ INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id)
     drop trigger tri_guest_id;
     
     drop sequence guest_sequence;
+    
+--------------------------------------------------------------------------------
+-- Select hotel ID based on known country and city
+
