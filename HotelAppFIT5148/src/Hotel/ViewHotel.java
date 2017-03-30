@@ -274,7 +274,7 @@ public class ViewHotel extends javax.swing.JFrame {
             while (rset.next()) {
                 hotelTypeList.add(rset.getString(1));
             }
-//            List<String> result = hotelTypeList.toArray(new String[hotelTypeList.size()]);
+            Database.getInstance().closeDBConnection();
             return hotelTypeList;
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());

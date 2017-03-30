@@ -269,6 +269,13 @@ Connection dbConnection = Database.getInstance().getDBConnection("FIT5148A");
        this.dispose();
     }//GEN-LAST:event_CancelButtonActionPerformed
 
+    
+    @Override
+    public void dispose() {
+        super.dispose();
+        new ViewHotel().setVisible(true);
+    }
+
     /**
      * @param args the command line arguments
      */
