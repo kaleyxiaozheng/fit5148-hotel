@@ -33,10 +33,7 @@ public class Database {
     private static Connection con_5148B;
     private static PreparedStatement pstmt;
     private static ResultSet rs;
-    private static CallableStatement cstmt;
     
-    private static String CALLSP_INSERTORUPDATECUSTOMER = "{call insertOrUpdateCustomer(?,?,?,?,?,?,?,?,?,?,?,?,?)}";
-
     private Database() {
         // private constructor //
     }
@@ -83,11 +80,7 @@ public class Database {
             }
             if (pstmt != null) {
                 pstmt.close();                
-            }
-            
-            if (cstmt != null){
-                cstmt.close();
-            }
+            }                      
             
             if (con_5148A != null) {
                 con_5148A.close();                
@@ -134,35 +127,5 @@ public class Database {
         return false;
     }
 
-    public boolean callSPInsertOrUpdateCustomer(CustomerBean customer, String dbName, String action){
-        Connection dbConnection = null;
-        
-        try{
-            dbConnection = getDBConnection(dbName);
-            cstmt = dbConnection.prepareCall(CALLSP_INSERTORUPDATECUSTOMER);
-            
-            cstmt.setInt(1, customer.getCustomer_id());
-            cstmt.setString(2, customer.getTitle());
-            cstmt.setString(3, customer.getFirstName());
-            cstmt.setString(4, customer.getLastName());
-            cstmt.setInt(5, customer.getCitizenID());
-            cstmt.setString(6, customer.getDOB());
-            cstmt.setString(7, customer.getCountry());
-            cstmt.setString(8, customer.getCity());
-            cstmt.setString(9, customer.getStreet());
-            cstmt.setInt(10, customer.getPostalCode());
-            cstmt.setInt(11, customer.getPhoneNumber());
-            cstmt.setString(12, customer.getEmail());
-            
-            cstmt.setString(13, action);
-            
-            cstmt.executeUpdate();
-            return true;
-            
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return false;
-        } 
-        
-    }
+    
 }
