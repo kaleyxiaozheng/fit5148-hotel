@@ -199,32 +199,8 @@ public class MainFrame extends javax.swing.JFrame {
         jPanel2.removeAll();
         
         javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
-        
-         
-         List countriesAndCities = new ArrayList();
-        try {
-            DriverManager.registerDriver(new OracleDriver());
-            Connection conn = Database.getInstance().getDBConnection("FIT5148A");
-            DatabaseMetaData md = conn.getMetaData();
-
-            ResultSet rs = md.getTables(null, null, "%", null);
-            Statement stmt = conn.createStatement();
-
-            ResultSet rset = stmt.executeQuery("select country, city from hotel");
-            ResultSetMetaData metadata = rset.getMetaData();
-            while (rset.next()) {
-                String[] rsets = new String[2];
-                rsets[0] = rset.getString(1);
-                rsets[1] = rset.getString(2);
-                countriesAndCities.add(rsets);
-            }
-            
-        } catch (SQLException f) {
-            System.out.println(f.getMessage());
-            f.printStackTrace();
-        }
  
-        Searching searching1 = new Searching(countriesAndCities);
+        Searching searching1 = new Searching();
 
         jPanel2Layout.setHorizontalGroup(
                 jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
