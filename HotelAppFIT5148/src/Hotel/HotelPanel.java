@@ -26,6 +26,32 @@ public class HotelPanel extends javax.swing.JPanel {
      */
     public HotelPanel() {
         initComponents();
+        showAllHotelToTable();
+    }
+    
+        private void showAllHotelToTable() {
+        conn = Database.getInstance().getDBConnection("FIT5148A");
+        dtm.setRowCount(0);
+        try {
+            DriverManager.registerDriver(new OracleDriver());
+            stmt = conn.createStatement();
+            ResultSet rset = stmt.executeQuery("select hotel_id, hotel_name, hotel_type, "
+                    + "construction_year, country, city, address, "
+                    + "contact_number, email from hotel  order by hotel_id DESC");
+
+            ResultSetMetaData mdata = rset.getMetaData();
+            int numberOfColumns = mdata.getColumnCount();
+            while (rset.next()) {
+                Object[] rowData = new Object[numberOfColumns];
+                for (int i = 0; i < rowData.length; i++) {
+                    rowData[i] = rset.getObject(i + 1);
+                }
+                dtm.addRow(rowData);
+            }
+            Database.getInstance().closeDBConnection();
+        } catch (SQLException f) {
+            System.out.println(f.getMessage());
+        }
     }
 
     /**
