@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -129,6 +130,11 @@ public class Searching extends javax.swing.JPanel {
         jCheckBox1 = new javax.swing.JCheckBox();
 
         search.setLabel("Search");
+        search.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Country:");
 
@@ -260,6 +266,29 @@ public class Searching extends javax.swing.JPanel {
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox2ActionPerformed
+
+    private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
+        String country = String.valueOf(jComboBox2.getSelectedItem());
+        String city = String.valueOf(jComboBox1.getSelectedItem());
+        String room_type = String.valueOf(jComboBox4.getSelectedItem());
+        String rate_range = String.valueOf(jComboBox3.getSelectedItem());
+        
+        SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
+        String check_in = formater.format(jXDatePicker1.getDate());
+        String check_out = formater.format(jXDatePicker2.getDate());
+        
+        boolean avaliable = jCheckBox1.isSelected();
+        String avail = "";
+        
+        if(avaliable){
+            avail = "true";
+        }
+        else{
+            avail = "false";
+        }
+        
+        System.out.println(country + ", " + city + ", " + check_in + ", " + check_out + ", " + room_type + ", " + rate_range + avail);
+    }//GEN-LAST:event_searchActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
