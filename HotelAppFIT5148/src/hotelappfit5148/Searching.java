@@ -5,6 +5,8 @@
  */
 package hotelappfit5148;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -18,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import oracle.jdbc.OracleDriver;
 
@@ -316,8 +319,24 @@ public class Searching extends javax.swing.JPanel {
             Logger.getLogger(Searching.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        // double click a row and go to the booking GUI
+        jTable1.addMouseListener(new MouseAdapter(){
+            public void mouseClicked(MouseEvent e){
+                if(e.getClickCount() == 2){
+                    JTable target = (JTable)e.getSource();
+                    int row = target.getSelectedRow();
+                    
+                  // get selected hotel name, room number
+                  
+                  System.out.print("double clicked");
+                }
+            }
+        });
     }//GEN-LAST:event_searchActionPerformed
 
+    
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox jCheckBox1;
