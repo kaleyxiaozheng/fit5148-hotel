@@ -65,7 +65,7 @@ public class MembershipPanel extends javax.swing.JPanel {
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
 
-        setPreferredSize(new java.awt.Dimension(701, 500));
+        setPreferredSize(new java.awt.Dimension(700, 500));
 
         jLabel1.setText("Avaiable Credit");
 
