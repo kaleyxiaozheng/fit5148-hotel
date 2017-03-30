@@ -5,17 +5,29 @@
  */
 package hotelappfit5148;
 
+import java.util.Iterator;
+import java.util.List;
+
 /**
  *
  * @author Kaley
  */
 public class Searching extends javax.swing.JPanel {
-
+    private List countriesAndCities;
     /**
      * Creates new form Searching
      */
-    public Searching() {
+    public Searching(List countriesAndCities) {
+        this.countriesAndCities = countriesAndCities;
         initComponents();
+        jComboBox2.removeAllItems();
+        jComboBox1.removeAllItems();
+        
+        for(Iterator iterator = countriesAndCities.iterator(); iterator.hasNext();){
+              String[] cc = (String[])iterator.next();
+              jComboBox2.addItem(cc[0]);
+              jComboBox1.addItem(cc[1]);  
+        }
     }
 
     /**
@@ -64,6 +76,11 @@ public class Searching extends javax.swing.JPanel {
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox2ActionPerformed(evt);
+            }
+        });
 
         jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -168,6 +185,10 @@ public class Searching extends javax.swing.JPanel {
                 .addGap(17, 17, 17))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
