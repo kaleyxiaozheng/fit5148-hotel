@@ -193,7 +193,33 @@ public class MainFrame extends javax.swing.JFrame {
 //                new ViewHotel().setVisible(true);
 //            }
 //        });
-                jPanel2.removeAll();
+//        jPanel2.removeAll();
+//
+//        javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
+//
+//        HotelPanel hotelPanel = new HotelPanel();
+//
+//        jPanel2Layout.setHorizontalGroup(
+//                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+//                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+//                        .addComponent(hotelPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                        .addContainerGap())
+//        );
+//        jPanel2Layout.setVerticalGroup(
+//                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+//                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+//                        .addComponent(hotelPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                        .addContainerGap())
+//        );
+//
+//        jPanel2.revalidate();
+        loadHotelpanel();
+    }//GEN-LAST:event_hotelMenuActionPerformed
+
+    public void loadHotelpanel(){
+        jPanel2.removeAll();
 
         javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
 
@@ -215,14 +241,13 @@ public class MainFrame extends javax.swing.JFrame {
         );
 
         jPanel2.revalidate();
-    }//GEN-LAST:event_hotelMenuActionPerformed
-
+    }
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
 
         jPanel2.removeAll();
-        
+
         javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
- 
+
         Searching searching1 = new Searching();
 
         jPanel2Layout.setHorizontalGroup(
@@ -278,7 +303,7 @@ public class MainFrame extends javax.swing.JFrame {
                 new CustomerFrame().setVisible(true);
             }
         });
-        
+
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     /**

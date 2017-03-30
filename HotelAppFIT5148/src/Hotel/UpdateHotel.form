@@ -31,9 +31,14 @@
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="136" max="-2" attributes="0"/>
-                      <Component id="close" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
-                      <Component id="Save" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="constructionYearText" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="close" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
+                              <Component id="Save" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
                   </Group>
               </Group>
               <EmptySpace pref="214" max="32767" attributes="0"/>
@@ -71,7 +76,6 @@
                                   <Component id="typeComboBox" min="-2" pref="120" max="-2" attributes="0"/>
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>
-                              <Component id="constructionYearText" alignment="0" max="32767" attributes="0"/>
                               <Component id="contactNumberText" alignment="0" max="32767" attributes="0"/>
                               <Component id="emailText" alignment="0" max="32767" attributes="0"/>
                           </Group>
@@ -103,7 +107,9 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="hotelIdLable" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="233" max="32767" attributes="0"/>
+              <EmptySpace pref="111" max="32767" attributes="0"/>
+              <Component id="constructionYearText" min="-2" pref="26" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="96" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="close" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="Save" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -146,10 +152,7 @@
                               <Component id="typeComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="constructionYearText" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -162,7 +165,7 @@
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace pref="54" max="32767" attributes="0"/>
+                  <EmptySpace pref="64" max="32767" attributes="0"/>
               </Group>
           </Group>
       </Group>
