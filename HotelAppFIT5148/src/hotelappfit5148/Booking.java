@@ -22,8 +22,11 @@ import oracle.jdbc.OracleDriver;
  * @author Kaley
  */
 public class Booking extends javax.swing.JPanel {
-
-    private List guest;
+    
+    private int numberOfCurrentGuest;
+    private int numberOfRoomGuest;
+    
+    private List<String> guest = new ArrayList();
     
     /**
      * Creates new form Booking
@@ -31,7 +34,9 @@ public class Booking extends javax.swing.JPanel {
     public Booking(String room_type) {
         initComponents();
         jLabel12.setText(totalGuest(room_type));
-        
+        jLabel14.setText("0");
+        numberOfRoomGuest = Integer.valueOf(jLabel12.getText());
+        numberOfCurrentGuest = 0;
     }
     
     // check number of guests a specific room allows
@@ -69,6 +74,9 @@ public class Booking extends javax.swing.JPanel {
             
             ResultSet rset = stmt.executeQuery(search);
             ResultSetMetaData metadata = rset.getMetaData();
+            
+            guest.clear();
+            
             while (rset.next()) {
                 
                 jTextField1.setText("");
@@ -86,18 +94,16 @@ public class Booking extends javax.swing.JPanel {
                 jTextField4.setText(rset.getString(8));
                 jTextField6.setText(rset.getString(7));
                 jTextField7.setText(rset.getString(6));
-//                String[] rsets = new String[9];
-//                rsets[0] = rset.getString(1);
-//                rsets[1] = rset.getString(2);
-//                rsets[2] = rset.getString(3);
-//                rsets[3] = rset.getString(4);
-//                rsets[4] = rset.getString(5);
-//                rsets[5] = rset.getString(6);
-//                rsets[6] = rset.getString(7);
-//                rsets[7] = rset.getString(8);
-//                rsets[8] = rset.getString(9);
-//                
-//                guest.add(rsets);
+                
+                guest.add(jTextField8.getText());
+                guest.add(jTextField1.getText());
+                guest.add(jTextField2.getText());
+                guest.add(jTextField3.getText());
+                guest.add(jTextField5.getText());
+                guest.add(jTextField4.getText());
+                guest.add(jTextField6.getText());
+                guest.add(jTextField7.getText());
+                
             }
         } catch (SQLException f) {
             System.out.println(f.getMessage());
@@ -177,6 +183,11 @@ public class Booking extends javax.swing.JPanel {
         });
 
         addGuest.setText("Add more guest");
+        addGuest.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addGuestActionPerformed(evt);
+            }
+        });
 
         jTextField1.setEditable(false);
 
@@ -395,6 +406,31 @@ public class Booking extends javax.swing.JPanel {
         //System.out.println(citizen_id);
         guest = getGuestInfor(citizen_id);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void addGuestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addGuestActionPerformed
+        
+        if(numberOfCurrentGuest == numberOfRoomGuest){
+            javax.swing.JOptionPane.showMessageDialog(this, "Can't add one more guest, sorry.");
+        }
+        else{
+            if(!guest.isEmpty()){
+                numberOfCurrentGuest++;
+                this.jLabel14.setText(String.valueOf(numberOfCurrentGuest));
+            }
+            else{
+                javax.swing.JOptionPane.showMessageDialog(this, "Guest does not exists.");
+            }
+        }
+        
+         jTextField1.setText("");
+         jTextField2.setText("");
+         jTextField3.setText("");
+         jTextField5.setText("");
+         jTextField4.setText("");
+         jTextField6.setText("");
+         jTextField7.setText("");
+         jTextField8.setText("");
+    }//GEN-LAST:event_addGuestActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
