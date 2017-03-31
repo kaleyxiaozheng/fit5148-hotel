@@ -65,7 +65,7 @@ CREATE TABLE  facility (
   description varchar(50),
   CONSTRAINT facility_pk PRIMARY KEY (hotel_id, room_number, facility_number),
   constraint fk_room_number_facility foreign key (room_number, hotel_id)
-      references room (room_number, hotel_id) on delete set NULL
+      references room (room_number, hotel_id)
 
 );
 CREATE SEQUENCE facility_seq START WITH 1 INCREMENT BY   1 NOCACHE NOCYCLE;
