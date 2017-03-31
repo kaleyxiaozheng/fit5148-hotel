@@ -352,8 +352,17 @@ public class Searching extends javax.swing.JPanel {
 //                        System.out.print(rowData[i]);
 //                    }
 
-                 // access booking GUI
-                 mf.bookingActionPerformed();
+                
+                 
+                 
+                 javax.swing.JTable target = (javax.swing.JTable)e.getSource();
+                 int row = target.getSelectedRow();
+                 String room_type = (String)target.getValueAt(row, 2);
+                 //System.out.println(room_type);
+                 
+                  // access booking GUI
+                 mf.bookingActionPerformed(room_type);
+                 
                 }
             }
         });

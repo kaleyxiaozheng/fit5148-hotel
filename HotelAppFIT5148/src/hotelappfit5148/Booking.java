@@ -28,9 +28,27 @@ public class Booking extends javax.swing.JPanel {
     /**
      * Creates new form Booking
      */
-    public Booking() {
+    public Booking(String room_type) {
         initComponents();
+        jLabel12.setText(totalGuest(room_type));
         
+    }
+    
+    // check number of guests a specific room allows
+    public String totalGuest(String room_type){
+        String totalGuest = "";
+        switch(room_type.toLowerCase()){
+            case "single": case "studio": case "suite":
+                totalGuest = "1";
+                break;
+            case "double":
+                totalGuest = "2";
+                break;
+            default :
+                System.out.println("Invalide number.");
+                break;
+        }
+        return totalGuest;
     }
     
     // Access guest information from table guest
@@ -46,7 +64,7 @@ public class Booking extends javax.swing.JPanel {
             Statement stmt = conn.createStatement();
 
             String search = "select title, first_name, last_name, citizen_id, dob, country, city, street, email from guest where citizen_id = " + citizen_id;
-            System.out.println(search);
+            //System.out.println(search);
             
             
             ResultSet rset = stmt.executeQuery(search);
