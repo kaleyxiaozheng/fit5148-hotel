@@ -23,36 +23,51 @@ import oracle.jdbc.OracleDriver;
  */
 public class Booking extends javax.swing.JPanel {
 
-    //private List guest;
+    private List guest;
     
     /**
      * Creates new form Booking
      */
     public Booking() {
         initComponents();
-        //guest = initGuest();
         
-//        for(Iterator iterator = guest.iterator(); iterator.hasNext();){
-//              String[] cc = (String[])iterator.next();
-//              
-//        }
     }
     
     // Access guest information from table guest
-//    public List initGuest(){
-//        
-//        List countriesAndCities = new ArrayList();
-//        try {
-//            DriverManager.registerDriver(new OracleDriver());
-//            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
-//            DatabaseMetaData md = conn.getMetaData();
-//
-//            ResultSet rs = md.getTables(null, null, "%", null);
-//            Statement stmt = conn.createStatement();
-//
-//            ResultSet rset = stmt.executeQuery("select title, first_name, last_name, citizen_id, dob, country, city, street, email from guest");
-//            ResultSetMetaData metadata = rset.getMetaData();
-//            while (rset.next()) {
+    public List getGuestInfor(int citizen_id){
+        
+        List countriesAndCities = new ArrayList();
+        try {
+            DriverManager.registerDriver(new OracleDriver());
+            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+            DatabaseMetaData md = conn.getMetaData();
+
+            ResultSet rs = md.getTables(null, null, "%", null);
+            Statement stmt = conn.createStatement();
+
+            String search = "select title, first_name, last_name, citizen_id, dob, country, city, street, email from guest where citizen_id = " + citizen_id;
+            System.out.println(search);
+            
+            
+            ResultSet rset = stmt.executeQuery(search);
+            ResultSetMetaData metadata = rset.getMetaData();
+            while (rset.next()) {
+                
+                jTextField1.setText("");
+                jTextField2.setText("");
+                jTextField3.setText("");
+                jTextField5.setText("");
+                jTextField4.setText("");
+                jTextField6.setText("");
+                jTextField7.setText("");
+                
+                jTextField1.setText(rset.getString(1));
+                jTextField2.setText(rset.getString(2) + " " + rset.getString(3));
+                jTextField3.setText(rset.getString(5));
+                jTextField5.setText(rset.getString(9));
+                jTextField4.setText(rset.getString(8));
+                jTextField6.setText(rset.getString(7));
+                jTextField7.setText(rset.getString(6));
 //                String[] rsets = new String[9];
 //                rsets[0] = rset.getString(1);
 //                rsets[1] = rset.getString(2);
@@ -65,13 +80,13 @@ public class Booking extends javax.swing.JPanel {
 //                rsets[8] = rset.getString(9);
 //                
 //                guest.add(rsets);
-//            }
-//        } catch (SQLException f) {
-//            System.out.println(f.getMessage());
-//            f.printStackTrace();
-//        }
-//        return guest;
-//    }
+            }
+        } catch (SQLException f) {
+            System.out.println(f.getMessage());
+            f.printStackTrace();
+        }
+        return guest;
+    }
     
 
     /**
@@ -165,7 +180,6 @@ public class Booking extends javax.swing.JPanel {
         jTextField7.setEditable(false);
         jTextField7.setText(" ");
 
-        jTextField8.setEditable(false);
         jTextField8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField8ActionPerformed(evt);
@@ -366,7 +380,8 @@ public class Booking extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // search citizen ID from guest table
         int citizen_id = Integer.valueOf(jTextField8.getText());
-        System.out.println(citizen_id);
+        //System.out.println(citizen_id);
+        guest = getGuestInfor(citizen_id);
     }//GEN-LAST:event_jButton1ActionPerformed
 
 
