@@ -9,6 +9,7 @@ import Membership.MembershipPanel;
 import Guest.GuestPanel;
 import Customer.CustomerPanel;
 import Hotel.HotelPanel;
+import java.util.Date;
 
 import javax.swing.ImageIcon;
 
@@ -274,12 +275,12 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
     // Booking GUI
-    public void bookingActionPerformed(String room_type){
+    public void bookingActionPerformed(String room_type, String check_in, String check_out, double price){
         jPanel2.removeAll();
         
         javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
         
-        Booking booking1 = new Booking(room_type, this);
+        Booking booking1 = new Booking(room_type, this, check_in, check_out, price);
         
          jPanel2Layout.setHorizontalGroup(
                 jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

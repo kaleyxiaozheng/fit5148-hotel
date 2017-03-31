@@ -280,6 +280,31 @@ public class Searching extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
+    // get customer id
+        public boolean getCustomer_id(String customer_id){
+            int cusid = 0;
+            boolean flag = false;
+            
+            // search customer in customer table with customer id
+                String search = "SELECT customer_id from customer where customer_id = " + Integer.valueOf(customer_id);
+                //System.out.println(search);
+                    try {
+                        DriverManager.registerDriver(new OracleDriver());
+                        Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+                        Statement stmt = conn.createStatement();
+
+                        ResultSet rset = stmt.executeQuery(search);
+                            if(rset.next()){
+                                flag = !rset.getString(1).isEmpty();
+                            }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Searching.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+            
+            return flag;
+        }
+    
+    
     private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
         
        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
@@ -331,7 +356,6 @@ public class Searching extends javax.swing.JPanel {
             Logger.getLogger(Searching.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        
         // double click a row and go to the booking GUI
         jTable1.addMouseListener(new MouseAdapter(){
             public void mouseClicked(MouseEvent e){
@@ -352,17 +376,27 @@ public class Searching extends javax.swing.JPanel {
 //                        System.out.print(rowData[i]);
 //                    }
 
+                String customer_id = javax.swing.JOptionPane.showInputDialog("Please input your customer ID:");
+                //System.out.println(customer_id);
+                 
                 
-                 
-                 
+                
+                
+                
                  javax.swing.JTable target = (javax.swing.JTable)e.getSource();
                  int row = target.getSelectedRow();
                  String room_type = (String)target.getValueAt(row, 2);
+                 double price = Double.valueOf((String)target.getValueAt(row, 3));
                  //System.out.println(room_type);
                  
                   // access booking GUI
-                 mf.bookingActionPerformed(room_type);
-                 
+                  
+                  if(getCustomer_id(customer_id)){
+                      mf.bookingActionPerformed(room_type, check_in, check_out, price);
+                  }
+                  else{
+                      javax.swing.JOptionPane.showMessageDialog(Searching.this, "customer does not exist");
+                  }
                 }
             }
         });

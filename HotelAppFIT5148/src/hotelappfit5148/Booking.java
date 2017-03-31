@@ -15,6 +15,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import oracle.jdbc.OracleDriver;
 
 /**
@@ -23,6 +25,9 @@ import oracle.jdbc.OracleDriver;
  */
 public class Booking extends javax.swing.JPanel {
     
+    private double price;
+    private String check_in;
+    private String check_out;
     private MainFrame mf;
     private int numberOfCurrentGuest;
     private int numberOfRoomGuest;
@@ -32,13 +37,16 @@ public class Booking extends javax.swing.JPanel {
     /**
      * Creates new form Booking
      */
-    public Booking(String room_type, MainFrame mf) {
+    public Booking(String room_type, MainFrame mf, String check_in, String check_out, double price) {
         initComponents();
         jLabel12.setText(totalGuest(room_type));
         jLabel14.setText("0");
         numberOfRoomGuest = Integer.valueOf(jLabel12.getText());
         numberOfCurrentGuest = 0;
         
+        this.price = price;
+        this.check_in = check_in;
+        this.check_out = check_out;
         this.mf = mf;
     }
     
@@ -442,6 +450,20 @@ public class Booking extends javax.swing.JPanel {
 
     private void bookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookingActionPerformed
         mf.accessPaymentGUI();
+        
+        try {
+            String insertBooking = "INSERT INTO booking (customer_id, check_in_date, check_out_date, total_amount, payment_status) VALUES(1, TO_DATE('" + check_in + "', 'DD/MM/YYYY'), TO_DATE('" + check_out + "', 'DD/MM/YYYY'), " + price + "'S')";
+            System.out.println(insertBooking);
+            
+            DriverManager.registerDriver(new OracleDriver());
+            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+            Statement stmt = conn.createStatement();
+            ResultSet rset = stmt.executeQuery("select room_type from room");
+        } catch (SQLException ex) {
+            Logger.getLogger(Booking.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+        
     }//GEN-LAST:event_bookingActionPerformed
 
 
