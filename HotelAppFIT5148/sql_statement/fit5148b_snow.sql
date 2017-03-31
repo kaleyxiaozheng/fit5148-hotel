@@ -188,6 +188,51 @@ BEGIN
   out_result := 'S';
 END;
 
+CREATE OR REPLACE PROCEDURE insertOrUpdateGuest(
+  in_guest_id IN GUEST.GUEST_ID%TYPE,
+  in_title IN GUEST.TITLE%TYPE,
+  in_first_name IN GUEST.FIRST_NAME%TYPE,
+  in_last_name IN GUEST.LAST_NAME%TYPE,
+  in_citizen_id IN GUEST.CITIZEN_ID%TYPE,
+  in_dob IN VARCHAR2,
+  in_country IN GUEST.COUNTRY%TYPE,
+  in_city IN GUEST.CITY%TYPE,
+  in_street IN GUEST.STREET%TYPE,
+  in_email IN GUEST.EMAIL%TYPE,
+  in_action IN VARCHAR2,
+  out_result OUT VARCHAR2)
+AS
+  temp NUMBER;
+  t_count NUMBER;
+  t_first_name CUSTOMER.FIRST_NAME%TYPE;
+  t_last_name CUSTOMER.LAST_NAME%TYPE;
+BEGIN
+  --NEED TO CHECK CITIZEN_ID EXISTS IN CUSTOMER WITH OTHER NAME OR NOT.
+  SELECT COUNT(1) INTO t_count FROM CUSTOMER WHERE CITIZEN_ID = in_citizen_id;
+  IF t_count = 1 THEN
+    SELECT FIRST_NAME, LAST_NAME INTO t_first_name, t_last_name FROM CUSTOMER WHERE CITIZEN_ID = in_citizen_id;
+    
+    IF t_first_name <> in_first_name OR t_last_name <> in_last_name THEN
+      --The citizen id is occupied by someone else
+      out_result := 'F';
+      RETURN;
+    END IF;
+  END IF;
+  
+  IF in_action = 'InsertGuest' THEN
+    
+    INSERT INTO GUEST VALUES (NULL, in_title, in_first_name,in_last_name, in_citizen_id, 
+    TO_DATE(in_dob,'yyyy/mm/dd') ,in_country, in_city, in_street, in_email);
+  ELSE
+    --Membership and credit is not allowed to update manually
+    UPDATE GUEST SET TITLE = in_title, FIRST_NAME = in_first_name, LAST_NAME = in_last_name,
+    CITIZEN_ID = in_citizen_id, DOB = TO_date(in_dob,'yyyy/mm/dd'), COUNTRY = in_country,
+    CITY = in_city, STREET = in_street, EMAIL = in_email WHERE GUEST_ID = in_guest_id;
+  END IF;
+  
+  out_result := 'S';
+END;
+
 create or replace PROCEDURE insertOrUpdateMembership(
   in_tier_id IN MEMBERSHIP.TIER_ID%TYPE,
   in_membership_tier IN MEMBERSHIP.MEMBERSHIP_TIER%TYPE,

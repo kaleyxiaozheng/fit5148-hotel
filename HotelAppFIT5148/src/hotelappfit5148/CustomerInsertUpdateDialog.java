@@ -7,7 +7,7 @@ package hotelappfit5148;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.ResultSet;
+
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,17 +25,13 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
     public final static String CHECK_CUST_EXISTANCE_B4INSERT = "SELECT COUNT(1) "
             + "FROM CUSTOMER WHERE CITIZEN_ID = ";
     private final static String CUSTOMER_INSERT_UPDATE_S = "Customer added/updated successfully. Please go back to Customer page and refresh.";
-    private final static String CUSTOMER_INSERT_UPDATE_F = "Failed to add/update customer. Other customer is using this citizen id."
+    private final static String CUSTOMER_INSERT_UPDATE_F = "Failed to add/update customer. Other guest is using this citizen id."
             + "Please double check the information";
-    private final static String EXISTED_CITIZEN = "Citizen Id is existed for other customer, please double check";
-    private final static String INVALID_CITIZEN_ID = "Please input digit for Citizen ID.";
-    private final static String DISCARD_CHANGE = "Your change will be discarded. Please click Yes if you want to stay.";
-    private final static String EMPTY_CITIZEN_ID = "Please input Citizen ID for this customer.";
+    
     
     private static CallableStatement cstmt;
-    private final static String CALLSP_INSERTORUPDATECUSTOMER = "{call insertOrUpdateCustomer(?,?,?,?,?,?,?,?,?,?,?,?,?)}";
-    private final static String FAIL_PROCEDURE = "F";
-    private final static String SUCCESS_PROCEDURE = "S";
+    private final static String CALLSP_INSERTORUPDATECUSTOMER = "{call insertOrUpdateCustomer(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+    
     /**
      * Creates new form CustomerInsertUpdateDialog
      */
@@ -320,7 +316,7 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:        
-        int cancelInput = JOptionPane.showConfirmDialog(null, DISCARD_CHANGE, null, JOptionPane.YES_NO_OPTION);
+        int cancelInput = JOptionPane.showConfirmDialog(null, CustomerGuestUtil.DISCARD_CHANGE, null, JOptionPane.YES_NO_OPTION);
         if (JOptionPane.NO_OPTION == cancelInput){
             dispose();
         }
@@ -330,12 +326,12 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
         // TODO add your handling code here:
         String citizenID = jTextField4.getText();
         if (null == citizenID || "".equals(citizenID)){
-            JOptionPane.showMessageDialog(null, EMPTY_CITIZEN_ID);
+            JOptionPane.showMessageDialog(null, CustomerGuestUtil.EMPTY_CITIZEN_ID);
             return;
         }
         boolean citizenId_Numeric = citizenID.chars().allMatch(Character :: isDigit);
         if (citizenId_Numeric == true){
-            if (!checkCitizenID(citizenID)){
+            if (!CustomerGuestUtil.checkCitizenID(citizenID, CHECK_CUST_EXISTANCE_B4INSERT)){
                 boolean insertResult = performInsertOrUpdate(CustomerPanel.INSERT_CUST);
                 if (insertResult == true){
                     JOptionPane.showMessageDialog(null, CUSTOMER_INSERT_UPDATE_S);
@@ -344,10 +340,10 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
                     JOptionPane.showMessageDialog(null, CUSTOMER_INSERT_UPDATE_F);
                 }
             }else{
-                JOptionPane.showMessageDialog(null, EXISTED_CITIZEN);
+                JOptionPane.showMessageDialog(null, CustomerGuestUtil.EXISTED_CITIZEN);
             }
         }else{
-            JOptionPane.showMessageDialog(null, INVALID_CITIZEN_ID);
+            JOptionPane.showMessageDialog(null, CustomerGuestUtil.INVALID_CITIZEN_ID);
             
         }
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -372,27 +368,7 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
         return result;
         
     }
-    private boolean checkCitizenID(String citizenId){
-        //If exist, return true; else return false
-        try {
-            int number = 1;
-            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, 
-                    CHECK_CUST_EXISTANCE_B4INSERT + citizenId);
-            if (rset.next()){
-                number = rset.getInt(1);
-            }
-            rset.close();
-            Database.getInstance().closeDBConnection();
-            
-            if (number == 0){
-                return false;
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        
-        return true;
-    }
+    
     private CustomerBean getUserInputOfCustomer(){
         CustomerBean cust = new CustomerBean();
         
@@ -455,12 +431,11 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
             
             cstmt.executeUpdate();
             
-            String result = cstmt.getString(13);
-            
-            
+            String result = cstmt.getString(14);
             
             cstmt.close();
-            if (FAIL_PROCEDURE.equals(result)){
+            Database.getInstance().closeDBConnection();
+            if (CustomerGuestUtil.FAIL_PROCEDURE.equals(result)){
                 return false;
             }
             return true;

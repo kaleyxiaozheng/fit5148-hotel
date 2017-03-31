@@ -237,7 +237,8 @@ public class Payment extends javax.swing.JPanel {
             
             String search = "SELECT citizen_id from guest WHERE citizne_id = '" + jTextField4.getText() + "'";
             
-            //System.out.println(search);
+            System.out.println(jTextField4.getText());
+            System.out.println(search);
             
             Connection conn = Database.getInstance().getDBConnection("FIT5148A");
             Statement stat = conn.createStatement();

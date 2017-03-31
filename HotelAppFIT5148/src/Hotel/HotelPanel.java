@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package Hotel;
+
 import hotelappfit5148.*;
 import java.math.BigDecimal;
 import javax.swing.table.DefaultTableModel;
@@ -12,16 +13,19 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+
 /**
  *
  * @author thaonguyen
  */
 public class HotelPanel extends javax.swing.JPanel {
+
     Object columnHeaders[] = {"HOTEL_ID", "HOTEL_NAME", "HOTEL_TYPE", "CONSTUCTION_YEAR", "COUNTRY", "CITY", "ADDRESS", "CONTACT_NUMBER", "EMAIL"};
     Object data[][] = {{}};
     DefaultTableModel dtm = new DefaultTableModel(data, columnHeaders);
     Connection conn = null;
     Statement stmt = null;
+
     /**
      * Creates new form HotelPanel
      */
@@ -29,8 +33,8 @@ public class HotelPanel extends javax.swing.JPanel {
         initComponents();
         showAllHotelToTable();
     }
-    
-        private void showAllHotelToTable() {
+
+    private void showAllHotelToTable() {
         conn = Database.getInstance().getDBConnection("FIT5148A");
         dtm.setRowCount(0);
         try {
@@ -170,8 +174,8 @@ public class HotelPanel extends javax.swing.JPanel {
 
             String selectedHotelType = String.valueOf(jComboBox2.getSelectedItem());
             StringBuffer sbSQL = new StringBuffer("select hotel_id, hotel_name, hotel_type, "
-                + "construction_year, country, city, address, "
-                + "contact_number, email from hotel");
+                    + "construction_year, country, city, address, "
+                    + "contact_number, email from hotel");
             if (!"All Types".equals(selectedHotelType)) {
                 sbSQL.append(" where hotel_type = '" + selectedHotelType + "'");
             }
@@ -203,26 +207,26 @@ public class HotelPanel extends javax.swing.JPanel {
         //        dtm.setRowCount(0);
         //        conn = DBConnection.getDBConnection("FIT5148A");
         //        try {
-            //            DriverManager.registerDriver(new OracleDriver());
-            //            stmt = conn.createStatement();
-            //            ResultSet rset = stmt.executeQuery("select hotel_id, hotel_name, hotel_type, "
-                //                    + "construction_year, country, city, address, "
-                //                    + "contact_number, email from hotel order by hotel_id DESC");
-            //
-            //            ResultSetMetaData mdata = rset.getMetaData();
-            //            int numberOfColumns = mdata.getColumnCount();
-            //            while (rset.next()) {
-                //                Object[] rowData = new Object[numberOfColumns];
-                //                for (int i = 0; i < rowData.length; i++) {
-                    //                    rowData[i] = rset.getObject(i + 1);
-                    //                }
-                //                dtm.addRow(rowData);
-                //            }
-            //            conn.close();
-            //
-            //        } catch (SQLException f) {
-            //            System.out.println(f.getMessage());
-            //        }
+        //            DriverManager.registerDriver(new OracleDriver());
+        //            stmt = conn.createStatement();
+        //            ResultSet rset = stmt.executeQuery("select hotel_id, hotel_name, hotel_type, "
+        //                    + "construction_year, country, city, address, "
+        //                    + "contact_number, email from hotel order by hotel_id DESC");
+        //
+        //            ResultSetMetaData mdata = rset.getMetaData();
+        //            int numberOfColumns = mdata.getColumnCount();
+        //            while (rset.next()) {
+        //                Object[] rowData = new Object[numberOfColumns];
+        //                for (int i = 0; i < rowData.length; i++) {
+        //                    rowData[i] = rset.getObject(i + 1);
+        //                }
+        //                dtm.addRow(rowData);
+        //            }
+        //            conn.close();
+        //
+        //        } catch (SQLException f) {
+        //            System.out.println(f.getMessage());
+        //        }
     }//GEN-LAST:event_newHotelActionPerformed
 
     private void updateHotelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateHotelActionPerformed
@@ -243,34 +247,47 @@ public class HotelPanel extends javax.swing.JPanel {
 
     private void deleteHotelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteHotelActionPerformed
         // TODO add your handling code here:
-        
-                int selectedRowCount = jTable1.getSelectedRowCount();
-        if (selectedRowCount > 1){
+
+        int selectedRowCount = jTable1.getSelectedRowCount();
+        if (selectedRowCount > 1) {
             JOptionPane.showMessageDialog(null, ErrorMessage.MULTIPLE_SELECTION);
-        }else if (selectedRowCount == 0){
+        } else if (selectedRowCount == 0) {
             JOptionPane.showMessageDialog(null, ErrorMessage.NO_SELECTION);
-        }else{
+        } else {
             int confirmDelete = JOptionPane.showConfirmDialog(null, ErrorMessage.CONFIRM_DELETE, null, JOptionPane.YES_NO_OPTION);
-            if (JOptionPane.YES_OPTION == confirmDelete){
+            if (JOptionPane.YES_OPTION == confirmDelete) {
                 int selectedHotel = jTable1.getSelectedRow();
                 Long hotelId = Long.parseLong(jTable1.getModel().getValueAt(selectedHotel, 0).toString());
-                
-                StringBuffer sb = new StringBuffer("delete hotel where hotel_id = ");
+
+                StringBuilder sb = new StringBuilder("delete hotel where hotel_id = ");
                 sb.append(hotelId);
-                
-                boolean deleteResult = Database.getInstance().updateTable(Database.DB_FIT5148A, sb.toString());
-                
-                if (deleteResult == true){
-                    JOptionPane.showMessageDialog(null, ErrorMessage.DELETE_S);
-                    this.showAllHotelToTable();
-                }else{
-                    JOptionPane.showMessageDialog(null, ErrorMessage.DELETE_F);
+
+                boolean deleteResult;
+
+                try {
+                    deleteResult = Database.getInstance().updateTable(Database.DB_FIT5148A, sb.toString());
+                    if (deleteResult == true) {
+                        JOptionPane.showMessageDialog(null, ErrorMessage.DELETE_S);
+                        this.showAllHotelToTable();
+                    } else {
+                        JOptionPane.showMessageDialog(null, ErrorMessage.DELETE_F);
+                    }
+
+                } catch (SQLException ex) {
+
+                    if (ex.getErrorCode() == 20002) {
+                        JOptionPane.showMessageDialog(null, ErrorMessage.HOTEL_DELETE_TRIGGER_F);
+                        return;
+                    }
+
                 }
+
             }
         }
+        Database.getInstance().closeDBConnection();
     }//GEN-LAST:event_deleteHotelActionPerformed
 
-   private HotelBean constructHotelBean() {
+    private HotelBean constructHotelBean() {
         HotelBean hotel = new HotelBean();
 
         int selectedHotel = jTable1.getSelectedRow();
@@ -307,8 +324,8 @@ public class HotelPanel extends javax.swing.JPanel {
 
         return null;
     }
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane HotelScrollPane1;
     private javax.swing.JButton deleteHotel;

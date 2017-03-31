@@ -5,6 +5,9 @@
  */
 package hotelappfit5148;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,7 +21,15 @@ import javax.swing.JOptionPane;
  */
 public class GuestInsertUpdateDialog extends javax.swing.JDialog {
 
-    private final static String DISCARD_CHANGE = "Your change will be discarded. Please click Yes if you want to stay.";
+    
+    public final static String CHECK_GUEST_EXISTANCE_B4INSERT = "SELECT COUNT(1) "
+            + "FROM GUEST WHERE CITIZEN_ID = ";
+    private final static String GUEST_INSERT_UPDATE_S = "Guest added/updated successfully. Please go back to Customer page and refresh.";
+    private final static String GUEST_INSERT_UPDATE_F = "Failed to add/update guest. Other customer is using this citizen id."
+            + "Please double check the information";
+    
+    private static CallableStatement cstmt;
+    private final static String CALLSP_INSERTORUPDATEGUEST = "{call insertOrUpdateGuest(?,?,?,?,?,?,?,?,?,?,?,?)}";
     /**
      * Creates new form GuestInsertUpdateDialog
      */
@@ -97,10 +108,20 @@ public class GuestInsertUpdateDialog extends javax.swing.JDialog {
         jLabel2.setText("Title");
 
         jButton1.setLabel("Insert Guest");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("First Name");
 
         jButton2.setLabel("Update Guest");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mr", "Miss" }));
 
@@ -241,12 +262,124 @@ public class GuestInsertUpdateDialog extends javax.swing.JDialog {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        int cancelInput = JOptionPane.showConfirmDialog(null, DISCARD_CHANGE, null, JOptionPane.YES_NO_OPTION);
+        int cancelInput = JOptionPane.showConfirmDialog(null, CustomerGuestUtil.DISCARD_CHANGE, null, JOptionPane.YES_NO_OPTION);
         if (JOptionPane.NO_OPTION == cancelInput){
             dispose();
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here: Insert
+        String citizenID = jTextField4.getText();
+        if (null == citizenID || "".equals(citizenID)){
+            JOptionPane.showMessageDialog(null, CustomerGuestUtil.EMPTY_CITIZEN_ID);
+            return;
+        }
+        boolean citizenId_Numeric = citizenID.chars().allMatch(Character :: isDigit);
+        if (citizenId_Numeric == true){
+            if (!CustomerGuestUtil.checkCitizenID(citizenID, CHECK_GUEST_EXISTANCE_B4INSERT)){
+                boolean insertResult = performInsertOrUpdate(CustomerPanel.INSERT_CUST);
+                if (insertResult == true){
+                    JOptionPane.showMessageDialog(null, GUEST_INSERT_UPDATE_S);
+                    dispose();
+                }else{
+                    JOptionPane.showMessageDialog(null, GUEST_INSERT_UPDATE_F);
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, CustomerGuestUtil.EXISTED_CITIZEN);
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, CustomerGuestUtil.INVALID_CITIZEN_ID);
+            
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here: Update
+        boolean updateResult = performInsertOrUpdate(GuestPanel.UPDATE_GUEST);
+        if (updateResult == true){
+            JOptionPane.showMessageDialog(null, GUEST_INSERT_UPDATE_S);
+            dispose();
+        }else{
+            JOptionPane.showMessageDialog(null, GUEST_INSERT_UPDATE_F);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private boolean performInsertOrUpdate(String action){
+        GuestBean guest = getUserInputOfGuest();
+        boolean result = callSPInsertOrUpdateGuest(guest, 
+                        Database.DB_FIT5148B, action);
+        Database.getInstance().closeDBConnection();
+        
+        return result;
+        
+    }
+    
+    public boolean callSPInsertOrUpdateGuest(GuestBean guest, String dbName, String action){
+        Connection dbConnection = null;
+        
+        try{
+            dbConnection = Database.getInstance().getDBConnection(dbName);
+            cstmt = dbConnection.prepareCall(CALLSP_INSERTORUPDATEGUEST);
+            
+            cstmt.setInt(1, guest.getGuest_id());
+            cstmt.setString(2, guest.getTitle());
+            cstmt.setString(3, guest.getFirstName());
+            cstmt.setString(4, guest.getLastName());
+            cstmt.setInt(5, guest.getCitizenID());
+            cstmt.setString(6, guest.getDOB());
+            cstmt.setString(7, guest.getCountry());
+            cstmt.setString(8, guest.getCity());
+            cstmt.setString(9, guest.getStreet());
+            
+            cstmt.setString(10, guest.getEmail());
+            
+            cstmt.setString(11, action);
+            cstmt.registerOutParameter(12, java.sql.Types.VARCHAR);
+            
+            cstmt.executeUpdate();
+            
+            String result = cstmt.getString(12);
+            
+            cstmt.close();
+            if (CustomerGuestUtil.FAIL_PROCEDURE.equals(result)){
+                return false;
+            }
+            return true;
+            
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        } 
+        
+    }
+    
+    private GuestBean getUserInputOfGuest(){
+        GuestBean guest = new GuestBean();
+        
+        if (null != jTextField1.getText() && !"".equals(jTextField1.getText())){
+            guest.setGuest_id(Integer.valueOf(jTextField1.getText()));
+        }
+        
+        guest.setTitle((String)jComboBox1.getSelectedItem());
+        guest.setFirstName(jTextField2.getText());
+        guest.setLastName(jTextField3.getText());
+        guest.setCitizenID(Integer.valueOf(jTextField4.getText()));
+        
+        if (jXDatePicker1.getDate() != null){
+            Date dob = jXDatePicker1.getDate();
+            SimpleDateFormat dateFormat = new SimpleDateFormat(Database.DB_DATE_FORMAT);
+            guest.setDOB(dateFormat.format(dob));
+        }
+        
+        guest.setCountry(jTextField5.getText());
+        guest.setCity(jTextField6.getText());
+        guest.setStreet(jTextField7.getText());
+        
+        guest.setEmail(jTextField8.getText());
+        
+        return guest;
+    }
     /**
      * @param args the command line arguments
      */

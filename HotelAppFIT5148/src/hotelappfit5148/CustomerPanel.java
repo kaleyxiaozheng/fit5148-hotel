@@ -173,18 +173,20 @@ public class CustomerPanel extends javax.swing.JPanel {
         }else{
             int confirmDelete = JOptionPane.showConfirmDialog(null, CONFIRM_DELETE_CUSTOMER, null, JOptionPane.YES_NO_OPTION);
             if (JOptionPane.YES_OPTION == confirmDelete){
-                int selectedCustomer = jTable1.getSelectedRow();
-                int customerId = ((BigDecimal)jTable1.getModel().getValueAt(selectedCustomer, 0)).intValue();
-                
-                StringBuffer sb = new StringBuffer(DELETE_CUSTOMER);
-                sb.append(customerId);
-                
-                boolean updateResult = Database.getInstance().updateTable(Database.DB_FIT5148B, sb.toString());
-                
-                Database.getInstance().closeDBConnection();
-                if (updateResult == true){
+                try {
+                    int selectedCustomer = jTable1.getSelectedRow();
+                    int customerId = ((BigDecimal)jTable1.getModel().getValueAt(selectedCustomer, 0)).intValue();
+                    
+                    StringBuffer sb = new StringBuffer(DELETE_CUSTOMER);
+                    sb.append(customerId);
+                    
+                    Database.getInstance().updateTable(Database.DB_FIT5148B, sb.toString());
+                    
+                    Database.getInstance().closeDBConnection();
                     JOptionPane.showMessageDialog(null, UPDATE_CUSTOMER_S);
-                }else{
+                    
+                } catch (SQLException ex) {
+                    //Logger.getLogger(CustomerPanel.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(null, UPDATE_CUSTOMER_F);
                 }
             }

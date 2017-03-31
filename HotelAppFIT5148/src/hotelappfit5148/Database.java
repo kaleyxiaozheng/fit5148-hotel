@@ -112,10 +112,10 @@ public class Database {
         return null;
     }
     
-    public boolean updateTable(String dbName, String sqlStatement){
+    public boolean updateTable(String dbName, String sqlStatement)  throws SQLException {
         Connection dbConnection = null;
         
-        try{
+//        try{
             dbConnection = getDBConnection(dbName);            
 //            
             pstmt = dbConnection.prepareStatement(sqlStatement);
@@ -123,10 +123,10 @@ public class Database {
             pstmt.executeUpdate(sqlStatement);
             
             return true;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } 
-        return false;
+//        } catch (SQLException ex) {
+//            ex.printStackTrace();
+//        } 
+//        return false;
     }
 
     
