@@ -289,7 +289,7 @@ public class UpdateHotel extends javax.swing.JFrame {
             Database.getInstance().closeDBConnection();
 
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            System.out.println(ex.getMessage());
         }
         this.dispose();
 //        new UpdateHotel(hotel).setVisible(true);

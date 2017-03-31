@@ -73,5 +73,14 @@ CREATE SEQUENCE facility_seq START WITH 1 INCREMENT BY   1 NOCACHE NOCYCLE;
 --select * from room;
 
 INSERT INTO facility (room_number, hotel_id, facility_number, description)
-   VALUES ('thao',37 , to_char(facility_seq.nextval), 'big tivi');
+   VALUES ('4',33 , to_char(facility_seq.nextval), 'Washing machine');
+INSERT INTO facility (room_number, hotel_id, facility_number, description)
+   VALUES ('6',37 , to_char(facility_seq.nextval), 'big tivi');
+INSERT INTO facility (room_number, hotel_id, facility_number, description)
+   VALUES ('7',37 , to_char(facility_seq.nextval), '3D Game');
+INSERT INTO facility (room_number, hotel_id, facility_number, description)
+   VALUES ('1',37 , to_char(facility_seq.nextval), 'big tivi');
+INSERT INTO facility (room_number, hotel_id, facility_number, description)
+   VALUES ('8',37 , to_char(facility_seq.nextval), 'Sofa');
    
+commit;
