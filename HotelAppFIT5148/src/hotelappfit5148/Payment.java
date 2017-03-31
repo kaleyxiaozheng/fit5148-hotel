@@ -6,6 +6,8 @@
 package hotelappfit5148;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -13,18 +15,43 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
+import oracle.jdbc.OracleDriver;
 
 /**
  *
  * @author Kaley
  */
 public class Payment extends javax.swing.JPanel {
-
+    
+    
     /**
      * Creates new form Payment
      */
-    public Payment() {
+    public Payment(String booking_id, String[] selectedRow) {
         initComponents();
+        initCurrentBooking(booking_id, selectedRow);
+    }
+    
+    public Payment(){
+        initComponents();
+    }
+    
+    
+    // Initial payment GUI with current booking order
+    public void initCurrentBooking(String booking_id, String[] selectedRow){
+        
+        String[] row = new String[5];
+        
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);    
+        
+        row[0] = booking_id; 
+        row[1] = selectedRow[0];
+        row[2] = selectedRow[1];
+        row[3] = selectedRow[2];
+        row[4] = selectedRow[3];
+        
+        model.addRow(row);
     }
 
     /**
@@ -56,7 +83,7 @@ public class Payment extends javax.swing.JPanel {
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [0][0],
             new String [] {
-                "Booking ID", "Payment date", "Payment method", "Total price"
+                "Booking ID", "Hotel name", "Room number", "Room type", "Total price"
             }
         )
         {public boolean isCellEditable(int row, int column) {return false;}}
@@ -75,7 +102,7 @@ public class Payment extends javax.swing.JPanel {
     });
 
     jLabel4.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
-    jLabel4.setText("Payment Information");
+    jLabel4.setText("Booking Information");
 
     jCheckBox2.setText("Unpaid");
     jCheckBox2.addActionListener(new java.awt.event.ActionListener() {

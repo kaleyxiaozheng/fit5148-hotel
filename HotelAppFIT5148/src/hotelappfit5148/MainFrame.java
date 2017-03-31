@@ -280,12 +280,12 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
     // Booking GUI
-    public void bookingActionPerformed(String room_type, String check_in, String check_out, double price, String customer_id){
+    public void bookingActionPerformed(String room_type, String check_in, String check_out, double price, String customer_id, String[] selectedRow){
         jPanel2.removeAll();
         
         javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
         
-        Booking booking1 = new Booking(room_type, this, check_in, check_out, price, customer_id);
+        Booking booking1 = new Booking(room_type, this, check_in, check_out, price, customer_id, selectedRow);
         
          jPanel2Layout.setHorizontalGroup(
                 jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -306,13 +306,13 @@ public class MainFrame extends javax.swing.JFrame {
     }
     
     // Payment GUI
-    public void accessPaymentGUI() {                                           
+    public void accessPaymentGUI(String booking_id, String[] selectedRow) {                                           
 
         jPanel2.removeAll();
 
         javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
 
-        Payment payment1 = new Payment();
+        Payment payment1 = new Payment(booking_id, selectedRow);
 
         jPanel2Layout.setHorizontalGroup(
                 jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

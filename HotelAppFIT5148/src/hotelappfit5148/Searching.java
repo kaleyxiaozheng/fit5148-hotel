@@ -362,14 +362,14 @@ public class Searching extends javax.swing.JPanel {
                 if(e.getClickCount() == 2){
                     
                     // access seleced row data
-//                    javax.swing.JTable target = (javax.swing.JTable)e.getSource();
-//                    int row = target.getSelectedRow();
-//                    
-//                    String[] rowData = new String[4];
-//                    
-//                    for(int i = 0; i < 4; i++){
-//                        rowData[i] = (String)target.getValueAt(row, i);
-//                    }
+                    javax.swing.JTable target = (javax.swing.JTable)e.getSource();
+                    int row1 = target.getSelectedRow();
+                    
+                    String[] rowData = new String[4];
+                    
+                    for(int i = 0; i < 4; i++){
+                        rowData[i] = (String)target.getValueAt(row1, i);
+                    }
 //                        
 //                    for(int i = 0; i < 4; i++){
 //                        System.out.print(rowData[i]);
@@ -379,19 +379,16 @@ public class Searching extends javax.swing.JPanel {
                 //System.out.println(customer_id);
                  
                 
-                
-                
-                
-                 javax.swing.JTable target = (javax.swing.JTable)e.getSource();
-                 int row = target.getSelectedRow();
-                 String room_type = (String)target.getValueAt(row, 2);
-                 double price = Double.valueOf((String)target.getValueAt(row, 3));
+                 target = (javax.swing.JTable)e.getSource();
+                 int row2 = target.getSelectedRow();
+                 String room_type = (String)target.getValueAt(row2, 2);
+                 double price = Double.valueOf((String)target.getValueAt(row2, 3));
                  //System.out.println(room_type);
                  
                   // access booking GUI
                   
                   if(getCustomer_id(customer_id)){
-                      mf.bookingActionPerformed(room_type, check_in, check_out, price, customer_id);
+                      mf.bookingActionPerformed(room_type, check_in, check_out, price, customer_id, rowData);
                   }
                   else{
                       javax.swing.JOptionPane.showMessageDialog(Searching.this, "customer does not exist");

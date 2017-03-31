@@ -25,6 +25,7 @@ import oracle.jdbc.OracleDriver;
  */
 public class Booking extends javax.swing.JPanel {
     
+    private String[] selectedRow;
     private String customer_id;
     private double price;
     private String check_in;
@@ -38,13 +39,14 @@ public class Booking extends javax.swing.JPanel {
     /**
      * Creates new form Booking
      */
-    public Booking(String room_type, MainFrame mf, String check_in, String check_out, double price, String customer_id) {
+    public Booking(String room_type, MainFrame mf, String check_in, String check_out, double price, String customer_id, String[] selectedRow) {
         initComponents();
         jLabel12.setText(totalGuest(room_type));
         jLabel14.setText("0");
         numberOfRoomGuest = Integer.valueOf(jLabel12.getText());
         numberOfCurrentGuest = 0;
         
+        this.selectedRow = selectedRow;
         this.customer_id = customer_id;
         this.price = price;
         this.check_in = check_in;
@@ -451,22 +453,30 @@ public class Booking extends javax.swing.JPanel {
     }//GEN-LAST:event_addGuestActionPerformed
 
     private void bookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookingActionPerformed
-        mf.accessPaymentGUI();
+        
         int cus = Integer.valueOf(customer_id);
+        String book_id = "";
         
         try {
             String insertBooking = "INSERT INTO booking VALUES(null, " + cus + ", TO_DATE('" + check_in + "', 'DD/MM/YYYY'), TO_DATE('" + check_out + "', 'DD/MM/YYYY'), " + price + ", 'U')";
-            System.out.println(insertBooking);
+            //System.out.println(insertBooking);
             
             DriverManager.registerDriver(new OracleDriver());
             Connection conn = Database.getInstance().getDBConnection("FIT5148B");
             Statement stmt = conn.createStatement();
             stmt.execute(insertBooking);
+            
+            String search = "SELECT booking_id FROM booking ORDER BY booking_id DESC";
+            stmt = conn.createStatement();
+            ResultSet rset = stmt.executeQuery(search);
+                            if(rset.next()){
+                                book_id = rset.getString(1);
+                            }
+            
+            mf.accessPaymentGUI(book_id, selectedRow);
         } catch (SQLException ex) {
             Logger.getLogger(Booking.class.getName()).log(Level.SEVERE, null, ex);
         }
-            
-        
     }//GEN-LAST:event_bookingActionPerformed
 
 
