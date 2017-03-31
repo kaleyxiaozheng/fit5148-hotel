@@ -306,13 +306,13 @@ public class MainFrame extends javax.swing.JFrame {
     }
     
     // Payment GUI
-    public void accessPaymentGUI(String booking_id, String[] selectedRow) {                                           
+    public void accessPaymentGUI(String booking_id, String[] selectedRow, String customer_id) {                                           
 
         jPanel2.removeAll();
 
         javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
 
-        Payment payment1 = new Payment(booking_id, selectedRow);
+        Payment payment1 = new Payment(booking_id, selectedRow, customer_id, this);
 
         jPanel2Layout.setHorizontalGroup(
                 jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -330,7 +330,33 @@ public class MainFrame extends javax.swing.JFrame {
         );
 
         jPanel2.revalidate();
-    }     
+    }   
+    
+    // Do Repayment with booking id and customer id
+    public void  RepaymentBidCid(String customer_id, String[] bookid_price){
+         jPanel2.removeAll();
+
+        javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
+
+        Dorepayment repayment1 = new Dorepayment(customer_id, bookid_price);
+
+        jPanel2Layout.setHorizontalGroup(
+                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(repayment1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(repayment1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+        );
+
+        jPanel2.revalidate();
+    }
     
     private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
 

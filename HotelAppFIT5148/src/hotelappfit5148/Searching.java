@@ -100,7 +100,6 @@ public class Searching extends javax.swing.JPanel {
             Connection conn = Database.getInstance().getDBConnection("FIT5148B");
             DatabaseMetaData md = conn.getMetaData();
 
-            ResultSet rs = md.getTables(null, null, "%", null);
             Statement stmt = conn.createStatement();
 
             ResultSet rset = stmt.executeQuery("select room_type from room");

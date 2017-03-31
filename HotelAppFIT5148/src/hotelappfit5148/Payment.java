@@ -6,8 +6,6 @@
 package hotelappfit5148;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -15,21 +13,24 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
-import oracle.jdbc.OracleDriver;
 
 /**
  *
  * @author Kaley
  */
 public class Payment extends javax.swing.JPanel {
-    
+    private String customer_id;
+    private MainFrame mf;
+    private String book_id;
     
     /**
      * Creates new form Payment
      */
-    public Payment(String booking_id, String[] selectedRow) {
+    public Payment(String book_id, String[] selectedRow, String customer_id, MainFrame mf) {
         initComponents();
-        initCurrentBooking(booking_id, selectedRow);
+        initCurrentBooking(book_id, selectedRow, customer_id);
+        
+        this.mf = mf;
     }
     
     public Payment(){
@@ -38,20 +39,22 @@ public class Payment extends javax.swing.JPanel {
     
     
     // Initial payment GUI with current booking order
-    public void initCurrentBooking(String booking_id, String[] selectedRow){
+    public void initCurrentBooking(String book_id, String[] selectedRow, String customer_id){
         
         String[] row = new String[5];
         
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);    
         
-        row[0] = booking_id; 
+        row[0] = book_id; 
         row[1] = selectedRow[0];
         row[2] = selectedRow[1];
         row[3] = selectedRow[2];
         row[4] = selectedRow[3];
         
         model.addRow(row);
+        
+        
     }
 
     /**
@@ -223,9 +226,17 @@ public class Payment extends javax.swing.JPanel {
             .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    // payment function
     private void paymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paymentActionPerformed
-        // TODO add your handling code here:
+        int row = jTable1.getSelectedRow();
+        
+        String[] bookid_price = new String[2];
+        
+        bookid_price[0] = (String)jTable1.getModel().getValueAt(row, 0);
+        bookid_price[1] = (String)jTable1.getModel().getValueAt(row, 4);
+        
+        mf.RepaymentBidCid(customer_id, bookid_price);
     }//GEN-LAST:event_paymentActionPerformed
 
     private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed

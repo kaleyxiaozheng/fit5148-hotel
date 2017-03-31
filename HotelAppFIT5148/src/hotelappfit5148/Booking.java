@@ -13,7 +13,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -80,7 +79,6 @@ public class Booking extends javax.swing.JPanel {
             Connection conn = Database.getInstance().getDBConnection("FIT5148B");
             DatabaseMetaData md = conn.getMetaData();
 
-            ResultSet rs = md.getTables(null, null, "%", null);
             Statement stmt = conn.createStatement();
 
             String search = "select title, first_name, last_name, citizen_id, dob, country, city, street, email from guest where citizen_id = " + citizen_id;
@@ -473,7 +471,7 @@ public class Booking extends javax.swing.JPanel {
                                 book_id = rset.getString(1);
                             }
             
-            mf.accessPaymentGUI(book_id, selectedRow);
+            mf.accessPaymentGUI(book_id, selectedRow, customer_id);
         } catch (SQLException ex) {
             Logger.getLogger(Booking.class.getName()).log(Level.SEVERE, null, ex);
         }
