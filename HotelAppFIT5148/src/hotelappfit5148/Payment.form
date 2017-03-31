@@ -108,10 +108,8 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="payment" min="-2" max="-2" attributes="0"/>
                   <Component id="delete" min="-2" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="view" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="search" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="view" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="search" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>

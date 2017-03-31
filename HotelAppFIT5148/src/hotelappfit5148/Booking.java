@@ -23,6 +23,7 @@ import oracle.jdbc.OracleDriver;
  */
 public class Booking extends javax.swing.JPanel {
     
+    private MainFrame mf;
     private int numberOfCurrentGuest;
     private int numberOfRoomGuest;
     
@@ -31,12 +32,14 @@ public class Booking extends javax.swing.JPanel {
     /**
      * Creates new form Booking
      */
-    public Booking(String room_type) {
+    public Booking(String room_type, MainFrame mf) {
         initComponents();
         jLabel12.setText(totalGuest(room_type));
         jLabel14.setText("0");
         numberOfRoomGuest = Integer.valueOf(jLabel12.getText());
         numberOfCurrentGuest = 0;
+        
+        this.mf = mf;
     }
     
     // check number of guests a specific room allows
@@ -173,6 +176,11 @@ public class Booking extends javax.swing.JPanel {
         jLabel11.setText("Guest email:");
 
         booking.setLabel("Booking");
+        booking.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bookingActionPerformed(evt);
+            }
+        });
 
         cancel.setAutoscrolls(true);
         cancel.setLabel("Cancel");
@@ -431,6 +439,10 @@ public class Booking extends javax.swing.JPanel {
          jTextField7.setText("");
          jTextField8.setText("");
     }//GEN-LAST:event_addGuestActionPerformed
+
+    private void bookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookingActionPerformed
+        mf.accessPaymentGUI();
+    }//GEN-LAST:event_bookingActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
