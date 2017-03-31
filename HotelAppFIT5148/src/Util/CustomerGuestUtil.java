@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotelappfit5148;
+package Util;
 
+import hotelappfit5148.Database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

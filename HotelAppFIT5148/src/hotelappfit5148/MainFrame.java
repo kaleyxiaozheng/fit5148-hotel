@@ -5,6 +5,9 @@
  */
 package hotelappfit5148;
 
+import Membership.MembershipPanel;
+import Guest.GuestPanel;
+import Customer.CustomerPanel;
 import Hotel.HotelPanel;
 
 import javax.swing.ImageIcon;
