@@ -21,12 +21,14 @@ public class Database {
             = "jdbc:oracle:thin:@hippo.its.monash.edu.au:1521:FIT5148A";
     private static final String DB_CONNECTION_FIT5148B
             = "jdbc:oracle:thin:@hippo.its.monash.edu.au:1521:FIT5148B";
-    private static final String DB_USER = "S27146073";
+    private static final String DB_USER = "S27530264";
     private static final String DB_PASSWORD = "student";
     
     //Global variable
     public static final String DB_FIT5148A = "FIT5148A";
     public static final String DB_FIT5148B = "FIT5148B";
+    
+    public final static String DB_DATE_FORMAT = "yyyy/MM/dd";
 
     private static Database dbIsntance;
     private static Connection con_5148A;
