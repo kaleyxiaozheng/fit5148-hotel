@@ -5,7 +5,6 @@
  */
 package Room;
 
-import Hotel.HotelBean;
 import hotelappfit5148.Database;
 import Util.ErrorMessage;
 import java.sql.Connection;
@@ -28,9 +27,11 @@ public class InsertUpdateHRoomDialog extends javax.swing.JDialog {
     public InsertUpdateHRoomDialog(RoomBean roomTempt, String action) {
 //        super(parent, modal);
         initComponents();
-        room = new RoomBean();
+        room = roomTempt;
         if (ErrorMessage.UPDATE_ACT.equals(action)) {
             viewRoomDetail(roomTempt);
+            this.roomNumberText.setEditable(false);
+            this.hotelIdText.setEditable(false);
             newRoomjButton1.setVisible(false);
         } else {
             this.roomNumberText.setText(Database.getInstance().getSequenceNextval("FIT5148B", "room_seq").toString());
@@ -243,14 +244,14 @@ public class InsertUpdateHRoomDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_newRoomjButton1ActionPerformed
 
     private void updateRoomjButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateRoomjButton2ActionPerformed
-                if (this.hotelIdText.getText().trim().isEmpty() || this.roomNumberText.getText().trim().isEmpty() || this.priceText.getText().trim().isEmpty()) {
+        if (this.hotelIdText.getText().trim().isEmpty() || this.roomNumberText.getText().trim().isEmpty() || this.priceText.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Please enter required fields.");
             return;
         }
 
         try {
-            room.setRoomNumber(this.roomNumberText.getText().trim());
-            room.setHotelId(Long.parseLong(this.hotelIdText.getText().trim()));
+//            room.setRoomNumber(this.roomNumberText.getText().trim());
+//            room.setHotelId(Long.parseLong(this.hotelIdText.getText().trim()));
             room.setRoomType(this.roomTypejComboBox1.getSelectedItem().toString());
             room.setPrice(Float.parseFloat(this.priceText.getText().trim()));
             room.setDescription(this.descriptionTextArea.getText().trim());
@@ -262,27 +263,26 @@ public class InsertUpdateHRoomDialog extends javax.swing.JDialog {
 
         PreparedStatement preparedStatement = null;
         Connection dbConnection = Database.getInstance().getDBConnection("FIT5148B");
-        String insertTableSQL = "update room set"
-                + "room_number = ?, hotel_id = ?, room_type = ?, price = ?, description = ? where "
+        String insertTableSQL = "update room set "
+                + "room_type = ?, price = ?, description = ? where "
                 + " room_number = ? and hotel_id = ? ";
-
         try {
             preparedStatement = dbConnection.prepareStatement(insertTableSQL);
-            preparedStatement.setString(1, room.getRoomNumber());
-            preparedStatement.setLong(2, room.getHotelId());
-            preparedStatement.setString(3, room.getRoomType());
-            preparedStatement.setFloat(4, room.getPrice());
-            preparedStatement.setString(5, room.getDescription());
-            preparedStatement.setString(6, room.getRoomNumber());
-            preparedStatement.setLong(7, room.getHotelId());
+         
+            preparedStatement.setString(1, room.getRoomType());
+            preparedStatement.setFloat(2, room.getPrice());
+            preparedStatement.setString(3, room.getDescription());
+            preparedStatement.setString(4, room.getRoomNumber());
+            preparedStatement.setLong(5, room.getHotelId());
             preparedStatement.executeUpdate();
 
             JOptionPane.showMessageDialog(null, "Update successfully.");
             preparedStatement.close();
             Database.getInstance().closeDBConnection();
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-            if (ex.getErrorCode() == 1) {
+            
+ex.printStackTrace();
+if (ex.getErrorCode() == 1) {
                 JOptionPane.showMessageDialog(null, ErrorMessage.UNIQUE_CONSTRAINT_ROOM);
                 return;
 
@@ -299,7 +299,6 @@ public class InsertUpdateHRoomDialog extends javax.swing.JDialog {
 
     private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
         // TODO add your handling code here:
-        
         this.dispose();
     }//GEN-LAST:event_CancelButtonActionPerformed
 

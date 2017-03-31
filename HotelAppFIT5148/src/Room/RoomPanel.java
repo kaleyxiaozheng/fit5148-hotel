@@ -194,7 +194,7 @@ public class RoomPanel extends javax.swing.JPanel {
                 dtm.addRow(rowData);
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            System.out.println(ex.getMessage());
         }
     }//GEN-LAST:event_searchButtonActionPerformed
 
@@ -218,53 +218,56 @@ public class RoomPanel extends javax.swing.JPanel {
             RoomBean hotel = this.constructRoomBean();
             /* Create and display the form */
             java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new InsertUpdateHRoomDialog(null, ErrorMessage.UPDATE_ACT).setVisible(true);
-            }
-        });
+                public void run() {
+                    new InsertUpdateHRoomDialog(hotel, ErrorMessage.UPDATE_ACT).setVisible(true);
+                }
+            });
         }
     }//GEN-LAST:event_updateRoomButtonActionPerformed
 
     private void deleteRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteRoomButtonActionPerformed
         // TODO add your handling code here:
 
-//        int selectedRowCount = jTable1.getSelectedRowCount();
-//        if (selectedRowCount > 1) {
-//            JOptionPane.showMessageDialog(null, ErrorMessage.MULTIPLE_SELECTION);
-//        } else if (selectedRowCount == 0) {
-//            JOptionPane.showMessageDialog(null, ErrorMessage.NO_SELECTION);
-//        } else {
-//            int confirmDelete = JOptionPane.showConfirmDialog(null, ErrorMessage.CONFIRM_DELETE, null, JOptionPane.YES_NO_OPTION);
-//            if (JOptionPane.YES_OPTION == confirmDelete) {
-//                int selectedHotel = jTable1.getSelectedRow();
-//                Long hotelId = Long.parseLong(jTable1.getModel().getValueAt(selectedHotel, 0).toString());
-//
-//                StringBuilder sb = new StringBuilder("delete hotel where hotel_id = ");
-//                sb.append(hotelId);
-//
-//                boolean deleteResult;
-//
-//                try {
-//                    deleteResult = Database.getInstance().updateTable(Database.DB_FIT5148A, sb.toString());
-//                    if (deleteResult == true) {
-//                        JOptionPane.showMessageDialog(null, ErrorMessage.DELETE_S);
-//                        this.showAllHotelToTable();
-//                    } else {
-//                        JOptionPane.showMessageDialog(null, ErrorMessage.DELETE_F);
-//                    }
-//
-//                } catch (SQLException ex) {
-//
-//                    if (ex.getErrorCode() == 20002) {
-//                        JOptionPane.showMessageDialog(null, ErrorMessage.FOREIGN_KEY_DELETE);
-//                        return;
-//                    }
-//
-//                }
-//
-//            }
-//        }
-//        Database.getInstance().closeDBConnection();
+        int selectedRowCount = jTable1.getSelectedRowCount();
+        if (selectedRowCount > 1) {
+            JOptionPane.showMessageDialog(null, ErrorMessage.MULTIPLE_SELECTION);
+        } else if (selectedRowCount == 0) {
+            JOptionPane.showMessageDialog(null, ErrorMessage.NO_SELECTION);
+        } else {
+            int confirmDelete = JOptionPane.showConfirmDialog(null, ErrorMessage.CONFIRM_DELETE, null, JOptionPane.YES_NO_OPTION);
+            if (JOptionPane.YES_OPTION == confirmDelete) {
+                int selectedHotel = jTable1.getSelectedRow();
+                String roomNumber = jTable1.getModel().getValueAt(selectedHotel, 0).toString();
+                Long hotelId = Long.parseLong(jTable1.getModel().getValueAt(selectedHotel, 1).toString());
+
+                StringBuilder sb = new StringBuilder("delete room where room_number = '");
+                sb.append(roomNumber);
+                sb.append("' and hotel_id = ");
+                sb.append(hotelId);
+
+                boolean deleteResult;
+
+                try {
+                    deleteResult = Database.getInstance().updateTable(Database.DB_FIT5148B, sb.toString());
+                    if (deleteResult == true) {
+                        JOptionPane.showMessageDialog(null, ErrorMessage.DELETE_S);
+                        this.showAllRoomToTable();
+                    } else {
+                        JOptionPane.showMessageDialog(null, ErrorMessage.DELETE_F);
+                    }
+
+                } catch (SQLException ex) {
+                    System.out.println(ex.getMessage());
+                    if (ex.getErrorCode() == 2292) {
+                        JOptionPane.showMessageDialog(null, ErrorMessage.FOREIGN_KEY_DELETE);
+                        return;
+                    }
+
+                }
+
+            }
+        }
+        Database.getInstance().closeDBConnection();
     }//GEN-LAST:event_deleteRoomButtonActionPerformed
 
     private RoomBean constructRoomBean() {
