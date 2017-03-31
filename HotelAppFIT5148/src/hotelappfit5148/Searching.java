@@ -30,10 +30,11 @@ import oracle.jdbc.OracleDriver;
 public class Searching extends javax.swing.JPanel {
     private List countriesAndCities;
     private List room_Type;
+    private MainFrame mf;
     /**
      * Creates new form Searching
      */
-    public Searching() {
+    public Searching(MainFrame mf) {
         initComponents();
         countriesAndCities = initHotel();
         room_Type = initRoom();
@@ -52,6 +53,8 @@ public class Searching extends javax.swing.JPanel {
             String room = iterator.next().toString();
             jComboBox4.addItem(room);
         }
+        
+        this.mf = mf;
     }
     
     // Access hotel country and hotel city
@@ -342,8 +345,7 @@ public class Searching extends javax.swing.JPanel {
 //                    }
 
                  // access booking GUI
-//                 MainFrame mf = new MainFrame();
-//                 mf.bookingActionPerformed();
+                 mf.bookingActionPerformed();
                 }
             }
         });

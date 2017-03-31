@@ -249,7 +249,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
 
-        Searching searching1 = new Searching();
+        Searching searching1 = new Searching(this);
 
         jPanel2Layout.setHorizontalGroup(
                 jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
