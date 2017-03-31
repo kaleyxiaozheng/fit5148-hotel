@@ -39,6 +39,7 @@ public class UpdateHotel extends javax.swing.JFrame {
         this.emailText.setText(hotel.getEmail());
         this.hotelNameText.setText(hotel.getHotelName());
         this.hotelIdLable.setText("Hotel number " + hotel.getHotelId().toString());
+        this.typeComboBox.setSelectedItem(hotel.getHotelType());
     }
 
     /**

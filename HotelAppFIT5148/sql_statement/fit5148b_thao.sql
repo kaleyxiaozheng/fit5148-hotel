@@ -11,7 +11,7 @@ CREATE TABLE  room (
   room_number varchar(20) not null,
   hotel_id number not null,
   room_type varchar(20),
-  price number(15,5),
+  price number(15,5) not null,
   description varchar(20),
   CONSTRAINT room_pk PRIMARY KEY (hotel_id, room_number),
   constraint room_type_values check (room_type in ('Single', 'Double', 'Studio', 'Suite'))
@@ -73,5 +73,5 @@ CREATE SEQUENCE facility_seq START WITH 1 INCREMENT BY   1 NOCACHE NOCYCLE;
 --select * from room;
 
 INSERT INTO facility (room_number, hotel_id, facility_number, description)
-   VALUES ('2',37 , to_char(facility_seq.nextval), 'big tivi');
+   VALUES ('thao',37 , to_char(facility_seq.nextval), 'big tivi');
    

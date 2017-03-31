@@ -277,7 +277,7 @@ public class HotelPanel extends javax.swing.JPanel {
                 } catch (SQLException ex) {
 
                     if (ex.getErrorCode() == 20002) {
-                        JOptionPane.showMessageDialog(null, ErrorMessage.HOTEL_DELETE_TRIGGER_F);
+                        JOptionPane.showMessageDialog(null, ErrorMessage.FOREIGN_KEY_DELETE);
                         return;
                     }
 
