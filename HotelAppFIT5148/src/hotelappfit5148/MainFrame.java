@@ -9,11 +9,7 @@ import Membership.MembershipPanel;
 import Guest.GuestPanel;
 import Customer.CustomerPanel;
 import Hotel.HotelPanel;
-<<<<<<< HEAD
-import java.util.Date;
-=======
 import Room.RoomPanel;
->>>>>>> 7aaf3ee49157930f3828569244b135c3853ff3cc
 
 import javax.swing.ImageIcon;
 
