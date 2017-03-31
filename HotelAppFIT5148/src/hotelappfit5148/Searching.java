@@ -339,7 +339,6 @@ public class Searching extends javax.swing.JPanel {
             Connection conn = Database.getInstance().getDBConnection("FIT5148A");
             Statement stat = conn.createStatement();
             ResultSet rset = stat.executeQuery(search);
-            ResultSetMetaData metadata = rset.getMetaData();
             while (rset.next()) {
                 String[] rsets = new String[4];
                 rsets[0] = rset.getString(1);
@@ -392,7 +391,7 @@ public class Searching extends javax.swing.JPanel {
                   // access booking GUI
                   
                   if(getCustomer_id(customer_id)){
-                      mf.bookingActionPerformed(room_type, check_in, check_out, price);
+                      mf.bookingActionPerformed(room_type, check_in, check_out, price, customer_id);
                   }
                   else{
                       javax.swing.JOptionPane.showMessageDialog(Searching.this, "customer does not exist");
