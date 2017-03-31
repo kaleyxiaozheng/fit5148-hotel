@@ -23,55 +23,55 @@ import oracle.jdbc.OracleDriver;
  */
 public class Booking extends javax.swing.JPanel {
 
-    private List guest;
+    //private List guest;
     
     /**
      * Creates new form Booking
      */
     public Booking() {
         initComponents();
-        guest = initGuest();
+        //guest = initGuest();
         
-        for(Iterator iterator = guest.iterator(); iterator.hasNext();){
-              String[] cc = (String[])iterator.next();
-              
-        }
+//        for(Iterator iterator = guest.iterator(); iterator.hasNext();){
+//              String[] cc = (String[])iterator.next();
+//              
+//        }
     }
     
     // Access guest information from table guest
-    public List initGuest(){
-        
-        List countriesAndCities = new ArrayList();
-        try {
-            DriverManager.registerDriver(new OracleDriver());
-            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
-            DatabaseMetaData md = conn.getMetaData();
-
-            ResultSet rs = md.getTables(null, null, "%", null);
-            Statement stmt = conn.createStatement();
-
-            ResultSet rset = stmt.executeQuery("select title, first_name, last_name, citizen_id, dob, country, city, street, email from guest");
-            ResultSetMetaData metadata = rset.getMetaData();
-            while (rset.next()) {
-                String[] rsets = new String[9];
-                rsets[0] = rset.getString(1);
-                rsets[1] = rset.getString(2);
-                rsets[2] = rset.getString(3);
-                rsets[3] = rset.getString(4);
-                rsets[4] = rset.getString(5);
-                rsets[5] = rset.getString(6);
-                rsets[6] = rset.getString(7);
-                rsets[7] = rset.getString(8);
-                rsets[8] = rset.getString(9);
-                
-                guest.add(rsets);
-            }
-        } catch (SQLException f) {
-            System.out.println(f.getMessage());
-            f.printStackTrace();
-        }
-        return guest;
-    }
+//    public List initGuest(){
+//        
+//        List countriesAndCities = new ArrayList();
+//        try {
+//            DriverManager.registerDriver(new OracleDriver());
+//            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+//            DatabaseMetaData md = conn.getMetaData();
+//
+//            ResultSet rs = md.getTables(null, null, "%", null);
+//            Statement stmt = conn.createStatement();
+//
+//            ResultSet rset = stmt.executeQuery("select title, first_name, last_name, citizen_id, dob, country, city, street, email from guest");
+//            ResultSetMetaData metadata = rset.getMetaData();
+//            while (rset.next()) {
+//                String[] rsets = new String[9];
+//                rsets[0] = rset.getString(1);
+//                rsets[1] = rset.getString(2);
+//                rsets[2] = rset.getString(3);
+//                rsets[3] = rset.getString(4);
+//                rsets[4] = rset.getString(5);
+//                rsets[5] = rset.getString(6);
+//                rsets[6] = rset.getString(7);
+//                rsets[7] = rset.getString(8);
+//                rsets[8] = rset.getString(9);
+//                
+//                guest.add(rsets);
+//            }
+//        } catch (SQLException f) {
+//            System.out.println(f.getMessage());
+//            f.printStackTrace();
+//        }
+//        return guest;
+//    }
     
 
     /**
@@ -144,7 +144,6 @@ public class Booking extends javax.swing.JPanel {
         });
 
         addGuest.setText("Add more guest");
-        addGuest.setActionCommand("Add more guest");
 
         jTextField1.setEditable(false);
 
@@ -167,6 +166,11 @@ public class Booking extends javax.swing.JPanel {
         jTextField7.setText(" ");
 
         jTextField8.setEditable(false);
+        jTextField8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField8ActionPerformed(evt);
+            }
+        });
 
         jCheckBox1.setText("Add current customer as guest");
         jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
@@ -191,6 +195,11 @@ public class Booking extends javax.swing.JPanel {
         jLabel16.setText("Note:");
 
         jButton1.setText("Search");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -349,6 +358,16 @@ public class Booking extends javax.swing.JPanel {
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void jTextField8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField8ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField8ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // search citizen ID from guest table
+        int citizen_id = Integer.valueOf(jTextField8.getText());
+        System.out.println(citizen_id);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

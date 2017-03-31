@@ -324,21 +324,26 @@ public class Searching extends javax.swing.JPanel {
         // double click a row and go to the booking GUI
         jTable1.addMouseListener(new MouseAdapter(){
             public void mouseClicked(MouseEvent e){
-                //System.out.println(e.getClickCount());
                 
                 if(e.getClickCount() == 2){
-                    javax.swing.JTable target = (javax.swing.JTable)e.getSource();
-                    int row = target.getSelectedRow();
                     
-                    String[] rowData = new String[4];
-                    
-                    for(int i = 0; i < 4; i++){
-                        rowData[i] = (String)target.getValueAt(row, i);
-                    }
-                        
-                    for(int i = 0; i < 4; i++){
-                        System.out.print(rowData[i]);
-                    }
+                    // access seleced row data
+//                    javax.swing.JTable target = (javax.swing.JTable)e.getSource();
+//                    int row = target.getSelectedRow();
+//                    
+//                    String[] rowData = new String[4];
+//                    
+//                    for(int i = 0; i < 4; i++){
+//                        rowData[i] = (String)target.getValueAt(row, i);
+//                    }
+//                        
+//                    for(int i = 0; i < 4; i++){
+//                        System.out.print(rowData[i]);
+//                    }
+
+                 // access booking GUI
+//                 MainFrame mf = new MainFrame();
+//                 mf.bookingActionPerformed();
                 }
             }
         });
