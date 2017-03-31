@@ -21,13 +21,13 @@ public class Database {
             = "jdbc:oracle:thin:@hippo.its.monash.edu.au:1521:FIT5148A";
     private static final String DB_CONNECTION_FIT5148B
             = "jdbc:oracle:thin:@hippo.its.monash.edu.au:1521:FIT5148B";
-    private static final String DB_USER = "S27146073";
+    private static final String DB_USER = "student01";
     private static final String DB_PASSWORD = "student";
-    
+
     //Global variable
     public static final String DB_FIT5148A = "FIT5148A";
     public static final String DB_FIT5148B = "FIT5148B";
-    
+
     public final static String DB_DATE_FORMAT = "yyyy/MM/dd";
 
     private static Database dbIsntance;
@@ -35,7 +35,7 @@ public class Database {
     private static Connection con_5148B;
     private static PreparedStatement pstmt;
     private static ResultSet rs;
-    
+
     private Database() {
         // private constructor //
     }
@@ -49,7 +49,6 @@ public class Database {
 
     public Connection getDBConnection(String databaseName) {
 //        Connection dbConnection = null;
-        
 
         try {
             if ("FIT5148A".equalsIgnoreCase(databaseName)) {
@@ -61,11 +60,9 @@ public class Database {
                 if (con_5148B == null || con_5148B.isClosed()) {
                     con_5148B = DriverManager.getConnection(DB_CONNECTION_FIT5148B, DB_USER, DB_PASSWORD);
                 }
-                
+
                 return con_5148B;
             }
-            
-            
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -81,25 +78,25 @@ public class Database {
                 rs.close();
             }
             if (pstmt != null) {
-                pstmt.close();                
-            }                      
-            
+                pstmt.close();
+            }
+
             if (con_5148A != null) {
-                con_5148A.close();                
+                con_5148A.close();
             }
             if (con_5148B != null) {
-                con_5148B.close();                
+                con_5148B.close();
             }
 
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());            
-        }        
+            System.out.println(ex.getMessage());
+        }
     }
 
     public ResultSet selectRecords(String dbName, String sqlStatement) throws SQLException {
         Connection dbConnection = null;
         try {
-            dbConnection = getDBConnection(dbName);            
+            dbConnection = getDBConnection(dbName);
 //            
             pstmt = dbConnection.prepareStatement(sqlStatement);
 
@@ -107,27 +104,48 @@ public class Database {
             return rs;
         } catch (SQLException ex) {
             ex.printStackTrace();
-        } 
-       
+        }
+
         return null;
     }
-    
-    public boolean updateTable(String dbName, String sqlStatement)  throws SQLException {
-        Connection dbConnection = null;
-        
-//        try{
-            dbConnection = getDBConnection(dbName);            
-//            
-            pstmt = dbConnection.prepareStatement(sqlStatement);
 
-            pstmt.executeUpdate(sqlStatement);
-            
-            return true;
+    public boolean updateTable(String dbName, String sqlStatement) throws SQLException {
+        Connection dbConnection = null;
+
+//        try{
+        dbConnection = getDBConnection(dbName);
+//            
+        pstmt = dbConnection.prepareStatement(sqlStatement);
+
+        pstmt.executeUpdate(sqlStatement);
+
+        return true;
 //        } catch (SQLException ex) {
 //            ex.printStackTrace();
 //        } 
 //        return false;
     }
 
-    
+    public Long getSequenceNextval(String dbName, String sequenceName) {
+
+        Connection dbConnection = null;
+        Long nextval = null;
+        try {
+            dbConnection = getDBConnection(dbName);
+            String sqlStatement = "select " + sequenceName + ".nextval from dual";
+            pstmt = dbConnection.prepareStatement(sqlStatement);
+
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                nextval = rs.getLong(1);
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return nextval;
+    }
+
 }

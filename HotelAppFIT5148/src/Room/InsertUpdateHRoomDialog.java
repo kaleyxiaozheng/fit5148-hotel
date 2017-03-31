@@ -3,12 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Hotel;
+package Room;
 
+import Hotel.HotelBean;
 import hotelappfit5148.Database;
-import hotelappfit5148.ErrorMessage;
+import Util.ErrorMessage;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
@@ -26,15 +28,18 @@ public class InsertUpdateHRoomDialog extends javax.swing.JDialog {
     public InsertUpdateHRoomDialog(RoomBean roomTempt, String action) {
 //        super(parent, modal);
         initComponents();
+        room = new RoomBean();
         if (ErrorMessage.UPDATE_ACT.equals(action)) {
-            viewHotelDetail(roomTempt);
+            viewRoomDetail(roomTempt);
             newRoomjButton1.setVisible(false);
         } else {
+            this.roomNumberText.setText(Database.getInstance().getSequenceNextval("FIT5148B", "room_seq").toString());
+
             updateRoomjButton2.setVisible(false);
         }
     }
 
-    private void viewHotelDetail(RoomBean roomTempt) {
+    private void viewRoomDetail(RoomBean roomTempt) {
         this.room = roomTempt;
         this.hotelIdText.setText(room.getHotelId().toString());
         this.roomNumberText.setText(room.getRoomNumber());
@@ -102,6 +107,11 @@ public class InsertUpdateHRoomDialog extends javax.swing.JDialog {
         });
 
         CancelButton.setText("Cancel");
+        CancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CancelButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -178,68 +188,120 @@ public class InsertUpdateHRoomDialog extends javax.swing.JDialog {
 
     private void newRoomjButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newRoomjButton1ActionPerformed
         // TODO add your handling code here:
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new InsertUpdateHRoomDialog(null, ErrorMessage.INSERT_ACT).setVisible(true);
-            }
-        });
-    }//GEN-LAST:event_newRoomjButton1ActionPerformed
-
-    private void updateRoomjButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateRoomjButton2ActionPerformed
-        // TODO add your handling code here:
-                // TODO add your handling code here:
-
-        // TODO add your handling code here:
-        if (hotelNameText.getText().trim().isEmpty()) {
+//                RoomBean room = new RoomBean();
+        if (this.hotelIdText.getText().trim().isEmpty() || this.roomNumberText.getText().trim().isEmpty() || this.priceText.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Please enter required fields.");
             return;
         }
-        if (emailText.getText().trim().contains("@") == false) {
-            JOptionPane.showMessageDialog(null, "Please enter correct email.");
+
+        try {
+            room.setRoomNumber(this.roomNumberText.getText().trim());
+            room.setHotelId(Long.parseLong(this.hotelIdText.getText().trim()));
+            room.setRoomType(this.roomTypejComboBox1.getSelectedItem().toString());
+            room.setPrice(Float.parseFloat(this.priceText.getText().trim()));
+            room.setDescription(this.descriptionTextArea.getText().trim());
+        } catch (Exception ex) {
+
+            JOptionPane.showMessageDialog(null, ErrorMessage.INPUT_FORMAT_ER);
             return;
         }
 
-        try {
-            hotel.setAddress(addressText.getText().trim());
-            hotel.setCity(cityText.getText().trim());
-            hotel.setConstructionYear(Integer.parseInt(constructionYearText.getText().trim()));
-            hotel.setContactNumber(contactNumberText.getText().trim());
-            hotel.setCountry(countryText.getText().trim());
-            hotel.setEmail(emailText.getText().trim());
-            hotel.setHotelName(hotelNameText.getText().trim());
-            hotel.setHotelType(String.valueOf(typeComboBox.getSelectedItem()));
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Please enter correct data type.");
-            return;
-        }
         PreparedStatement preparedStatement = null;
-        Connection dbConnection = Database.getInstance().getDBConnection("FIT5148A");
-        String insertTableSQL = "update  hotel set "
-                + "hotel_name = ?, hotel_type = ?, construction_year = ?, "
-                + "country = ?, city = ?, address = ?, contact_number = ?, email = ? where hotel_id = ?";
+        Connection dbConnection = Database.getInstance().getDBConnection("FIT5148B");
+        String insertTableSQL = "INSERT INTO room"
+                + "(room_number, hotel_id, room_type, price, description) VALUES"
+                + "(?,?,?,?,?)";
 
         try {
             preparedStatement = dbConnection.prepareStatement(insertTableSQL);
-            preparedStatement.setString(1, hotel.getHotelName());
-            preparedStatement.setString(2, hotel.getHotelType());
-            preparedStatement.setInt(3, hotel.getConstructionYear());
-            preparedStatement.setString(4, hotel.getCountry());
-            preparedStatement.setString(5, hotel.getCity());
-            preparedStatement.setString(6, hotel.getAddress());
-            preparedStatement.setString(7, hotel.getContactNumber());
-            preparedStatement.setString(8, hotel.getEmail());
-            preparedStatement.setLong(9, hotel.getHotelId());
+            preparedStatement.setString(1, room.getRoomNumber());
+            preparedStatement.setLong(2, room.getHotelId());
+            preparedStatement.setString(3, room.getRoomType());
+            preparedStatement.setFloat(4, room.getPrice());
+            preparedStatement.setString(5, room.getDescription());
+            preparedStatement.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Create successfully.");
+            preparedStatement.close();
+            Database.getInstance().closeDBConnection();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            if (ex.getErrorCode() == 1) {
+                JOptionPane.showMessageDialog(null, ErrorMessage.UNIQUE_CONSTRAINT_ROOM);
+                return;
+
+            };
+            if (ex.getErrorCode() == 20001) {
+
+                JOptionPane.showMessageDialog(null, ErrorMessage.NOT_EXIST_HOTEL_ID_ER);
+                return;
+
+            }
+            JOptionPane.showMessageDialog(null, ErrorMessage.UNKNOWN_ERROR);
+        };
+
+    }//GEN-LAST:event_newRoomjButton1ActionPerformed
+
+    private void updateRoomjButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateRoomjButton2ActionPerformed
+                if (this.hotelIdText.getText().trim().isEmpty() || this.roomNumberText.getText().trim().isEmpty() || this.priceText.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter required fields.");
+            return;
+        }
+
+        try {
+            room.setRoomNumber(this.roomNumberText.getText().trim());
+            room.setHotelId(Long.parseLong(this.hotelIdText.getText().trim()));
+            room.setRoomType(this.roomTypejComboBox1.getSelectedItem().toString());
+            room.setPrice(Float.parseFloat(this.priceText.getText().trim()));
+            room.setDescription(this.descriptionTextArea.getText().trim());
+        } catch (Exception ex) {
+
+            JOptionPane.showMessageDialog(null, ErrorMessage.INPUT_FORMAT_ER);
+            return;
+        }
+
+        PreparedStatement preparedStatement = null;
+        Connection dbConnection = Database.getInstance().getDBConnection("FIT5148B");
+        String insertTableSQL = "update room set"
+                + "room_number = ?, hotel_id = ?, room_type = ?, price = ?, description = ? where "
+                + " room_number = ? and hotel_id = ? ";
+
+        try {
+            preparedStatement = dbConnection.prepareStatement(insertTableSQL);
+            preparedStatement.setString(1, room.getRoomNumber());
+            preparedStatement.setLong(2, room.getHotelId());
+            preparedStatement.setString(3, room.getRoomType());
+            preparedStatement.setFloat(4, room.getPrice());
+            preparedStatement.setString(5, room.getDescription());
+            preparedStatement.setString(6, room.getRoomNumber());
+            preparedStatement.setLong(7, room.getHotelId());
             preparedStatement.executeUpdate();
 
             JOptionPane.showMessageDialog(null, "Update successfully.");
             preparedStatement.close();
             Database.getInstance().closeDBConnection();
-
         } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        this.dispose();
+            System.out.println(ex.getMessage());
+            if (ex.getErrorCode() == 1) {
+                JOptionPane.showMessageDialog(null, ErrorMessage.UNIQUE_CONSTRAINT_ROOM);
+                return;
+
+            };
+            if (ex.getErrorCode() == 20001) {
+
+                JOptionPane.showMessageDialog(null, ErrorMessage.NOT_EXIST_HOTEL_ID_ER);
+                return;
+
+            }
+            JOptionPane.showMessageDialog(null, ErrorMessage.UNKNOWN_ERROR);
+        };
     }//GEN-LAST:event_updateRoomjButton2ActionPerformed
+
+    private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
+        // TODO add your handling code here:
+        
+        this.dispose();
+    }//GEN-LAST:event_CancelButtonActionPerformed
 
     /**
      * @param args the command line arguments

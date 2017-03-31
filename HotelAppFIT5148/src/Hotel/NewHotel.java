@@ -5,6 +5,7 @@
  */
 package Hotel;
 
+import Util.ErrorMessage;
 import hotelappfit5148.*;
 import javax.swing.JOptionPane;
 import java.sql.*;
@@ -266,6 +267,7 @@ Connection dbConnection = Database.getInstance().getDBConnection("FIT5148A");
             Database.getInstance().closeDBConnection();
         } catch (SQLException ex) {
             ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, ErrorMessage.UNKNOWN_ERROR);
         }
         
 //        this.dispose();

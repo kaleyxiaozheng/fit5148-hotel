@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Hotel;
+package Room;
 
+import Hotel.NewHotel;
+import Util.ErrorMessage;
 import java.sql.Connection;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
@@ -16,12 +18,14 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+
 /**
  *
  * @author thaonguyen
  */
 public class RoomPanel extends javax.swing.JPanel {
-    Object columnHeaders[] = {"ROOM_NUMBER", "HOTEL_NAME", "HOTEL_TYPE", "CONSTUCTION_YEAR", "COUNTRY", "CITY", "ADDRESS", "CONTACT_NUMBER", "EMAIL"};
+
+    Object columnHeaders[] = {"ROOM_NUMBER", "HOTEL_ID", "ROOM_TYPE", "PRICE", "DESCRIPTION"};
     Object data[][] = {{}};
     DefaultTableModel dtm = new DefaultTableModel(data, columnHeaders);
     Connection conn = null;
@@ -32,6 +36,31 @@ public class RoomPanel extends javax.swing.JPanel {
      */
     public RoomPanel() {
         initComponents();
+        showAllRoomToTable();
+    }
+
+    private void showAllRoomToTable() {
+        conn = Database.getInstance().getDBConnection("FIT5148B");
+        dtm.setRowCount(0);
+        try {
+            DriverManager.registerDriver(new OracleDriver());
+            stmt = conn.createStatement();
+            ResultSet rset = stmt.executeQuery("select room_number, hotel_id, room_type, "
+                    + "price, description from room  order by room_number DESC");
+
+            ResultSetMetaData mdata = rset.getMetaData();
+            int numberOfColumns = mdata.getColumnCount();
+            while (rset.next()) {
+                Object[] rowData = new Object[numberOfColumns];
+                for (int i = 0; i < rowData.length; i++) {
+                    rowData[i] = rset.getObject(i + 1);
+                }
+                dtm.addRow(rowData);
+            }
+            Database.getInstance().closeDBConnection();
+        } catch (SQLException f) {
+            System.out.println(f.getMessage());
+        }
     }
 
     /**
@@ -93,99 +122,107 @@ public class RoomPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(HotelScrollPane1)
+                    .addComponent(HotelScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2)
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(18, 18, 18)
+                                .addComponent(facilityTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(searchButton))
                             .addComponent(jLabel1))
-                        .addGap(18, 18, 18)
-                        .addComponent(facilityTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(searchButton))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(173, 173, 173)
-                        .addComponent(newRoomButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(updateRoomButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(deleteRoomButton)))
-                .addGap(466, 466, 466))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(101, 101, 101)
+                .addComponent(newRoomButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(updateRoomButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(deleteRoomButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addGap(29, 29, 29)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(searchButton)
-                    .addComponent(facilityTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(59, 59, 59)
+                    .addComponent(facilityTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchButton))
+                .addGap(18, 18, 18)
                 .addComponent(HotelScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(newRoomButton)
                     .addComponent(updateRoomButton)
                     .addComponent(deleteRoomButton))
-                .addGap(2, 2, 2))
+                .addGap(83, 83, 83))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         // TODO add your handling code here:
-//        dtm.setRowCount(0);
-//
-//        try {
-//            // TODO add your handling code here:
-//
-//            String selectedHotelType = String.valueOf(jComboBox2.getSelectedItem());
-//            StringBuffer sbSQL = new StringBuffer("select hotel_id, hotel_name, hotel_type, "
-//                + "construction_year, country, city, address, "
-//                + "contact_number, email from hotel");
-//            if (!"All Types".equals(selectedHotelType)) {
-//                sbSQL.append(" where hotel_type = '" + selectedHotelType + "'");
-//            }
-//            sbSQL.append(" order by hotel_id DESC");
-//            ResultSet rset = Database.getInstance().selectRecords("FIT5148A", sbSQL.toString());
-//            ResultSetMetaData mdata = rset.getMetaData();
-//            int numberOfColumns = mdata.getColumnCount();
-//            while (rset.next()) {
-//                Object[] rowData = new Object[numberOfColumns];
-//                for (int i = 0; i < rowData.length; i++) {
-//                    rowData[i] = rset.getObject(i + 1);
-//                }
-//                dtm.addRow(rowData);
-//            }
-//        } catch (SQLException ex) {
-//            ex.printStackTrace();
-//        }
+        dtm.setRowCount(0);
+
+        try {
+            // TODO add your handling code here:
+
+            String facility = this.facilityTextField1.getText().trim();
+            StringBuilder sbSQL = new StringBuilder("select room.room_number, room.hotel_id, room.room_type, room.price, room.description  "
+                    + "from room");
+
+            if (!"".equals(facility)) {
+                sbSQL.append(", facility where room.room_number = facility.room_number and room.hotel_id = facility.hotel_id ");
+                sbSQL.append("and lower(facility.description) like '%" + facility.toLowerCase() + "%' ");
+            }
+            sbSQL.append(" order by room_number DESC");
+            System.out.print(sbSQL);
+            ResultSet rset = Database.getInstance().selectRecords("FIT5148B", sbSQL.toString());
+            ResultSetMetaData mdata = rset.getMetaData();
+            int numberOfColumns = mdata.getColumnCount();
+            while (rset.next()) {
+                Object[] rowData = new Object[numberOfColumns];
+                for (int i = 0; i < rowData.length; i++) {
+                    rowData[i] = rset.getObject(i + 1);
+                }
+                dtm.addRow(rowData);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }//GEN-LAST:event_searchButtonActionPerformed
 
     private void newRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newRoomButtonActionPerformed
         // TODO add your handling code here:
-        NewHotel hotelForm = new NewHotel();
-        hotelForm.setVisible(true);
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new InsertUpdateHRoomDialog(null, ErrorMessage.INSERT_ACT).setVisible(true);
+            }
+        });
 
-  
+
     }//GEN-LAST:event_newRoomButtonActionPerformed
 
     private void updateRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateRoomButtonActionPerformed
         // TODO add your handling code here:
-//        int selectedRowCount = jTable1.getSelectedRowCount();
-//        if (selectedRowCount != 1) {
-//            JOptionPane.showMessageDialog(null, "Please select one record.");
-//        } else {
-//            HotelBean hotel = this.constructHotelBean();
-//            /* Create and display the form */
-//            java.awt.EventQueue.invokeLater(new Runnable() {
-//                public void run() {
-//                    new UpdateHotel(hotel).setVisible(true);
-//                }
-//            });
-//        }
+        int selectedRowCount = jTable1.getSelectedRowCount();
+        if (selectedRowCount != 1) {
+            JOptionPane.showMessageDialog(null, "Please select one record.");
+        } else {
+            RoomBean hotel = this.constructRoomBean();
+            /* Create and display the form */
+            java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new InsertUpdateHRoomDialog(null, ErrorMessage.UPDATE_ACT).setVisible(true);
+            }
+        });
+        }
     }//GEN-LAST:event_updateRoomButtonActionPerformed
 
     private void deleteRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteRoomButtonActionPerformed
@@ -230,6 +267,16 @@ public class RoomPanel extends javax.swing.JPanel {
 //        Database.getInstance().closeDBConnection();
     }//GEN-LAST:event_deleteRoomButtonActionPerformed
 
+    private RoomBean constructRoomBean() {
+        RoomBean room = new RoomBean();
+        int selectedRoom = jTable1.getSelectedRow();
+        room.setRoomNumber((String) jTable1.getModel().getValueAt(selectedRoom, 0));
+        room.setHotelId(Long.parseLong(jTable1.getModel().getValueAt(selectedRoom, 1).toString()));
+        room.setRoomType((String) jTable1.getModel().getValueAt(selectedRoom, 2));
+        room.setPrice(Float.parseFloat(jTable1.getModel().getValueAt(selectedRoom, 3).toString()));
+        room.setDescription((String) jTable1.getModel().getValueAt(selectedRoom, 4));
+        return room;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane HotelScrollPane1;
