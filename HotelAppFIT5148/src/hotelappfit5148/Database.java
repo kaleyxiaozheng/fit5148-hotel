@@ -21,7 +21,7 @@ public class Database {
             = "jdbc:oracle:thin:@hippo.its.monash.edu.au:1521:FIT5148A";
     private static final String DB_CONNECTION_FIT5148B
             = "jdbc:oracle:thin:@hippo.its.monash.edu.au:1521:FIT5148B";
-    private static final String DB_USER = "S27530264";
+    private static final String DB_USER = "student01";
     private static final String DB_PASSWORD = "student";
     
     //Global variable
@@ -112,10 +112,10 @@ public class Database {
         return null;
     }
     
-    public boolean updateTable(String dbName, String sqlStatement){
+    public boolean updateTable(String dbName, String sqlStatement)  throws SQLException {
         Connection dbConnection = null;
         
-        try{
+//        try{
             dbConnection = getDBConnection(dbName);            
 //            
             pstmt = dbConnection.prepareStatement(sqlStatement);
@@ -123,10 +123,10 @@ public class Database {
             pstmt.executeUpdate(sqlStatement);
             
             return true;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } 
-        return false;
+//        } catch (SQLException ex) {
+//            ex.printStackTrace();
+//        } 
+//        return false;
     }
 
     
