@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -36,6 +37,7 @@ public class Searching extends javax.swing.JPanel {
      */
     public Searching(MainFrame mf) {
         initComponents();
+        initDate();
         countriesAndCities = initHotel();
         room_Type = initRoom();
         
@@ -57,9 +59,15 @@ public class Searching extends javax.swing.JPanel {
         this.mf = mf;
     }
     
+    // Set current date as value of check-in and check-out
+    public void initDate(){
+        jXDatePicker1.setDate(Calendar.getInstance().getTime());
+        jXDatePicker2.setDate(Calendar.getInstance().getTime());
+    }
+    
+    
     // Access hotel country and hotel city
     public List initHotel(){
-        
         List countriesAndCities = new ArrayList();
         try {
             DriverManager.registerDriver(new OracleDriver());
