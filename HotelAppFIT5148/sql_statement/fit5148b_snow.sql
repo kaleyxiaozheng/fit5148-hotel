@@ -150,11 +150,27 @@ CREATE OR REPLACE PROCEDURE insertOrUpdateCustomer(
   in_postal_code IN CUSTOMER.POSTAL_CODE%TYPE,
   in_phone IN CUSTOMER.PHONE_NUM%TYPE,
   in_email IN CUSTOMER.EMAIL%TYPE,
-  in_action IN VARCHAR2)
+  in_action IN VARCHAR2,
+  out_result OUT VARCHAR2)
 AS
   temp NUMBER;
+  t_count NUMBER;
+  t_first_name GUEST.FIRST_NAME%TYPE;
+  t_last_name GUEST.LAST_NAME%TYPE;
 BEGIN
-  IF in_action = 'Insert' THEN
+  --NEED TO CHECK CITIZEN_ID EXISTS IN GUEST WITH OTHER NAME OR NOT.
+  SELECT COUNT(1) INTO t_count FROM GUEST WHERE CITIZEN_ID = in_citizen_id;
+  IF t_count = 1 THEN
+    SELECT FIRST_NAME, LAST_NAME INTO t_first_name, t_last_name FROM GUEST WHERE CITIZEN_ID = in_citizen_id;
+    
+    IF t_first_name <> in_first_name OR t_last_name <> in_last_name THEN
+      --The citizen id is occupied by someone else
+      out_result := 'F';
+      RETURN;
+    END IF;
+  END IF;
+  
+  IF in_action = 'InsertCustomer' THEN
     --By default, the membership is Bronze and credit is 0
     SELECT TIER_ID INTO temp FROM MEMBERSHIP WHERE MEMBERSHIP_TIER = 'Bronze';
   
@@ -168,6 +184,8 @@ BEGIN
     CITY = in_city, STREET = in_street, POSTAL_CODE = in_postal_code, PHONE_NUM = in_phone,
     EMAIL = in_email WHERE CUSTOMER_ID = in_cust_id;
   END IF;
+  
+  out_result := 'S';
 END;
 
 create or replace PROCEDURE insertOrUpdateMembership(
@@ -188,6 +206,34 @@ BEGIN
       UPDATE MEMBERSHIP SET MEMBERSHIP_TIER = in_membership_tier, TIER_CREDIT = in_tier_credit,
         DISCOUNT = in_discount, OTHER_REWARDS = in_other_rewards WHERE TIER_ID = in_tier_id;
       
+  END IF;
+END;
+
+CREATE OR REPLACE PROCEDURE addCustomerToGuest(
+  in_cust_id IN CUSTOMER.CUSTOMER_ID%Type,
+  out_guest_id OUT GUEST.GUEST_ID%TYPE
+)
+AS
+  temp NUMBER;
+  t_citizen_id NUMBER;
+BEGIN
+  
+  SELECT COUNT(1), GUEST.CITIZEN_ID INTO temp, t_citizen_id FROM GUEST WHERE EXISTS (
+    SELECT * FROM CUSTOMER WHERE GUEST.CITIZEN_ID = CUSTOMER.CITIZEN_ID
+    AND CUSTOMER_ID = in_cust_id);
+    
+  IF temp = 1 THEN
+    SELECT GUEST_ID INTO out_guest_id FROM GUEST WHERE GUEST.CITIZEN_ID = t_citizen_id;
+  ELSE
+    --Due to the uniqueness of citizen_id, it will only insert one record into GUEST table
+    FOR cust_rec IN (SELECT TITLE, FIRST_NAME, LAST_NAME, CITIZEN_ID, DOB, COUNTRY, CITY, STREET, EMAIL
+      FROM CUSTOMER WHERE CUSTOMER_ID = in_cust_id) LOOP
+      
+      INSERT INTO GUEST(GUEST_ID, TITLE, FIRST_NAME, LAST_NAME, CITIZEN_ID, DOB, COUNTRY, CITY, STREET, EMAIL)
+        VALUES (NULL, cust_rec.TITLE, cust_rec.FIRST_NAME, cust_rec.LAST_NAME, cust_rec.CITIZEN_ID, cust_rec.DOB,
+        cust_rec.COUNTRY, cust_rec.CITY, cust_rec.STREET, cust_rec.EMAIL) RETURNING GUEST_ID INTO out_guest_id;
+      
+    END LOOP;  
   END IF;
 END;
 --End of stored procedure

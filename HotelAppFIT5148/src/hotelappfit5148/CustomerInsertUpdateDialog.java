@@ -25,7 +25,8 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
     public final static String CHECK_CUST_EXISTANCE_B4INSERT = "SELECT COUNT(1) "
             + "FROM CUSTOMER WHERE CITIZEN_ID = ";
     private final static String CUSTOMER_INSERT_UPDATE_S = "Customer added/updated successfully. Please go back to Customer page and refresh.";
-    private final static String CUSTOMER_INSERT_UPDATE_F = "Failed to add/update customer. Please double check the information";
+    private final static String CUSTOMER_INSERT_UPDATE_F = "Failed to add/update customer. Other customer is using this citizen id."
+            + "Please double check the information";
     private final static String EXISTED_CITIZEN = "Citizen Id is existed for other customer, please double check";
     private final static String INVALID_CITIZEN_ID = "Please input digit for Citizen ID.";
     private final static String DISCARD_CHANGE = "Your change will be discarded. Please click Yes if you want to stay.";
@@ -33,6 +34,8 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
     
     private static CallableStatement cstmt;
     private final static String CALLSP_INSERTORUPDATECUSTOMER = "{call insertOrUpdateCustomer(?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+    private final static String FAIL_PROCEDURE = "F";
+    private final static String SUCCESS_PROCEDURE = "S";
     /**
      * Creates new form CustomerInsertUpdateDialog
      */
@@ -58,8 +61,10 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
         jTextField4.setText(String.valueOf(customer.getCitizenID()));
         
         try {
-            Date dob = new SimpleDateFormat(CustomerPanel.DB_DATE_FORMAT).parse(customer.getDOB());
-            jXDatePicker1.setDate(dob);
+            if (customer.getDOB()!= null && !"".equals(customer.getDOB())){
+                Date dob = new SimpleDateFormat(Database.DB_DATE_FORMAT).parse(customer.getDOB());
+                jXDatePicker1.setDate(dob);
+            }
         } catch (ParseException ex) {
             Logger.getLogger(CustomerInsertUpdateDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -402,7 +407,7 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
         
         if (jXDatePicker1.getDate() != null){
             Date dob = jXDatePicker1.getDate();
-            SimpleDateFormat dateFormat = new SimpleDateFormat(CustomerPanel.DB_DATE_FORMAT);
+            SimpleDateFormat dateFormat = new SimpleDateFormat(Database.DB_DATE_FORMAT);
             cust.setDOB(dateFormat.format(dob));
         }
         
@@ -446,10 +451,18 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
             cstmt.setString(12, customer.getEmail());
             
             cstmt.setString(13, action);
+            cstmt.registerOutParameter(14, java.sql.Types.VARCHAR);
             
             cstmt.executeUpdate();
             
+            String result = cstmt.getString(13);
+            
+            
+            
             cstmt.close();
+            if (FAIL_PROCEDURE.equals(result)){
+                return false;
+            }
             return true;
             
         } catch (SQLException ex) {

@@ -35,7 +35,7 @@ public class CustomerPanel extends javax.swing.JPanel {
     public final static String UPDATE_CUST = "UpdateCustomer";
     public final static String INSERT_CUST = "InsertCustomer";
     
-    public final static String DB_DATE_FORMAT = "yyyy/MM/dd";
+    
     
     public final static String MULTIPLE_SELECTION = "Please select one customer only.";
     public final static String NO_SELECTION = "Please select at least one customer.";
@@ -258,9 +258,10 @@ public class CustomerPanel extends javax.swing.JPanel {
         customer.setCitizenID(((BigDecimal)jTable1.getModel().getValueAt(selectedCustomer, 4)).intValue());
         
         //Cast SQL Date format
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DB_DATE_FORMAT);        
-        customer.setDOB(dateFormat.format(jTable1.getModel().getValueAt(selectedCustomer, 5)));
-        
+        if (jTable1.getModel().getValueAt(selectedCustomer, 5) != null){
+            SimpleDateFormat dateFormat = new SimpleDateFormat(Database.DB_DATE_FORMAT);        
+            customer.setDOB(dateFormat.format(jTable1.getModel().getValueAt(selectedCustomer, 5)));
+        }
         customer.setCountry((String)jTable1.getModel().getValueAt(selectedCustomer, 6));
         customer.setCity((String)jTable1.getModel().getValueAt(selectedCustomer, 7));
         customer.setStreet((String)jTable1.getModel().getValueAt(selectedCustomer, 8));

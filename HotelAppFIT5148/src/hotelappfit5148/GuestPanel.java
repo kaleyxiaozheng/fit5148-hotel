@@ -5,9 +5,12 @@
  */
 package hotelappfit5148;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -23,9 +26,19 @@ public class GuestPanel extends javax.swing.JPanel {
     
     public final static String SELECT_GUEST = "SELECT GUEST_ID, TITLE, FIRST_NAME, "
             + "LAST_NAME, CITIZEN_ID, DOB, COUNTRY, CITY, STREET, EMAIL FROM GUEST";
-    public final static String SELECT_GUEST_WITH_FIRSTNAME = " WHERE FIRST_NAME LIKE '";
-    public final static String SELECT_GUEST_WITH_LASTNAME = "' OR LAST_NAME LIKE '";
-            
+    public final static String SELECT_GUEST_WITH_FIRSTNAME = " WHERE FIRST_NAME LIKE '%";
+    public final static String SELECT_GUEST_WITH_LASTNAME = "%' OR LAST_NAME LIKE '%";
+    
+    public final static String MULTIPLE_SELECTION = "Please select one guest only.";
+    public final static String NO_SELECTION = "Please select at least one guest.";
+    
+    public final static String CONFIRM_DELETE_GUEST = "The guest information will be deleted. Please click Yes to proceed.";
+    public final static String DELETE_GUEST = "DELETE GUEST WHERE GUEST_ID = ";
+    public final static String UPDATE_GUEST_S = "Membership is deleted. Please refresh.";
+    public final static String UPDATE_GUEST_F = "Fail to delete guest, there is booking for this guest in the system.";
+    
+    public final static String UPDATE_GUEST = "UpdateGuest";
+    public final static String INSERT_GUEST = "InsertGuest";
     /**
      * Creates new form GuestPanel
      */
@@ -68,10 +81,25 @@ public class GuestPanel extends javax.swing.JPanel {
         jScrollPane1.setViewportView(jTable1);
 
         jButton2.setText("Insert Guest");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Update Guest");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Delete Guest");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -80,7 +108,7 @@ public class GuestPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 681, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -89,14 +117,14 @@ public class GuestPanel extends javax.swing.JPanel {
                         .addComponent(jButton1)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(85, 85, 85)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton2)
-                .addGap(39, 39, 39)
+                .addGap(18, 18, 18)
                 .addComponent(jButton3)
-                .addGap(28, 28, 28)
+                .addGap(18, 18, 18)
                 .addComponent(jButton4)
-                .addContainerGap(90, Short.MAX_VALUE))
+                .addGap(64, 64, 64))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -108,12 +136,12 @@ public class GuestPanel extends javax.swing.JPanel {
                     .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
+                    .addComponent(jButton4)
                     .addComponent(jButton3)
-                    .addComponent(jButton4))
-                .addGap(15, 15, 15))
+                    .addComponent(jButton2))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -127,7 +155,7 @@ public class GuestPanel extends javax.swing.JPanel {
         StringBuffer sb = new StringBuffer(SELECT_GUEST);
         if (!"".equals(jTextField1.getText())){
             sb.append(SELECT_GUEST_WITH_FIRSTNAME).append(jTextField1.getText())
-                    .append(SELECT_GUEST_WITH_LASTNAME).append("'");
+                    .append(SELECT_GUEST_WITH_LASTNAME).append(jTextField1.getText()).append("%'");
         }
         
         try {
@@ -149,6 +177,82 @@ public class GuestPanel extends javax.swing.JPanel {
         }
         
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here: Insert
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new GuestInsertUpdateDialog(null, INSERT_GUEST).setVisible(true);
+            }
+        });
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here: Update
+        int selectedRowCount = jTable1.getSelectedRowCount();
+        if (selectedRowCount > 1){
+            JOptionPane.showMessageDialog(null, MULTIPLE_SELECTION);
+        }else if (selectedRowCount == 0){
+            JOptionPane.showMessageDialog(null, NO_SELECTION);
+        }else{
+            GuestBean guestBean = constructGuestBean();
+            /* Create and display the form */
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    new GuestInsertUpdateDialog(guestBean, UPDATE_GUEST).setVisible(true);
+                }
+            });
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private GuestBean constructGuestBean(){
+        GuestBean guest = new GuestBean();
+        
+        int selectedGuest = jTable1.getSelectedRow();
+        guest.setGuest_id(((BigDecimal)jTable1.getModel().getValueAt(selectedGuest, 0)).intValue());
+        guest.setTitle((String)jTable1.getModel().getValueAt(selectedGuest, 1));
+        guest.setFirstName((String)jTable1.getModel().getValueAt(selectedGuest, 2));
+        guest.setLastName((String)jTable1.getModel().getValueAt(selectedGuest, 3));
+        guest.setCitizenID(((BigDecimal)jTable1.getModel().getValueAt(selectedGuest, 4)).intValue());
+        //Cast SQL Date format
+        if (jTable1.getModel().getValueAt(selectedGuest, 5) != null){
+            SimpleDateFormat dateFormat = new SimpleDateFormat(Database.DB_DATE_FORMAT);
+            guest.setDOB(dateFormat.format(jTable1.getModel().getValueAt(selectedGuest, 5)));
+        }
+        
+        guest.setCountry((String)jTable1.getModel().getValueAt(selectedGuest, 6));
+        guest.setCity((String)jTable1.getModel().getValueAt(selectedGuest, 7));
+        guest.setStreet((String)jTable1.getModel().getValueAt(selectedGuest, 8));
+        guest.setEmail((String)jTable1.getModel().getValueAt(selectedGuest, 9));
+        return guest;
+        
+    }
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here: Delete
+        int selectedRowCount = jTable1.getSelectedRowCount();
+        if (selectedRowCount > 1){
+            JOptionPane.showMessageDialog(null, MULTIPLE_SELECTION);
+        }else if (selectedRowCount == 0){
+            JOptionPane.showMessageDialog(null, NO_SELECTION);
+        }else{
+            int confirmDelete = JOptionPane.showConfirmDialog(null, CONFIRM_DELETE_GUEST, null, JOptionPane.YES_NO_OPTION);
+            if (JOptionPane.YES_OPTION == confirmDelete){
+                int selectedCustomer = jTable1.getSelectedRow();
+                int guestID = ((BigDecimal)jTable1.getModel().getValueAt(selectedCustomer, 0)).intValue();
+                StringBuffer sb = new StringBuffer(DELETE_GUEST);
+                sb.append(guestID);
+                
+                boolean updateResult = Database.getInstance().updateTable(Database.DB_FIT5148B, sb.toString());
+                Database.getInstance().closeDBConnection();
+                if (updateResult == true){
+                    JOptionPane.showMessageDialog(null, UPDATE_GUEST_S);
+                }else{
+                    JOptionPane.showMessageDialog(null, UPDATE_GUEST_F);
+                }
+            }
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
