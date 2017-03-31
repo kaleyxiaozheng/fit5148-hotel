@@ -280,12 +280,12 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
     // Booking GUI
-    public void bookingActionPerformed(String room_type){
+    public void bookingActionPerformed(String room_type, String check_in, String check_out, double price, String customer_id){
         jPanel2.removeAll();
         
         javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
         
-        Booking booking1 = new Booking(room_type, this);
+        Booking booking1 = new Booking(room_type, this, check_in, check_out, price, customer_id);
         
          jPanel2Layout.setHorizontalGroup(
                 jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
