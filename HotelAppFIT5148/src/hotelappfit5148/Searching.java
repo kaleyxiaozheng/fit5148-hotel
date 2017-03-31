@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -30,11 +31,13 @@ import oracle.jdbc.OracleDriver;
 public class Searching extends javax.swing.JPanel {
     private List countriesAndCities;
     private List room_Type;
+    private MainFrame mf;
     /**
      * Creates new form Searching
      */
-    public Searching() {
+    public Searching(MainFrame mf) {
         initComponents();
+        initDate();
         countriesAndCities = initHotel();
         room_Type = initRoom();
         
@@ -52,11 +55,19 @@ public class Searching extends javax.swing.JPanel {
             String room = iterator.next().toString();
             jComboBox4.addItem(room);
         }
+        
+        this.mf = mf;
     }
+    
+    // Set current date as value of check-in and check-out
+    public void initDate(){
+        jXDatePicker1.setDate(Calendar.getInstance().getTime());
+        jXDatePicker2.setDate(Calendar.getInstance().getTime());
+    }
+    
     
     // Access hotel country and hotel city
     public List initHotel(){
-        
         List countriesAndCities = new ArrayList();
         try {
             DriverManager.registerDriver(new OracleDriver());
@@ -324,15 +335,25 @@ public class Searching extends javax.swing.JPanel {
         // double click a row and go to the booking GUI
         jTable1.addMouseListener(new MouseAdapter(){
             public void mouseClicked(MouseEvent e){
-                //System.out.println(e.getClickCount());
                 
                 if(e.getClickCount() == 2){
-//                    JTable target = (JTable)e.getSource();
-//                    int row = target.getSelectedRow();
                     
-                  // get selected hotel name, room number
-                  
-                  System.out.print("double clicked");
+                    // access seleced row data
+//                    javax.swing.JTable target = (javax.swing.JTable)e.getSource();
+//                    int row = target.getSelectedRow();
+//                    
+//                    String[] rowData = new String[4];
+//                    
+//                    for(int i = 0; i < 4; i++){
+//                        rowData[i] = (String)target.getValueAt(row, i);
+//                    }
+//                        
+//                    for(int i = 0; i < 4; i++){
+//                        System.out.print(rowData[i]);
+//                    }
+
+                 // access booking GUI
+                 mf.bookingActionPerformed();
                 }
             }
         });

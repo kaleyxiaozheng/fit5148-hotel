@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotelappfit5148;
+package Membership;
 
+import hotelappfit5148.Database;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -252,13 +253,15 @@ public class MembershipPanel extends javax.swing.JPanel {
                 StringBuffer sb = new StringBuffer(DELETE_MEMBERSHIP);
                 sb.append(tierId);
                 
-                boolean updateResult = Database.getInstance().updateTable(Database.DB_FIT5148B, sb.toString());
-                Database.getInstance().closeDBConnection();
-                if (updateResult == true){
+                //boolean updateResult;
+                try {
+                    Database.getInstance().updateTable(Database.DB_FIT5148B, sb.toString());
+                    Database.getInstance().closeDBConnection();
                     JOptionPane.showMessageDialog(null, UPDATE_MEMBERSHIP_S);
-                }else{
+                } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(null, UPDATE_MEMBERSHIP_F);
                 }
+                
             }
         }
     }//GEN-LAST:event_jButton5ActionPerformed

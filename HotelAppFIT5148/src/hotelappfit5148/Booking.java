@@ -30,16 +30,11 @@ public class Booking extends javax.swing.JPanel {
      */
     public Booking() {
         initComponents();
-        guest = initGuest();
         
-        for(Iterator iterator = guest.iterator(); iterator.hasNext();){
-              String[] cc = (String[])iterator.next();
-              
-        }
     }
     
     // Access guest information from table guest
-    public List initGuest(){
+    public List getGuestInfor(int citizen_id){
         
         List countriesAndCities = new ArrayList();
         try {
@@ -50,21 +45,41 @@ public class Booking extends javax.swing.JPanel {
             ResultSet rs = md.getTables(null, null, "%", null);
             Statement stmt = conn.createStatement();
 
-            ResultSet rset = stmt.executeQuery("select title, first_name, last_name, citizen_id, dob, country, city, street, email from guest");
+            String search = "select title, first_name, last_name, citizen_id, dob, country, city, street, email from guest where citizen_id = " + citizen_id;
+            System.out.println(search);
+            
+            
+            ResultSet rset = stmt.executeQuery(search);
             ResultSetMetaData metadata = rset.getMetaData();
             while (rset.next()) {
-                String[] rsets = new String[9];
-                rsets[0] = rset.getString(1);
-                rsets[1] = rset.getString(2);
-                rsets[2] = rset.getString(3);
-                rsets[3] = rset.getString(4);
-                rsets[4] = rset.getString(5);
-                rsets[5] = rset.getString(6);
-                rsets[6] = rset.getString(7);
-                rsets[7] = rset.getString(8);
-                rsets[8] = rset.getString(9);
                 
-                guest.add(rsets);
+                jTextField1.setText("");
+                jTextField2.setText("");
+                jTextField3.setText("");
+                jTextField5.setText("");
+                jTextField4.setText("");
+                jTextField6.setText("");
+                jTextField7.setText("");
+                
+                jTextField1.setText(rset.getString(1));
+                jTextField2.setText(rset.getString(2) + " " + rset.getString(3));
+                jTextField3.setText(rset.getString(5));
+                jTextField5.setText(rset.getString(9));
+                jTextField4.setText(rset.getString(8));
+                jTextField6.setText(rset.getString(7));
+                jTextField7.setText(rset.getString(6));
+//                String[] rsets = new String[9];
+//                rsets[0] = rset.getString(1);
+//                rsets[1] = rset.getString(2);
+//                rsets[2] = rset.getString(3);
+//                rsets[3] = rset.getString(4);
+//                rsets[4] = rset.getString(5);
+//                rsets[5] = rset.getString(6);
+//                rsets[6] = rset.getString(7);
+//                rsets[7] = rset.getString(8);
+//                rsets[8] = rset.getString(9);
+//                
+//                guest.add(rsets);
             }
         } catch (SQLException f) {
             System.out.println(f.getMessage());
@@ -144,7 +159,6 @@ public class Booking extends javax.swing.JPanel {
         });
 
         addGuest.setText("Add more guest");
-        addGuest.setActionCommand("Add more guest");
 
         jTextField1.setEditable(false);
 
@@ -166,7 +180,11 @@ public class Booking extends javax.swing.JPanel {
         jTextField7.setEditable(false);
         jTextField7.setText(" ");
 
-        jTextField8.setEditable(false);
+        jTextField8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField8ActionPerformed(evt);
+            }
+        });
 
         jCheckBox1.setText("Add current customer as guest");
         jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
@@ -191,6 +209,11 @@ public class Booking extends javax.swing.JPanel {
         jLabel16.setText("Note:");
 
         jButton1.setText("Search");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -200,34 +223,28 @@ public class Booking extends javax.swing.JPanel {
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(34, 34, 34)
+                        .addComponent(addGuest)
+                        .addGap(148, 148, 148)
+                        .addComponent(cancel)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel4)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(booking)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(34, 34, 34)
-                                .addComponent(addGuest)
-                                .addGap(148, 148, 148)
-                                .addComponent(cancel)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(0, 40, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(50, 50, 50)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(jLabel13)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel4)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(booking)
-                                                    .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))))))))
-                        .addGap(87, 87, 87))
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel13)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(75, 75, 75))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
@@ -349,6 +366,17 @@ public class Booking extends javax.swing.JPanel {
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void jTextField8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField8ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField8ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // search citizen ID from guest table
+        int citizen_id = Integer.valueOf(jTextField8.getText());
+        //System.out.println(citizen_id);
+        guest = getGuestInfor(citizen_id);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
