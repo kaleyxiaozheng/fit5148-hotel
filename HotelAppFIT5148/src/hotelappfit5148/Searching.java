@@ -329,22 +329,16 @@ public class Searching extends javax.swing.JPanel {
                 if(e.getClickCount() == 2){
                     javax.swing.JTable target = (javax.swing.JTable)e.getSource();
                     int row = target.getSelectedRow();
-                    int column = target.getSelectedColumn();
                     
                     String[] rowData = new String[4];
                     
-                        for(int j = 0; j < column; j++){
-                            rowData[j] = (String)target.getValueAt(row,j);
+                    for(int i = 0; i < 4; i++){
+                        rowData[i] = (String)target.getValueAt(row, i);
                     }
-                    
-                    //String cell =(String)target.getValueAt(row, column);
-                    
-                  // get selected hotel name, room number
-                  
-                  for(int i = 0; i < rowData.length; i++){
-                      System.out.print(rowData[i]);
-                  }
-                  System.out.println();
+                        
+                    for(int i = 0; i < 4; i++){
+                        System.out.print(rowData[i]);
+                    }
                 }
             }
         });
