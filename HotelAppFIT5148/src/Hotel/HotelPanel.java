@@ -5,6 +5,7 @@
  */
 package Hotel;
 
+import Util.ErrorMessage;
 import hotelappfit5148.*;
 import java.math.BigDecimal;
 import javax.swing.table.DefaultTableModel;
