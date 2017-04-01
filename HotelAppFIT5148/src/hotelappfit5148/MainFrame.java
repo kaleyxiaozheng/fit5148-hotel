@@ -395,7 +395,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
 
-        Payment payment1 = new Payment();
+        Payment payment1 = new Payment(this);
 
         jPanel2Layout.setHorizontalGroup(
                 jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
