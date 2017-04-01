@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -29,6 +30,7 @@ public class Payment extends javax.swing.JPanel {
     private List<Integer> customerIds = new ArrayList();
 
     List<Integer> guests = new ArrayList();
+    private List<String> paymentStatuses = new ArrayList();
 
     /**
      * Creates new form Payment
@@ -238,7 +240,10 @@ public class Payment extends javax.swing.JPanel {
     // payment function
     private void paymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paymentActionPerformed
         int row = jTable1.getSelectedRow();
-
+        if(this.paymentStatuses.size()> row && "S".equalsIgnoreCase(this.paymentStatuses.get(row))){
+            JOptionPane.showMessageDialog(this, "Already Paid");
+            return;
+        }
         String[] bookid_price = new String[2];
 
         bookid_price[0] = (String) jTable1.getModel().getValueAt(row, 0);
@@ -343,7 +348,7 @@ public class Payment extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) this.jTable1.getModel();
         model.setRowCount(0);
         try {
-            String search = "select DISTINCT b.booking_id, brm.room_number, r.room_type, p.payment_amount, brm.hotel_id, b.customer_id\n"
+            String search = "select DISTINCT b.booking_id, brm.room_number, r.room_type, p.payment_amount, brm.hotel_id, b.customer_id, b.payment_status\n"
                     + "from booking b, bookingroomguest brm, room r, payment p\n"
                     + "where b.booking_id = brm.booking_id and brm.room_number = r.room_number and brm.booking_id = p.booking_id";
 
@@ -365,6 +370,7 @@ public class Payment extends javax.swing.JPanel {
                 rsets[3] = rset.getString(3);
                 rsets[4] = rset.getString(4);
                 this.customerIds.add(Integer.parseInt(rset.getString(6)));
+                this.paymentStatuses.add(rset.getString(7));
                 //System.out.println(rsets[0] + ", " + rsets[1] + ", " + rsets[2] + ", " + rsets[3]);
                 model.addRow(rsets);
             }

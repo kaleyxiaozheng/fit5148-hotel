@@ -332,7 +332,12 @@ public class Dorepayment extends javax.swing.JPanel {
                  
             
             javax.swing.JOptionPane.showMessageDialog(this, "The booking is piad, thank you!");
+            
+            String updateSql = "update booking set payment_status = 'S' where booking_id = " + this.bookedInfor[0] ;
+            stmt.executeUpdate(updateSql);
             mf.removePanel2();
+            
+            
         }
         }catch (SQLException ex) {
             Logger.getLogger(Booking.class.getName()).log(Level.SEVERE, null, ex);
