@@ -281,23 +281,20 @@ public class Searching extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
-    // get customer id
-    public boolean getCustomer_id(String customer_id) {
+    // get citizen id from customer tablem
+    public boolean whetherExistCitizenId(String citizenId) {
         int cusid = 0;
         boolean flag = false;
 
         // search customer in customer table with customer id
-        String search = "SELECT customer_id from customer where customer_id = " + Integer.valueOf(customer_id);
+        String search = "SELECT citizen_id from customer where citizen_id = " + Integer.valueOf(citizenId);
         //System.out.println(search);
         try {
-            DriverManager.registerDriver(new OracleDriver());
             Connection conn = Database.getInstance().getDBConnection("FIT5148B");
             Statement stmt = conn.createStatement();
 
             ResultSet rset = stmt.executeQuery(search);
-            if (rset.next()) {
-                flag = !rset.getString(1).isEmpty();
-            }
+            flag = rset.next();
         } catch (SQLException ex) {
             Logger.getLogger(Searching.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -409,10 +406,10 @@ public class Searching extends javax.swing.JPanel {
 //                        System.out.print(rowData[i]);
 //                    }
 
-                    String customer_id = javax.swing.JOptionPane.showInputDialog("Please input your customer ID:");
+                    String citizen_id = javax.swing.JOptionPane.showInputDialog("Please input your citizen ID:");
                     //System.out.println(customer_id);
 
-                    if(customer_id == null){
+                    if(citizen_id == null){
                         return;
                     }
                     target = (javax.swing.JTable) e.getSource();
@@ -422,8 +419,8 @@ public class Searching extends javax.swing.JPanel {
                     //System.out.println(room_type);
 
                     // access booking GUI
-                    if (getCustomer_id(customer_id)) {
-                        mf.bookingActionPerformed(room_type, check_in, check_out, price, customer_id, rowData);
+                    if (whetherExistCitizenId(citizen_id)) {
+                        mf.bookingActionPerformed(room_type, check_in, check_out, price, citizen_id, rowData);
                     } else {
                         javax.swing.JOptionPane.showMessageDialog(Searching.this, "customer does not exist");
                     }

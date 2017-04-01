@@ -23,56 +23,58 @@ import oracle.jdbc.OracleDriver;
  * @author Kaley
  */
 public class Booking extends javax.swing.JPanel {
-    
+
     private String[] selectedRow;
-    private String customer_id;
+    private String citizen_id;
     private double price;
     private String check_in;
     private String check_out;
     private MainFrame mf;
     private int numberOfCurrentGuest;
     private int numberOfRoomGuest;
-    
+
     private List<String> guest = new ArrayList();
-    
+
     /**
      * Creates new form Booking
      */
-    public Booking(String room_type, MainFrame mf, String check_in, String check_out, double price, String customer_id, String[] selectedRow) {
+    public Booking(String room_type, MainFrame mf, String check_in, String check_out, double price, String citizen_id, String[] selectedRow) {
         initComponents();
         jLabel12.setText(totalGuest(room_type));
         jLabel14.setText("0");
         numberOfRoomGuest = Integer.valueOf(jLabel12.getText());
         numberOfCurrentGuest = 0;
-        
+
         this.selectedRow = selectedRow;
-        this.customer_id = customer_id;
+        this.citizen_id = citizen_id;
         this.price = price;
         this.check_in = check_in;
         this.check_out = check_out;
         this.mf = mf;
     }
-    
+
     // check number of guests a specific room allows
-    public String totalGuest(String room_type){
+    public String totalGuest(String room_type) {
         String totalGuest = "";
-        switch(room_type.toLowerCase()){
-            case "single": case "studio": case "suite":
+        switch (room_type.toLowerCase()) {
+            case "single":
+            case "studio":
+            case "suite":
                 totalGuest = "1";
                 break;
             case "double":
                 totalGuest = "2";
                 break;
-            default :
+            default:
                 System.out.println("Invalide number.");
                 break;
         }
         return totalGuest;
     }
-    
+
     // Access guest information from table guest
-    public List getGuestInfor(int citizen_id){
-        
+    public List getGuestInfor(int citizen_id) {
+
         List countriesAndCities = new ArrayList();
         try {
             DriverManager.registerDriver(new OracleDriver());
@@ -83,15 +85,14 @@ public class Booking extends javax.swing.JPanel {
 
             String search = "select title, first_name, last_name, citizen_id, dob, country, city, street, email from guest where citizen_id = " + citizen_id;
             //System.out.println(search);
-            
-            
+
             ResultSet rset = stmt.executeQuery(search);
             ResultSetMetaData metadata = rset.getMetaData();
-            
+
             guest.clear();
-            
+
             while (rset.next()) {
-                
+
                 jTextField1.setText("");
                 jTextField2.setText("");
                 jTextField3.setText("");
@@ -99,7 +100,7 @@ public class Booking extends javax.swing.JPanel {
                 jTextField4.setText("");
                 jTextField6.setText("");
                 jTextField7.setText("");
-                
+
                 jTextField1.setText(rset.getString(1));
                 jTextField2.setText(rset.getString(2) + " " + rset.getString(3));
                 jTextField3.setText(rset.getString(5));
@@ -107,7 +108,7 @@ public class Booking extends javax.swing.JPanel {
                 jTextField4.setText(rset.getString(8));
                 jTextField6.setText(rset.getString(7));
                 jTextField7.setText(rset.getString(6));
-                
+
                 guest.add(jTextField8.getText());
                 guest.add(jTextField1.getText());
                 guest.add(jTextField2.getText());
@@ -116,7 +117,7 @@ public class Booking extends javax.swing.JPanel {
                 guest.add(jTextField4.getText());
                 guest.add(jTextField6.getText());
                 guest.add(jTextField7.getText());
-                
+
             }
         } catch (SQLException f) {
             System.out.println(f.getMessage());
@@ -124,7 +125,6 @@ public class Booking extends javax.swing.JPanel {
         }
         return guest;
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -412,6 +412,7 @@ public class Booking extends javax.swing.JPanel {
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
+
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jTextField8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField8ActionPerformed
@@ -426,79 +427,91 @@ public class Booking extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private List<Integer> guests = new ArrayList();
-    
+
     // get guest id
-    public int getGuestID(String citizen_id){
+    public int getGuestID(String citizen_id) {
         int guest_id = 0;
-        
-         try {
-                    String search = "SELECT guest_id from guest WHERE citizen_id = " + citizen_id;
-            
-                     Connection conn = Database.getInstance().getDBConnection("FIT5148B");
-                     Statement stat = conn.createStatement();
-                     ResultSet rset = stat.executeQuery(search);
-                     ResultSetMetaData metadata = rset.getMetaData();
-                    if(rset.next()) {
-                         guest_id = Integer.valueOf(rset.getString(1));
-            }} catch (SQLException ex) {
+
+        try {
+            String search = "SELECT guest_id from guest WHERE citizen_id = " + citizen_id;
+
+            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+            Statement stat = conn.createStatement();
+            ResultSet rset = stat.executeQuery(search);
+            ResultSetMetaData metadata = rset.getMetaData();
+            if (rset.next()) {
+                guest_id = Integer.valueOf(rset.getString(1));
+            }
+        } catch (SQLException ex) {
             Logger.getLogger(Searching.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return guest_id;
     }
-    
+
     private void addGuestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addGuestActionPerformed
-        
-        if(numberOfCurrentGuest == numberOfRoomGuest){
+
+        if (numberOfCurrentGuest == numberOfRoomGuest) {
             javax.swing.JOptionPane.showMessageDialog(this, "Can't add one more guest, sorry.");
+        } else if (!guest.isEmpty()) {
+            numberOfCurrentGuest++;
+            this.jLabel14.setText(String.valueOf(numberOfCurrentGuest));
+
+            int gueID = getGuestID(jTextField8.getText());
+            this.guests.add(gueID);
+
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Guest does not exists.");
         }
-        else{
-            if(!guest.isEmpty()){
-                numberOfCurrentGuest++;
-                this.jLabel14.setText(String.valueOf(numberOfCurrentGuest));
-                
-                int gueID = getGuestID(jTextField8.getText());
-                this.guests.add(gueID);
-                
-            }
-            else{
-                javax.swing.JOptionPane.showMessageDialog(this, "Guest does not exists.");
-            }
-        }
-        
-         jTextField1.setText("");
-         jTextField2.setText("");
-         jTextField3.setText("");
-         jTextField5.setText("");
-         jTextField4.setText("");
-         jTextField6.setText("");
-         jTextField7.setText("");
-         jTextField8.setText("");
+
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
+        jTextField5.setText("");
+        jTextField4.setText("");
+        jTextField6.setText("");
+        jTextField7.setText("");
+        jTextField8.setText("");
     }//GEN-LAST:event_addGuestActionPerformed
 
+    private int getCustomerId(int citizenId) {
+        String sql = "select customer_id from customer where citizen_id = " + citizenId;
+
+        Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet set = stmt.executeQuery(sql);
+            if(set.next()){
+                return set.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+         return 0;
+    }
+
     private void bookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookingActionPerformed
-        
-        int cus = Integer.valueOf(customer_id);
+
+        int citizenId = Integer.valueOf(citizen_id);
         String book_id = "";
-        
+        int cus = this.getCustomerId(citizenId);
         try {
             String insertBooking = "INSERT INTO booking VALUES(null, " + cus + ", TO_DATE('" + check_in + "', 'DD/MM/YYYY'), TO_DATE('" + check_out + "', 'DD/MM/YYYY'), " + price + ", 'U')";
             //System.out.println(insertBooking);
-            
-            DriverManager.registerDriver(new OracleDriver());
+
             Connection conn = Database.getInstance().getDBConnection("FIT5148B");
             Statement stmt = conn.createStatement();
             //stmt.execute(insertBooking);
             stmt.executeUpdate(insertBooking);
-            
+
             String search = "SELECT booking_id FROM booking ORDER BY booking_id DESC";
             stmt = conn.createStatement();
             ResultSet rset = stmt.executeQuery(search);
-                            if(rset.next()){
-                                book_id = rset.getString(1);
-                            }
-            
-            mf.accessPaymentGUI(book_id, selectedRow, customer_id, guests);
+            if (rset.next()) {
+                book_id = rset.getString(1);
+            }
+
+            mf.accessPaymentGUI(book_id, selectedRow, cus+"", guests);
         } catch (SQLException ex) {
             Logger.getLogger(Booking.class.getName()).log(Level.SEVERE, null, ex);
         }
