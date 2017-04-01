@@ -29,9 +29,11 @@ import oracle.jdbc.OracleDriver;
  * @author Kaley
  */
 public class Searching extends javax.swing.JPanel {
+
     private List countriesAndCities;
     private List room_Type;
     private MainFrame mf;
+
     /**
      * Creates new form Searching
      */
@@ -40,34 +42,33 @@ public class Searching extends javax.swing.JPanel {
         initDate();
         countriesAndCities = initHotel();
         room_Type = initRoom();
-        
+
         jComboBox2.removeAllItems();
         jComboBox1.removeAllItems();
         jComboBox4.removeAllItems();
-        
-        for(Iterator iterator = countriesAndCities.iterator(); iterator.hasNext();){
-              String[] cc = (String[])iterator.next();
-              jComboBox2.addItem(cc[0]);
-              jComboBox1.addItem(cc[1]);  
+
+        for (Iterator iterator = countriesAndCities.iterator(); iterator.hasNext();) {
+            String[] cc = (String[]) iterator.next();
+            jComboBox2.addItem(cc[0]);
+            jComboBox1.addItem(cc[1]);
         }
-        
-        for(Iterator iterator = room_Type.iterator(); iterator.hasNext();){
+
+        for (Iterator iterator = room_Type.iterator(); iterator.hasNext();) {
             String room = iterator.next().toString();
             jComboBox4.addItem(room);
         }
-        
+
         this.mf = mf;
     }
-    
+
     // Set current date as value of check-in and check-out
-    public void initDate(){
+    public void initDate() {
         jXDatePicker1.setDate(Calendar.getInstance().getTime());
         jXDatePicker2.setDate(Calendar.getInstance().getTime());
     }
-    
-    
+
     // Access hotel country and hotel city
-    public List initHotel(){
+    public List initHotel() {
         List countriesAndCities = new ArrayList();
         try {
             DriverManager.registerDriver(new OracleDriver());
@@ -91,10 +92,10 @@ public class Searching extends javax.swing.JPanel {
         }
         return countriesAndCities;
     }
-    
+
     // Access room type and rate range
-    public List initRoom(){
-        List roomType= new ArrayList();
+    public List initRoom() {
+        List roomType = new ArrayList();
         try {
             DriverManager.registerDriver(new OracleDriver());
             Connection conn = Database.getInstance().getDBConnection("FIT5148B");
@@ -113,10 +114,9 @@ public class Searching extends javax.swing.JPanel {
             f.printStackTrace();
         }
         return roomType;
-        
+
     }
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -280,61 +280,71 @@ public class Searching extends javax.swing.JPanel {
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
     // get customer id
-        public boolean getCustomer_id(String customer_id){
-            int cusid = 0;
-            boolean flag = false;
-            
-            // search customer in customer table with customer id
-                String search = "SELECT customer_id from customer where customer_id = " + Integer.valueOf(customer_id);
-                //System.out.println(search);
-                    try {
-                        DriverManager.registerDriver(new OracleDriver());
-                        Connection conn = Database.getInstance().getDBConnection("FIT5148B");
-                        Statement stmt = conn.createStatement();
+    public boolean getCustomer_id(String customer_id) {
+        int cusid = 0;
+        boolean flag = false;
 
-                        ResultSet rset = stmt.executeQuery(search);
-                            if(rset.next()){
-                                flag = !rset.getString(1).isEmpty();
-                            }
-                    } catch (SQLException ex) {
-                        Logger.getLogger(Searching.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-            
-            return flag;
+        // search customer in customer table with customer id
+        String search = "SELECT customer_id from customer where customer_id = " + Integer.valueOf(customer_id);
+        //System.out.println(search);
+        try {
+            DriverManager.registerDriver(new OracleDriver());
+            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+            Statement stmt = conn.createStatement();
+
+            ResultSet rset = stmt.executeQuery(search);
+            if (rset.next()) {
+                flag = !rset.getString(1).isEmpty();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Searching.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
-    
+
+        return flag;
+    }
+
+
     private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
-        
-       DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
-        
+
         String country = String.valueOf(jComboBox2.getSelectedItem());
         String city = String.valueOf(jComboBox1.getSelectedItem());
         String room_type = String.valueOf(jComboBox4.getSelectedItem());
         String rate_range = String.valueOf(jComboBox3.getSelectedItem());
-        
+
         SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
         String check_in = formater.format(jXDatePicker1.getDate());
         String check_out = formater.format(jXDatePicker2.getDate());
-        
+
         boolean avaliable = jCheckBox1.isSelected();
         String avail = "";
-        
-        if(avaliable){
+
+        if (avaliable) {
             avail = "true";
-        }
-        else{
+        } else {
             avail = "false";
         }
-        
+
         try {
+
+            String search = "SELECT hotel_name, room_number, room_type, price from room@FIT5148B r, hotel@FIT5148A h WHERE h.country =  '"
+                    + country + "' and h.city = '" + city + "'" + " and h.hotel_id = r.hotel_id and r.room_type = '"
+                    + room_type + "' ";
+            String selectedPriceRange = this.jComboBox3.getSelectedItem().toString();
+            int priceStart = Integer.MIN_VALUE;
+            int priceEnd = Integer.MAX_VALUE;
+            if (selectedPriceRange.contains("-")) {
+                priceStart = Integer.parseInt(selectedPriceRange.split("-")[0]);
+                priceEnd = Integer.parseInt(selectedPriceRange.split("-")[1]);
+            }else if (selectedPriceRange.contains(">")) {
+                priceStart = Integer.parseInt(selectedPriceRange.split(">")[1].trim());
+            }
+            search += " and r.price >= " + priceStart + " and r.price <=" + priceEnd;
             
             
-            String search = "SELECT hotel_name, room_number, room_type, price from room@FIT5148B r, hotel@FIT5148A h WHERE h.country =  '" + country + "' and h.city = '" + city + "'" + " and h.hotel_id = r.hotel_id and r.room_type = '" + room_type + "'";
-            
-            //System.out.println(search);
-            
+            System.out.println(search);
             Connection conn = Database.getInstance().getDBConnection("FIT5148A");
             Statement stat = conn.createStatement();
             ResultSet rset = stat.executeQuery(search);
@@ -344,62 +354,55 @@ public class Searching extends javax.swing.JPanel {
                 rsets[1] = rset.getString(2);
                 rsets[2] = rset.getString(3);
                 rsets[3] = rset.getString(4);
-                
+
                 //System.out.println(rsets[0] + ", " + rsets[1] + ", " + rsets[2] + ", " + rsets[3]);
-                
                 model.addRow(rsets);
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(Searching.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         // double click a row and go to the booking GUI
-        jTable1.addMouseListener(new MouseAdapter(){
-            public void mouseClicked(MouseEvent e){
-                
-                if(e.getClickCount() == 2){
-                    
+        jTable1.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+
+                if (e.getClickCount() == 2) {
+
                     // access seleced row data
-                    javax.swing.JTable target = (javax.swing.JTable)e.getSource();
+                    javax.swing.JTable target = (javax.swing.JTable) e.getSource();
                     int row1 = target.getSelectedRow();
-                    
+
                     String[] rowData = new String[4];
-                    
-                    for(int i = 0; i < 4; i++){
-                        rowData[i] = (String)target.getValueAt(row1, i);
+
+                    for (int i = 0; i < 4; i++) {
+                        rowData[i] = (String) target.getValueAt(row1, i);
                     }
 //                        
 //                    for(int i = 0; i < 4; i++){
 //                        System.out.print(rowData[i]);
 //                    }
 
-                String customer_id = javax.swing.JOptionPane.showInputDialog("Please input your customer ID:");
-                //System.out.println(customer_id);
-                 
-                
-                 target = (javax.swing.JTable)e.getSource();
-                 int row2 = target.getSelectedRow();
-                 String room_type = (String)target.getValueAt(row2, 2);
-                 double price = Double.valueOf((String)target.getValueAt(row2, 3));
-                 //System.out.println(room_type);
-                 
-                  // access booking GUI
-                  
-                  if(getCustomer_id(customer_id)){
-                      mf.bookingActionPerformed(room_type, check_in, check_out, price, customer_id, rowData);
-                  }
-                  else{
-                      javax.swing.JOptionPane.showMessageDialog(Searching.this, "customer does not exist");
-                  }
+                    String customer_id = javax.swing.JOptionPane.showInputDialog("Please input your customer ID:");
+                    //System.out.println(customer_id);
+
+                    target = (javax.swing.JTable) e.getSource();
+                    int row2 = target.getSelectedRow();
+                    String room_type = (String) target.getValueAt(row2, 2);
+                    double price = Double.valueOf((String) target.getValueAt(row2, 3));
+                    //System.out.println(room_type);
+
+                    // access booking GUI
+                    if (getCustomer_id(customer_id)) {
+                        mf.bookingActionPerformed(room_type, check_in, check_out, price, customer_id, rowData);
+                    } else {
+                        javax.swing.JOptionPane.showMessageDialog(Searching.this, "customer does not exist");
+                    }
                 }
             }
         });
     }//GEN-LAST:event_searchActionPerformed
 
-    
-    
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox jCheckBox1;
@@ -421,5 +424,3 @@ public class Searching extends javax.swing.JPanel {
     private javax.swing.JButton search;
     // End of variables declaration//GEN-END:variables
 }
-
-
