@@ -63,15 +63,15 @@ public class Dorepayment extends javax.swing.JPanel {
     public void initRepayment(String customer_id, String[] bookid_price){
         String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(new Timestamp(System.currentTimeMillis()));
         jTextField2.setText(timeStamp);
-        
          jTextField1.setText(bookid_price[0]);
-         jTextField3.setText(bookid_price[1]);
          jTextField4.setText(customer_id);
-         
          jTextField5.setText(getMembership(customer_id)[0]);
          jTextField6.setText(getMembership(customer_id)[1]);
          jTextField7.setText(getMembership(customer_id)[2]);
          jTextField8.setText(getMembership(customer_id)[3]);
+         
+         double total_price = Double.valueOf(bookid_price[1]) * Double.valueOf(jTextField7.getText()) / 100;
+         jTextField3.setText(String.valueOf(total_price));
     }
 
     /**
