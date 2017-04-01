@@ -84,7 +84,8 @@ public class Dorepayment extends javax.swing.JPanel {
         jTextField8.setText(getMembership(customer_id)[3]);
 
         double total_price = Math.round(Double.valueOf(bookid_price[1]) * Double.valueOf(jTextField7.getText()) / 100);
-        jTextField3.setText(String.valueOf(total_price));
+        String total = String.format("%.2f", total_price);
+        jTextField3.setText(String.valueOf(total));
     }
 
     /**
