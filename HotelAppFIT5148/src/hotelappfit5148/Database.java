@@ -21,6 +21,8 @@ public class Database {
             = "jdbc:oracle:thin:@hippo.its.monash.edu.au:1521:FIT5148A";
     private static final String DB_CONNECTION_FIT5148B
             = "jdbc:oracle:thin:@hippo.its.monash.edu.au:1521:FIT5148B";
+    private static final String DB_CONNECTION
+            = "jdbc:oracle:thin:@hippo.its.monash.edu.au:1521";
     private static final String DB_USER = "S27146073";
     private static final String DB_PASSWORD = "student";
 
@@ -33,6 +35,7 @@ public class Database {
     private static Database dbIsntance;
     private static Connection con_5148A;
     private static Connection con_5148B;
+    private static Connection con;
     private static PreparedStatement pstmt;
     private static ResultSet rs;
 
@@ -49,13 +52,17 @@ public class Database {
 
     public Connection getDBConnection(String databaseName) {
 //        Connection dbConnection = null;
-
         try {
             if ("FIT5148A".equalsIgnoreCase(databaseName)) {
                 if (con_5148A == null || con_5148A.isClosed()) {
                     con_5148A = DriverManager.getConnection(DB_CONNECTION_FIT5148A, DB_USER, DB_PASSWORD);
                 }
                 return con_5148A;
+            } if ("FIT5148B".equalsIgnoreCase(databaseName)) {
+                if (con_5148B == null || con_5148B.isClosed()) {
+                    con_5148B = DriverManager.getConnection(DB_CONNECTION_FIT5148B, DB_USER, DB_PASSWORD);
+                }
+                return con_5148B;
             } else {
                 if (con_5148B == null || con_5148B.isClosed()) {
                     con_5148B = DriverManager.getConnection(DB_CONNECTION_FIT5148B, DB_USER, DB_PASSWORD);

@@ -42,6 +42,35 @@ public class Payment extends javax.swing.JPanel {
     
     public Payment(){
         initComponents();
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+        
+        try {
+            
+            String search = "select b.booking_id, h.hotel_name, brm.room_number, r.room_type, p.payment_amount\n" +
+"from booking b, bookingroomguest brm, hotel@FIT5148A h, room r, payment p\n" +
+"where b.booking_id = brm.booking_id and brm.hotel_id = h.hotel_id and brm.room_number = r.room_number and brm.booking_id = p.booking_id";
+            //System.out.println(search);
+            
+            Connection conn = Database.getInstance().getDBConnection("FIT5148A");
+            Statement stat = conn.createStatement();
+            ResultSet rset = stat.executeQuery(search);
+            while (rset.next()) {
+                String[] rsets = new String[5];
+                rsets[0] = rset.getString(1);
+                rsets[1] = rset.getString(2);
+                rsets[2] = rset.getString(3);
+                rsets[3] = rset.getString(4);
+                rsets[4] = rset.getString(5);
+                
+                //System.out.println(rsets[0] + ", " + rsets[1] + ", " + rsets[2] + ", " + rsets[3]);
+                
+                model.addRow(rsets);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Searching.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     
