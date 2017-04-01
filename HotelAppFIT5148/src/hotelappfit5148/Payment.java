@@ -28,8 +28,9 @@ public class Payment extends javax.swing.JPanel {
      */
     public Payment(String book_id, String[] selectedRow, String customer_id, MainFrame mf) {
         initComponents();
-        initCurrentBooking(book_id, selectedRow, customer_id);
+        initCurrentBooking(book_id, selectedRow);
         
+        this.customer_id = customer_id;
         this.mf = mf;
     }
     
@@ -39,7 +40,7 @@ public class Payment extends javax.swing.JPanel {
     
     
     // Initial payment GUI with current booking order
-    public void initCurrentBooking(String book_id, String[] selectedRow, String customer_id){
+    public void initCurrentBooking(String book_id, String[] selectedRow){
         
         String[] row = new String[5];
         
@@ -235,6 +236,8 @@ public class Payment extends javax.swing.JPanel {
         
         bookid_price[0] = (String)jTable1.getModel().getValueAt(row, 0);
         bookid_price[1] = (String)jTable1.getModel().getValueAt(row, 4);
+        
+        System.out.println("customer " + customer_id);
         
         mf.RepaymentBidCid(customer_id, bookid_price);
     }//GEN-LAST:event_paymentActionPerformed

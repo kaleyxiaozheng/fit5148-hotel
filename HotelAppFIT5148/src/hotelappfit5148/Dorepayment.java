@@ -22,15 +22,12 @@ import oracle.jdbc.OracleDriver;
  */
 public class Dorepayment extends javax.swing.JPanel {
 
-    
     /**
      * Creates new form Dorepayment
      */
     public Dorepayment(String customer_id, String[] bookid_price) {
         initComponents();
         initRepayment(customer_id, bookid_price);
-        
-        
     }
     
     // get membership tire with customer id
@@ -45,13 +42,16 @@ public class Dorepayment extends javax.swing.JPanel {
             Statement stmt = conn.createStatement();
 
             String search = "SELECT membership_tier, tier_credit, discount, other_rewards FROM membership WHERE tier_id = (SELECT tier_id FROM customer WHERE customer_id = " + customer_id +")";
-            System.out.println(search);
+            //System.out.println(search);
             
             ResultSet rset = stmt.executeQuery(search);
             ResultSetMetaData metadata = rset.getMetaData();
-//            while (rset.next()) {
-//                String room_type = rset.getString(1);
-//            }
+            while (rset.next()) {
+               membership[0] = rset.getString(1);
+               membership[1] = rset.getString(2);
+               membership[2] = rset.getString(3);
+               membership[3] = rset.getString(4);
+            }
         } catch (SQLException f) {
             System.out.println(f.getMessage());
             f.printStackTrace();
@@ -66,6 +66,12 @@ public class Dorepayment extends javax.swing.JPanel {
         
          jTextField1.setText(bookid_price[0]);
          jTextField3.setText(bookid_price[1]);
+         jTextField4.setText(customer_id);
+         
+         jTextField5.setText(getMembership(customer_id)[0]);
+         jTextField6.setText(getMembership(customer_id)[1]);
+         jTextField7.setText(getMembership(customer_id)[2]);
+         jTextField8.setText(getMembership(customer_id)[3]);
     }
 
     /**
