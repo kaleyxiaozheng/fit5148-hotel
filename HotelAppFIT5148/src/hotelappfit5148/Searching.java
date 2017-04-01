@@ -17,10 +17,12 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import oracle.jdbc.OracleDriver;
 
@@ -103,7 +105,7 @@ public class Searching extends javax.swing.JPanel {
 
             Statement stmt = conn.createStatement();
 
-            ResultSet rset = stmt.executeQuery("select room_type from room");
+            ResultSet rset = stmt.executeQuery("select DISTINCT room_type from room");
             ResultSetMetaData metadata = rset.getMetaData();
             while (rset.next()) {
                 String room_type = rset.getString(1);
@@ -306,6 +308,28 @@ public class Searching extends javax.swing.JPanel {
 
     private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
 
+        // check check-in and check-out date
+        Date checkinDate = this.jXDatePicker1.getDate();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(checkinDate);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 58);
+        checkinDate = calendar.getTime();
+        Date checkoutDate = this.jXDatePicker2.getDate();
+        Date todayDate = Calendar.getInstance().getTime();
+        if(checkinDate.before(todayDate)){
+            JOptionPane.showMessageDialog(this, "Checkin date must be after today");
+            return;
+        }
+        if(checkoutDate.before(todayDate)){
+            JOptionPane.showMessageDialog(this, "Checkout date must be after today");
+            return;
+        }
+        if(checkoutDate.before(checkinDate)){
+            JOptionPane.showMessageDialog(this, "Checkout date must be after checkin date");
+            return;
+        }
+        
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
 
@@ -386,6 +410,9 @@ public class Searching extends javax.swing.JPanel {
                     String customer_id = javax.swing.JOptionPane.showInputDialog("Please input your customer ID:");
                     //System.out.println(customer_id);
 
+                    if(customer_id == null){
+                        return;
+                    }
                     target = (javax.swing.JTable) e.getSource();
                     int row2 = target.getSelectedRow();
                     String room_type = (String) target.getValueAt(row2, 2);
