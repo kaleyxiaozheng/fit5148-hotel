@@ -322,7 +322,7 @@ public class Payment extends javax.swing.JPanel {
     }//GEN-LAST:event_jTextField4ActionPerformed
 
     private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
-        boolean unpaid = !this.jCheckBox2.isSelected();
+        boolean unpaid = this.jCheckBox2.isSelected();
         int customerId = -1;
         try{
             customerId = Integer.parseInt(this.jTextField4.getText().trim());
@@ -335,7 +335,7 @@ public class Payment extends javax.swing.JPanel {
      * read from database to render table data
      */
     private void initializeTableData() {
-        this.filterData(-1, null, null, true);
+        this.filterData(-1, null, null, false);
     }
 
     /**
@@ -357,8 +357,10 @@ public class Payment extends javax.swing.JPanel {
             if (lastName != null && !lastName.trim().isEmpty()) {
                 search += " and cus.last_name like '%" + lastName.trim() + "%' ";
             }
-            String paymentStatus = unPaid ? "S" : "U";
-            search += " and b.payment_status = '" + paymentStatus + "'";
+            if(unPaid){
+                search += " and b.payment_status = 'U'";
+            }
+            
             System.out.println("search "+search);
             Connection conn = Database.getInstance().getDBConnection("FIT5148B");
             Statement stat = conn.createStatement();
