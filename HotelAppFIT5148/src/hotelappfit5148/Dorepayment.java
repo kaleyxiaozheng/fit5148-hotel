@@ -28,24 +28,25 @@ public class Dorepayment extends javax.swing.JPanel {
 
     private String[] bookedInfor;
     private MainFrame mf;
-    
+
     List<Integer> guests = new ArrayList();
+
     /**
      * Creates new form Dorepayment
      */
     public Dorepayment(String customer_id, String[] bookid_price, String[] bookedInfor, List<Integer> guests, MainFrame mf) {
         initComponents();
         initRepayment(customer_id, bookid_price);
-        
+
         this.guests = guests;
         this.mf = mf;
         this.bookedInfor = bookedInfor;
     }
-    
+
     // get membership tire with customer id
-    public String[] getMembership(String customer_id){
+    public String[] getMembership(String customer_id) {
         String[] membership = new String[4];
-        
+
         try {
             DriverManager.registerDriver(new OracleDriver());
             Connection conn = Database.getInstance().getDBConnection("FIT5148B");
@@ -53,16 +54,16 @@ public class Dorepayment extends javax.swing.JPanel {
 
             Statement stmt = conn.createStatement();
 
-            String search = "SELECT membership_tier, tier_credit, discount, other_rewards FROM membership WHERE tier_id = (SELECT tier_id FROM customer WHERE customer_id = " + customer_id +")";
+            String search = "SELECT membership_tier, tier_credit, discount, other_rewards FROM membership WHERE tier_id = (SELECT tier_id FROM customer WHERE customer_id = " + customer_id + ")";
             //System.out.println(search);
-            
+
             ResultSet rset = stmt.executeQuery(search);
             ResultSetMetaData metadata = rset.getMetaData();
             while (rset.next()) {
-               membership[0] = rset.getString(1);
-               membership[1] = rset.getString(2);
-               membership[2] = rset.getString(3);
-               membership[3] = rset.getString(4);
+                membership[0] = rset.getString(1);
+                membership[1] = rset.getString(2);
+                membership[2] = rset.getString(3);
+                membership[3] = rset.getString(4);
             }
         } catch (SQLException f) {
             System.out.println(f.getMessage());
@@ -70,20 +71,20 @@ public class Dorepayment extends javax.swing.JPanel {
         }
         return membership;
     }
-    
+
     // initial current booking payment 
-    public void initRepayment(String customer_id, String[] bookid_price){
+    public void initRepayment(String customer_id, String[] bookid_price) {
         String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(new Timestamp(System.currentTimeMillis()));
         jTextField2.setText(timeStamp);
-         jTextField1.setText(bookid_price[0]);
-         jTextField4.setText(customer_id);
-         jTextField5.setText(getMembership(customer_id)[0]);
-         jTextField6.setText(getMembership(customer_id)[1]);
-         jTextField7.setText(getMembership(customer_id)[2]);
-         jTextField8.setText(getMembership(customer_id)[3]);
-         
-         double total_price = Math.round(Double.valueOf(bookid_price[1]) * Double.valueOf(jTextField7.getText()) / 100);
-         jTextField3.setText(String.valueOf(total_price));
+        jTextField1.setText(bookid_price[0]);
+        jTextField4.setText(customer_id);
+        jTextField5.setText(getMembership(customer_id)[0]);
+        jTextField6.setText(getMembership(customer_id)[1]);
+        jTextField7.setText(getMembership(customer_id)[2]);
+        jTextField8.setText(getMembership(customer_id)[3]);
+
+        double total_price = Math.round(Double.valueOf(bookid_price[1]) * Double.valueOf(jTextField7.getText()) / 100);
+        jTextField3.setText(String.valueOf(total_price));
     }
 
     /**
@@ -291,55 +292,30 @@ public class Dorepayment extends javax.swing.JPanel {
         mf.removePanel2();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    // get Hotel id
-    public int getHotelId(String hotelName){
-        int hotelID = 0;
-        
-         try {
-            String search = "SELECT hotel_id from hotel WHERE hotel_name = '" + hotelName + "'";
-            
-            Connection conn = Database.getInstance().getDBConnection("FIT5148A");
-            Statement stat = conn.createStatement();
-            ResultSet rset = stat.executeQuery(search);
-            if(rset.next()){
-                hotelID = rset.getInt(1);
-            }
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(Searching.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        return hotelID;
-    }
     
+
     // insert data into payment table
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
-            String insertPayment = "INSERT INTO payment VALUES(" + Integer.valueOf(jTextField1.getText()) + ", TO_DATE('" + jTextField2.getText() + "', 'DD/MM/YYYY'), '" + (String)jComboBox1.getSelectedItem() + "', " + jTextField3.getText() + ")";
+            String insertPayment = "INSERT INTO payment VALUES(" + Integer.valueOf(jTextField1.getText()) + ", TO_DATE('" + jTextField2.getText() + "', 'DD/MM/YYYY'), '" + (String) jComboBox1.getSelectedItem() + "', " + jTextField3.getText() + " )";
             System.out.println(insertPayment);
-            
+
             DriverManager.registerDriver(new OracleDriver());
             Connection conn = Database.getInstance().getDBConnection("FIT5148B");
             Statement stmt = conn.createStatement();
             stmt.execute(insertPayment);
+
+            String updateStatus = "update booking set payment_status = 'S' where booking_id = " + this.bookedInfor[0];
+            stmt = conn.createStatement();
+            stmt.executeUpdate(updateStatus);
+
             
-            for(int i = 0; i < guests.size(); i++){
-                 String insertBookGuests = "INSERT INTO bookingroomguest VALUES(" + this.bookedInfor[0] + ", " + getHotelId(this.bookedInfor[1]) + ", '" + this.bookedInfor[2] + "', " + guests.get(i) + ")";
-                 
-                 System.out.println(insertBookGuests);
-                 stmt = conn.createStatement();
-                stmt.execute(insertBookGuests);
-                 
-            
+
             javax.swing.JOptionPane.showMessageDialog(this, "The booking is piad, thank you!");
-            
-            String updateSql = "update booking set payment_status = 'S' where booking_id = " + this.bookedInfor[0] ;
-            stmt.executeUpdate(updateSql);
+
             mf.removePanel2();
-            
-            
-        }
-        }catch (SQLException ex) {
+
+        } catch (SQLException ex) {
             Logger.getLogger(Booking.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton2ActionPerformed

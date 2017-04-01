@@ -240,13 +240,20 @@ public class Payment extends javax.swing.JPanel {
     // payment function
     private void paymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paymentActionPerformed
         int row = jTable1.getSelectedRow();
-        if(this.paymentStatuses.size()> row && "S".equalsIgnoreCase(this.paymentStatuses.get(row))){
-            JOptionPane.showMessageDialog(this, "Already Paid");
-            return;
-        }
         String[] bookid_price = new String[2];
 
         bookid_price[0] = (String) jTable1.getModel().getValueAt(row, 0);
+        try {
+            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+            Statement stat = conn.createStatement();
+            ResultSet rset = stat.executeQuery("select * from payment where booking_id=" + bookid_price[0]);
+            if (rset.next()) {
+                JOptionPane.showMessageDialog(this, "Already Paid");
+                return;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
         bookid_price[1] = (String) jTable1.getModel().getValueAt(row, 4);
 
         //System.out.println("customer " + customer_id);
@@ -254,10 +261,49 @@ public class Payment extends javax.swing.JPanel {
         if (cid == null) {
             cid = this.customerIds.get(row) + "";
         }
+        try {
+            for (int i = 0; i < guests.size(); i++) {
+                String insertBookGuests = "INSERT INTO bookingroomguest VALUES(" + this.bookedInfor[0] + ", " + getHotelId(this.bookedInfor[1]) + ", '" + this.bookedInfor[2] + "', " + guests.get(i) + ")";
 
-        mf.RepaymentBidCid(cid, bookid_price, bookedInfor, guests);
+                Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+                System.out.println(insertBookGuests);
+                Statement stmt = conn.createStatement();
+                stmt.execute(insertBookGuests);
+
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        if(bookedInfor==null){
+            String bInfo [] = new String[1];
+            bInfo[0] = bookid_price[0];
+            mf.RepaymentBidCid(cid, bookid_price, bInfo, guests);
+        }else{
+            
+            mf.RepaymentBidCid(cid, bookid_price, bookedInfor, guests);
+        }
     }//GEN-LAST:event_paymentActionPerformed
+    // get Hotel id
 
+    public int getHotelId(String hotelName) {
+        int hotelID = 0;
+
+        try {
+            String search = "SELECT hotel_id from hotel WHERE hotel_name = '" + hotelName + "'";
+
+            Connection conn = Database.getInstance().getDBConnection("FIT5148A");
+            Statement stat = conn.createStatement();
+            ResultSet rset = stat.executeQuery(search);
+            if (rset.next()) {
+                hotelID = rset.getInt(1);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Searching.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return hotelID;
+    }
     private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBox2ActionPerformed
@@ -348,9 +394,9 @@ public class Payment extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) this.jTable1.getModel();
         model.setRowCount(0);
         try {
-            String search = "select DISTINCT b.booking_id, brm.room_number, r.room_type, p.payment_amount, brm.hotel_id, b.customer_id, b.payment_status\n"
-                    + "from booking b, bookingroomguest brm, room r, payment p\n"
-                    + "where b.booking_id = brm.booking_id and brm.room_number = r.room_number and brm.booking_id = p.booking_id";
+            String search = "select DISTINCT b.booking_id, brm.room_number, r.room_type, b.total_amount, brm.hotel_id, b.customer_id\n"
+                    + "from booking b, bookingroomguest brm, room r\n"
+                    + "where b.booking_id = brm.booking_id and brm.room_number = r.room_number ";
 
             Connection conn = Database.getInstance().getDBConnection("FIT5148B");
             Statement stat = conn.createStatement();
@@ -370,7 +416,6 @@ public class Payment extends javax.swing.JPanel {
                 rsets[3] = rset.getString(3);
                 rsets[4] = rset.getString(4);
                 this.customerIds.add(Integer.parseInt(rset.getString(6)));
-                this.paymentStatuses.add(rset.getString(7));
                 //System.out.println(rsets[0] + ", " + rsets[1] + ", " + rsets[2] + ", " + rsets[3]);
                 model.addRow(rsets);
             }
