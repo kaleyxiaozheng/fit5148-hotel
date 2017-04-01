@@ -27,13 +27,15 @@ public class InsertUpdateHRoomDialog extends javax.swing.JDialog {
     public InsertUpdateHRoomDialog(RoomBean roomTempt, String action) {
 //        super(parent, modal);
         initComponents();
-        room = roomTempt;
+        
         if (ErrorMessage.UPDATE_ACT.equals(action)) {
+            room = roomTempt;
             viewRoomDetail(roomTempt);
             this.roomNumberText.setEditable(false);
             this.hotelIdText.setEditable(false);
             newRoomjButton1.setVisible(false);
         } else {
+            room = new RoomBean();
             this.roomNumberText.setText(Database.getInstance().getSequenceNextval("FIT5148B", "room_seq").toString());
 
             updateRoomjButton2.setVisible(false);

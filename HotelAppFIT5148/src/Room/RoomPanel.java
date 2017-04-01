@@ -62,6 +62,35 @@ public class RoomPanel extends javax.swing.JPanel {
             System.out.println(f.getMessage());
         }
     }
+    
+//    private List<FacilityBean> getListFacilityOfRoom(String roomNumber, Long hotelId){
+//        conn = Database.getInstance().getDBConnection("FIT5148B");
+//        dtm.setRowCount(0);
+//        try {
+//            DriverManager.registerDriver(new OracleDriver());
+//            stmt = conn.createStatement();
+//            StringBuilder str = new StringBuilder("select facility_number,room_number, hotel_id, description "
+//                    + "from facility  where hotel_id = ");
+//            str.append(hotelId);
+//            str.append(" and room_number = '");
+//            str.append(roomNumber + "'");
+//            ResultSet rset = stmt.executeQuery(str.toString());
+//            
+//
+//            ResultSetMetaData mdata = rset.getMetaData();
+//            int numberOfColumns = mdata.getColumnCount();
+//            while (rset.next()) {
+//                Object[] rowData = new Object[numberOfColumns];
+//                for (int i = 0; i < rowData.length; i++) {
+//                    rowData[i] = rset.getObject(i + 1);
+//                }
+//                dtm.addRow(rowData);
+//            }
+//            Database.getInstance().closeDBConnection();
+//        } catch (SQLException f) {
+//            System.out.println(f.getMessage());
+//        }
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -122,47 +151,44 @@ public class RoomPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(HotelScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
+                    .addComponent(HotelScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(18, 18, 18)
-                                .addComponent(facilityTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(searchButton))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel2)
                             .addComponent(jLabel1))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(101, 101, 101)
-                .addComponent(newRoomButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(updateRoomButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(deleteRoomButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addComponent(facilityTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(searchButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(173, 173, 173)
+                        .addComponent(newRoomButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(updateRoomButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(deleteRoomButton)))
+                .addGap(466, 466, 466))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(facilityTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(searchButton))
-                .addGap(18, 18, 18)
+                    .addComponent(searchButton)
+                    .addComponent(facilityTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(59, 59, 59)
                 .addComponent(HotelScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(newRoomButton)
                     .addComponent(updateRoomButton)
                     .addComponent(deleteRoomButton))
-                .addGap(83, 83, 83))
+                .addGap(2, 2, 2))
         );
     }// </editor-fold>//GEN-END:initComponents
 
