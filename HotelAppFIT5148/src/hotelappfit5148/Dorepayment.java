@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import oracle.jdbc.OracleDriver;
 
 /**
@@ -22,12 +24,15 @@ import oracle.jdbc.OracleDriver;
  */
 public class Dorepayment extends javax.swing.JPanel {
 
+    private MainFrame mf;
     /**
      * Creates new form Dorepayment
      */
-    public Dorepayment(String customer_id, String[] bookid_price) {
+    public Dorepayment(String customer_id, String[] bookid_price, MainFrame mf) {
         initComponents();
         initRepayment(customer_id, bookid_price);
+        
+        this.mf = mf;
     }
     
     // get membership tire with customer id
@@ -70,7 +75,7 @@ public class Dorepayment extends javax.swing.JPanel {
          jTextField7.setText(getMembership(customer_id)[2]);
          jTextField8.setText(getMembership(customer_id)[3]);
          
-         double total_price = Double.valueOf(bookid_price[1]) * Double.valueOf(jTextField7.getText()) / 100;
+         double total_price = Math.round(Double.valueOf(bookid_price[1]) * Double.valueOf(jTextField7.getText()) / 100);
          jTextField3.setText(String.valueOf(total_price));
     }
 
@@ -110,10 +115,12 @@ public class Dorepayment extends javax.swing.JPanel {
 
         jLabel2.setText("Booking ID:");
 
+        jTextField1.setEditable(false);
         jTextField1.setText(" ");
 
         jLabel3.setText("Payment date:");
 
+        jTextField2.setEditable(false);
         jTextField2.setText(" ");
 
         jLabel4.setText("Payment method:");
@@ -122,22 +129,27 @@ public class Dorepayment extends javax.swing.JPanel {
 
         jLabel5.setText("Total price:");
 
+        jTextField3.setEditable(false);
         jTextField3.setText(" ");
 
         jLabel6.setText("Customer ID:");
 
+        jTextField4.setEditable(false);
         jTextField4.setText(" ");
 
         jLabel7.setText("Membership tier:");
 
+        jTextField5.setEditable(false);
         jTextField5.setText(" ");
 
         jLabel8.setText("Total credit:");
 
+        jTextField6.setEditable(false);
         jTextField6.setText(" ");
 
         jLabel9.setText("Discount:");
 
+        jTextField7.setEditable(false);
         jTextField7.setText(" ");
 
         jButton1.setLabel("Cancel");
@@ -154,6 +166,7 @@ public class Dorepayment extends javax.swing.JPanel {
             }
         });
 
+        jTextField8.setEditable(false);
         jTextField8.setText(" ");
 
         jLabel10.setText("Rewards:");
@@ -271,8 +284,24 @@ public class Dorepayment extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    
+    // insert data into payment table
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        try {
+            String insertPayment = "INSERT INTO payment VALUES(" + Integer.valueOf(jTextField1.getText()) + ", TO_DATE('" + jTextField2.getText() + "', 'DD/MM/YYYY'), '" + (String)jComboBox1.getSelectedItem() + "', " + jTextField3.getText() + ")";
+            //System.out.println(insertPayment);
+            
+            DriverManager.registerDriver(new OracleDriver());
+            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+            Statement stmt = conn.createStatement();
+            stmt.execute(insertPayment);
+            
+            javax.swing.JOptionPane.showMessageDialog(this, "The booking is piad, thank you!");
+            mf.removePanel2();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Booking.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
 

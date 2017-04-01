@@ -237,7 +237,7 @@ public class Payment extends javax.swing.JPanel {
         bookid_price[0] = (String)jTable1.getModel().getValueAt(row, 0);
         bookid_price[1] = (String)jTable1.getModel().getValueAt(row, 4);
         
-        System.out.println("customer " + customer_id);
+        //System.out.println("customer " + customer_id);
         
         mf.RepaymentBidCid(customer_id, bookid_price);
     }//GEN-LAST:event_paymentActionPerformed
