@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -412,7 +413,40 @@ public class Booking extends javax.swing.JPanel {
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
+        if(!this.jCheckBox1.isSelected()){
+            numberOfCurrentGuest--;
+            this.jLabel14.setText(String.valueOf(numberOfCurrentGuest));
 
+            return;
+        }
+        numberOfCurrentGuest++;
+        this.jLabel14.setText(String.valueOf(numberOfCurrentGuest));
+
+        //check whether customer citizen id exist in guest table
+        int guestId = this.getGuestID(this.citizen_id);
+
+        //if not insert into guest table
+        if (guestId == 0) {
+            String query = "select * from customer where citizen_id=" + citizen_id;
+
+            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+            try {
+                Statement stat = conn.createStatement();
+                ResultSet rset = stat.executeQuery(query);
+                if (rset.next()) {
+                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                    String insert = "insert into guest values(null, '" + rset.getString(2)
+                            + "','" + rset.getString(3) + "','" + rset.getString(4) + "'," + rset.getString(5) + ","
+                            + "TO_DATE('" + format.format(rset.getDate(6)) + "', 'DD/MM/YYYY'),'" + rset.getString(7)
+                            + "','" + rset.getString(8) + "','" + rset.getString(9) + "','" + rset.getString(14) + "')";
+                    System.out.println("insert into guest=== " + insert);
+                    Statement insertState = conn.createStatement();
+                    insertState.executeUpdate(insert);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jTextField8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField8ActionPerformed
@@ -460,7 +494,7 @@ public class Booking extends javax.swing.JPanel {
             int gueID = getGuestID(jTextField8.getText());
             this.guests.add(gueID);
 
-        } else {
+        } else if( !this.jCheckBox1.isSelected()){
             javax.swing.JOptionPane.showMessageDialog(this, "Guest does not exists.");
         }
 
@@ -481,13 +515,13 @@ public class Booking extends javax.swing.JPanel {
         try {
             Statement stmt = conn.createStatement();
             ResultSet set = stmt.executeQuery(sql);
-            if(set.next()){
+            if (set.next()) {
                 return set.getInt(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-         return 0;
+        return 0;
     }
 
     private void bookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookingActionPerformed
@@ -511,7 +545,7 @@ public class Booking extends javax.swing.JPanel {
                 book_id = rset.getString(1);
             }
 
-            mf.accessPaymentGUI(book_id, selectedRow, cus+"", guests);
+            mf.accessPaymentGUI(book_id, selectedRow, cus + "", guests);
         } catch (SQLException ex) {
             Logger.getLogger(Booking.class.getName()).log(Level.SEVERE, null, ex);
         }
