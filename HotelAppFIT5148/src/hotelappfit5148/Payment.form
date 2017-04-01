@@ -206,7 +206,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel5">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Citizen ID"/>
+        <Property name="text" type="java.lang.String" value="Customer ID"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="search">
