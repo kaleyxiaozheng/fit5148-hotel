@@ -353,7 +353,7 @@ public class Searching extends javax.swing.JPanel {
 
         try {
 
-            String search = "SELECT hotel_name, room_number, room_type, price from room@FIT5148B r, hotel@FIT5148A h WHERE h.country =  '"
+            String search = "SELECT hotel_name, r.room_number, r.room_type, r.price from room@FIT5148B r, hotel@FIT5148A h WHERE h.country =  '"
                     + country + "' and h.city = '" + city + "'" + " and h.hotel_id = r.hotel_id and r.room_type = '"
                     + room_type + "' ";
             String selectedPriceRange = this.jComboBox3.getSelectedItem().toString();
@@ -366,7 +366,9 @@ public class Searching extends javax.swing.JPanel {
                 priceStart = Integer.parseInt(selectedPriceRange.split(">")[1].trim());
             }
             search += " and r.price >= " + priceStart + " and r.price <=" + priceEnd;
-            
+            if(this.jCheckBox1.isSelected()){
+                search += " and  not EXISTS (select bgm.room_number from bookingroomguest@FIT5148B bgm)  ";
+            }
             
             System.out.println(search);
             Connection conn = Database.getInstance().getDBConnection("FIT5148A");
