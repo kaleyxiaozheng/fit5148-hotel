@@ -25,7 +25,7 @@ import javax.swing.JOptionPane;
  */
 public class RoomPanel extends javax.swing.JPanel {
 
-    Object columnHeaders[] = {"ROOM_NUMBER", "HOTEL_ID", "ROOM_TYPE", "PRICE", "DESCRIPTION", "FACILITY"};
+    Object columnHeaders[] = {"ROOM_NUMBER", "HOTEL_ID", "ROOM_TYPE", "PRICE", "DESCRIPTION"};
     Object data[][] = {{}};
     DefaultTableModel dtm = new DefaultTableModel(data, columnHeaders);
     Connection conn = null;
@@ -51,7 +51,7 @@ public class RoomPanel extends javax.swing.JPanel {
             ResultSetMetaData mdata = rset.getMetaData();
             int numberOfColumns = mdata.getColumnCount();
             while (rset.next()) {
-                Object[] rowData = new Object[numberOfColumns + 1];
+                Object[] rowData = new Object[numberOfColumns];
                 for (int i = 0; i < rowData.length; i++) {
                     rowData[i] = rset.getObject(i + 1);
                 }
@@ -63,34 +63,34 @@ public class RoomPanel extends javax.swing.JPanel {
         }
     }
     
-    private List<FacilityBean> getListFacilityOfRoom(String roomNumber, Long hotelId){
-        conn = Database.getInstance().getDBConnection("FIT5148B");
-        dtm.setRowCount(0);
-        try {
-            DriverManager.registerDriver(new OracleDriver());
-            stmt = conn.createStatement();
-            StringBuilder str = new StringBuilder("select facility_number,room_number, hotel_id, description "
-                    + "from facility  where hotel_id = ");
-            str.append(hotelId);
-            str.append(" and room_number = '");
-            str.append(roomNumber + "'");
-            ResultSet rset = stmt.executeQuery(str.toString());
-            
-
-            ResultSetMetaData mdata = rset.getMetaData();
-            int numberOfColumns = mdata.getColumnCount();
-            while (rset.next()) {
-                Object[] rowData = new Object[numberOfColumns + 1];
-                for (int i = 0; i < rowData.length; i++) {
-                    rowData[i] = rset.getObject(i + 1);
-                }
-                dtm.addRow(rowData);
-            }
-            Database.getInstance().closeDBConnection();
-        } catch (SQLException f) {
-            System.out.println(f.getMessage());
-        }
-    }
+//    private List<FacilityBean> getListFacilityOfRoom(String roomNumber, Long hotelId){
+//        conn = Database.getInstance().getDBConnection("FIT5148B");
+//        dtm.setRowCount(0);
+//        try {
+//            DriverManager.registerDriver(new OracleDriver());
+//            stmt = conn.createStatement();
+//            StringBuilder str = new StringBuilder("select facility_number,room_number, hotel_id, description "
+//                    + "from facility  where hotel_id = ");
+//            str.append(hotelId);
+//            str.append(" and room_number = '");
+//            str.append(roomNumber + "'");
+//            ResultSet rset = stmt.executeQuery(str.toString());
+//            
+//
+//            ResultSetMetaData mdata = rset.getMetaData();
+//            int numberOfColumns = mdata.getColumnCount();
+//            while (rset.next()) {
+//                Object[] rowData = new Object[numberOfColumns];
+//                for (int i = 0; i < rowData.length; i++) {
+//                    rowData[i] = rset.getObject(i + 1);
+//                }
+//                dtm.addRow(rowData);
+//            }
+//            Database.getInstance().closeDBConnection();
+//        } catch (SQLException f) {
+//            System.out.println(f.getMessage());
+//        }
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
