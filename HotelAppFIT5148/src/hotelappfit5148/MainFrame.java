@@ -10,6 +10,7 @@ import Guest.GuestPanel;
 import Customer.CustomerPanel;
 import Hotel.HotelPanel;
 import Room.RoomPanel;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 
@@ -280,12 +281,12 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
     // Booking GUI
-    public void bookingActionPerformed(String room_type, String check_in, String check_out, double price, String customer_id){
+    public void bookingActionPerformed(String room_type, String check_in, String check_out, double price, String customer_id, String[] selectedRow){
         jPanel2.removeAll();
         
         javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
         
-        Booking booking1 = new Booking(room_type, this, check_in, check_out, price, customer_id);
+        Booking booking1 = new Booking(room_type, this, check_in, check_out, price, customer_id, selectedRow);
         
          jPanel2Layout.setHorizontalGroup(
                 jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -306,13 +307,13 @@ public class MainFrame extends javax.swing.JFrame {
     }
     
     // Payment GUI
-    public void accessPaymentGUI() {                                           
+    public void accessPaymentGUI(String booking_id, String[] selectedRow, String customer_id, List<Integer> guests) {                                           
 
         jPanel2.removeAll();
 
         javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
 
-        Payment payment1 = new Payment();
+        Payment payment1 = new Payment(booking_id, selectedRow, customer_id, guests, this);
 
         jPanel2Layout.setHorizontalGroup(
                 jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -330,7 +331,63 @@ public class MainFrame extends javax.swing.JFrame {
         );
 
         jPanel2.revalidate();
-    }     
+    }   
+    
+    // clear JPanel2
+    public void removePanel2(){
+          jPanel2.removeAll();
+          javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(114, 114, 114)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 447, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(202, 202, 202)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(119, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel1)
+                .addContainerGap(375, Short.MAX_VALUE))
+        );
+//        this.initComponents();
+          jPanel2.revalidate();
+    }
+    
+    // Do Repayment with booking id and customer id
+    public void  RepaymentBidCid(String customer_id, String[] bookid_price, String[] bookedInfor, List<Integer> guests){
+         jPanel2.removeAll();
+
+        javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
+
+        Dorepayment repayment1 = new Dorepayment(customer_id, bookid_price, bookedInfor, guests, this);
+
+        jPanel2Layout.setHorizontalGroup(
+                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(repayment1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(repayment1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+        );
+
+        jPanel2.revalidate();
+    }
     
     private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
 
@@ -338,7 +395,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
 
-        Payment payment1 = new Payment();
+        Payment payment1 = new Payment(this);
 
         jPanel2Layout.setHorizontalGroup(
                 jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -13,7 +13,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,6 +24,7 @@ import oracle.jdbc.OracleDriver;
  */
 public class Booking extends javax.swing.JPanel {
     
+    private String[] selectedRow;
     private String customer_id;
     private double price;
     private String check_in;
@@ -38,13 +38,14 @@ public class Booking extends javax.swing.JPanel {
     /**
      * Creates new form Booking
      */
-    public Booking(String room_type, MainFrame mf, String check_in, String check_out, double price, String customer_id) {
+    public Booking(String room_type, MainFrame mf, String check_in, String check_out, double price, String customer_id, String[] selectedRow) {
         initComponents();
         jLabel12.setText(totalGuest(room_type));
         jLabel14.setText("0");
         numberOfRoomGuest = Integer.valueOf(jLabel12.getText());
         numberOfCurrentGuest = 0;
         
+        this.selectedRow = selectedRow;
         this.customer_id = customer_id;
         this.price = price;
         this.check_in = check_in;
@@ -78,7 +79,6 @@ public class Booking extends javax.swing.JPanel {
             Connection conn = Database.getInstance().getDBConnection("FIT5148B");
             DatabaseMetaData md = conn.getMetaData();
 
-            ResultSet rs = md.getTables(null, null, "%", null);
             Statement stmt = conn.createStatement();
 
             String search = "select title, first_name, last_name, citizen_id, dob, country, city, street, email from guest where citizen_id = " + citizen_id;
@@ -272,26 +272,24 @@ public class Booking extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(34, 34, 34)
                         .addComponent(addGuest)
-                        .addGap(148, 148, 148)
+                        .addGap(18, 18, 18)
+                        .addComponent(booking)
+                        .addGap(35, 35, 35)
                         .addComponent(cancel)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel4)
+                        .addGap(18, 18, Short.MAX_VALUE)
+                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(booking)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel13)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(75, 75, 75))))
+                        .addComponent(jLabel13)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(75, 75, 75))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
@@ -407,7 +405,7 @@ public class Booking extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelActionPerformed
-        // TODO add your handling code here:
+        mf.removePanel2();
     }//GEN-LAST:event_cancelActionPerformed
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
@@ -425,6 +423,28 @@ public class Booking extends javax.swing.JPanel {
         guest = getGuestInfor(citizen_id);
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private List<Integer> guests = new ArrayList();
+    
+    // get guest id
+    public int getGuestID(String citizen_id){
+        int guest_id = 0;
+        
+         try {
+                    String search = "SELECT guest_id from guest WHERE citizen_id = " + citizen_id;
+            
+                     Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+                     Statement stat = conn.createStatement();
+                     ResultSet rset = stat.executeQuery(search);
+                     ResultSetMetaData metadata = rset.getMetaData();
+                    if(rset.next()) {
+                         guest_id = Integer.valueOf(rset.getString(1));
+            }} catch (SQLException ex) {
+            Logger.getLogger(Searching.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return guest_id;
+    }
+    
     private void addGuestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addGuestActionPerformed
         
         if(numberOfCurrentGuest == numberOfRoomGuest){
@@ -434,6 +454,10 @@ public class Booking extends javax.swing.JPanel {
             if(!guest.isEmpty()){
                 numberOfCurrentGuest++;
                 this.jLabel14.setText(String.valueOf(numberOfCurrentGuest));
+                
+                int gueID = getGuestID(jTextField8.getText());
+                this.guests.add(gueID);
+                
             }
             else{
                 javax.swing.JOptionPane.showMessageDialog(this, "Guest does not exists.");
@@ -451,22 +475,31 @@ public class Booking extends javax.swing.JPanel {
     }//GEN-LAST:event_addGuestActionPerformed
 
     private void bookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookingActionPerformed
-        mf.accessPaymentGUI();
+        
         int cus = Integer.valueOf(customer_id);
+        String book_id = "";
         
         try {
             String insertBooking = "INSERT INTO booking VALUES(null, " + cus + ", TO_DATE('" + check_in + "', 'DD/MM/YYYY'), TO_DATE('" + check_out + "', 'DD/MM/YYYY'), " + price + ", 'U')";
-            System.out.println(insertBooking);
+            //System.out.println(insertBooking);
             
             DriverManager.registerDriver(new OracleDriver());
             Connection conn = Database.getInstance().getDBConnection("FIT5148B");
             Statement stmt = conn.createStatement();
-            stmt.execute(insertBooking);
+            //stmt.execute(insertBooking);
+            stmt.executeUpdate(insertBooking);
+            
+            String search = "SELECT booking_id FROM booking ORDER BY booking_id DESC";
+            stmt = conn.createStatement();
+            ResultSet rset = stmt.executeQuery(search);
+                            if(rset.next()){
+                                book_id = rset.getString(1);
+                            }
+            
+            mf.accessPaymentGUI(book_id, selectedRow, customer_id, guests);
         } catch (SQLException ex) {
             Logger.getLogger(Booking.class.getName()).log(Level.SEVERE, null, ex);
         }
-            
-        
     }//GEN-LAST:event_bookingActionPerformed
 
 

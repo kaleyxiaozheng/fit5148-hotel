@@ -10,8 +10,11 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -20,11 +23,48 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Payment extends javax.swing.JPanel {
 
+    private String customer_id;
+    private MainFrame mf;
+    private String book_id;
+    String[] bookedInfor;
+    private List<Integer> customerIds = new ArrayList();
+
+    List<Integer> guests = new ArrayList();
+    private List<String> paymentStatuses = new ArrayList();
+
     /**
      * Creates new form Payment
      */
-    public Payment() {
+    public Payment(String book_id, String[] selectedRow, String customer_id, List<Integer> guests, MainFrame mf) {
         initComponents();
+        initCurrentBooking(book_id, selectedRow);
+
+        this.guests = guests;
+        this.customer_id = customer_id;
+        this.mf = mf;
+    }
+
+    public Payment(MainFrame mf) {
+        this.mf = mf;
+        initComponents();
+        this.initializeTableData();
+    }
+
+    // Initial payment GUI with current booking order
+    public void initCurrentBooking(String book_id, String[] selectedRow) {
+
+        bookedInfor = new String[5];
+
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+
+        bookedInfor[0] = book_id;
+        bookedInfor[1] = selectedRow[0];
+        bookedInfor[2] = selectedRow[1];
+        bookedInfor[3] = selectedRow[2];
+        bookedInfor[4] = selectedRow[3];
+
+        model.addRow(bookedInfor);
     }
 
     /**
@@ -56,7 +96,7 @@ public class Payment extends javax.swing.JPanel {
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [0][0],
             new String [] {
-                "Booking ID", "Payment date", "Payment method", "Total price"
+                "Booking ID", "Hotel name", "Room number", "Room type", "Total price"
             }
         )
         {public boolean isCellEditable(int row, int column) {return false;}}
@@ -75,7 +115,7 @@ public class Payment extends javax.swing.JPanel {
     });
 
     jLabel4.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
-    jLabel4.setText("Payment Information");
+    jLabel4.setText("Booking Information");
 
     jCheckBox2.setText("Unpaid");
     jCheckBox2.addActionListener(new java.awt.event.ActionListener() {
@@ -109,7 +149,7 @@ public class Payment extends javax.swing.JPanel {
         }
     });
 
-    jLabel5.setText("Citizen ID");
+    jLabel5.setText("Customer ID");
 
     search.setLabel("Search");
     search.addActionListener(new java.awt.event.ActionListener() {
@@ -197,16 +237,98 @@ public class Payment extends javax.swing.JPanel {
     );
     }// </editor-fold>//GEN-END:initComponents
 
+    // payment function
     private void paymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paymentActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_paymentActionPerformed
+        int row = jTable1.getSelectedRow();
+        if (row < 0) {
+            return;
+        }
+        String[] bookid_price = new String[2];
 
+        bookid_price[0] = (String) jTable1.getModel().getValueAt(row, 0);
+        try {
+            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+            Statement stat = conn.createStatement();
+            ResultSet rset = stat.executeQuery("select * from payment where booking_id=" + bookid_price[0]);
+            if (rset.next()) {
+                JOptionPane.showMessageDialog(this, "Already Paid");
+                return;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        bookid_price[1] = (String) jTable1.getModel().getValueAt(row, 4);
+
+        //System.out.println("customer " + customer_id);
+        String cid = this.customer_id;
+        if (cid == null) {
+            cid = this.customerIds.get(row) + "";
+        }
+        try {
+            for (int i = 0; i < guests.size(); i++) {
+                String insertBookGuests = "INSERT INTO bookingroomguest VALUES(" + this.bookedInfor[0] + ", " + getHotelId(this.bookedInfor[1]) + ", '" + this.bookedInfor[2] + "', " + guests.get(i) + ")";
+
+                Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+                System.out.println(insertBookGuests);
+                Statement stmt = conn.createStatement();
+                stmt.execute(insertBookGuests);
+
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        if (bookedInfor == null) {
+            String bInfo[] = new String[1];
+            bInfo[0] = bookid_price[0];
+            mf.RepaymentBidCid(cid, bookid_price, bInfo, guests);
+        } else {
+
+            mf.RepaymentBidCid(cid, bookid_price, bookedInfor, guests);
+        }
+    }//GEN-LAST:event_paymentActionPerformed
+    // get Hotel id
+
+    public int getHotelId(String hotelName) {
+        int hotelID = 0;
+
+        try {
+            String search = "SELECT hotel_id from hotel WHERE hotel_name = '" + hotelName + "'";
+
+            Connection conn = Database.getInstance().getDBConnection("FIT5148A");
+            Statement stat = conn.createStatement();
+            ResultSet rset = stat.executeQuery(search);
+            if (rset.next()) {
+                hotelID = rset.getInt(1);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Searching.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return hotelID;
+    }
     private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBox2ActionPerformed
 
     private void deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteActionPerformed
         // TODO add your handling code here:
+        int row = jTable1.getSelectedRow();
+        if (row < 0) {
+            return;
+        }
+        String bookId = (String) jTable1.getModel().getValueAt(row, 0);
+        String deleteSql = "delete from booking where booking_id = " + bookId;
+        String deleteRelSql = "delete from bookingroomguest where booking_id = " + bookId;
+        try {
+            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+            Statement stat = conn.createStatement();
+            stat.executeUpdate(deleteRelSql);
+            stat.executeUpdate(deleteSql);
+            this.initializeTableData();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_deleteActionPerformed
 
     private void viewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewActionPerformed
@@ -218,78 +340,70 @@ public class Payment extends javax.swing.JPanel {
     }//GEN-LAST:event_jTextField4ActionPerformed
 
     private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        boolean unpaid = !this.jCheckBox2.isSelected();
+        int customerId = -1;
+        try{
+            customerId = Integer.parseInt(this.jTextField4.getText().trim());
+        }catch(Exception e){
+            //e.printStackTrace();
+        }
+        this.filterData(customerId, this.jTextField2.getText(), this.jTextField3.getText(), unpaid);
+    }//GEN-LAST:event_searchActionPerformed
+    /**
+     * read from database to render table data
+     */
+    private void initializeTableData() {
+        this.filterData(-1, null, null, true);
+    }
+
+    /**
+     * filter data on the table
+     */
+    private void filterData(int customerId, String firstName, String lastName, boolean unPaid) {
+        DefaultTableModel model = (DefaultTableModel) this.jTable1.getModel();
         model.setRowCount(0);
-        
-        String citizen_id = jTextField4.getText();
-        
-        boolean avaliable = jCheckBox2.isSelected();
-        String avail = "";
-        
-        if(avaliable){
-            avail = "true";
-        }
-        else{
-            avail = "false";
-        }
-        
         try {
-            
-            
-            String search = "SELECT citizen_id from guest WHERE citizne_id = '" + jTextField4.getText() + "'";
-            
-            System.out.println(jTextField4.getText());
-            System.out.println(search);
-            
-            Connection conn = Database.getInstance().getDBConnection("FIT5148A");
+            String search = "select DISTINCT b.booking_id, brm.room_number, r.room_type, b.total_amount, brm.hotel_id, b.customer_id\n"
+                    + "from booking b, bookingroomguest brm, room r, customer cus \n"
+                    + "where b.booking_id = brm.booking_id and brm.room_number = r.room_number and cus.customer_id = b.customer_id";
+            if (customerId > 0) {
+                search += " and b.customer_id = " + customerId + " ";
+            }
+            if (firstName != null && !firstName.trim().isEmpty()) {
+                search += " and cus.first_name like '%" + firstName.trim() + "%' ";
+            }
+            if (lastName != null && !lastName.trim().isEmpty()) {
+                search += " and cus.last_name like '%" + lastName.trim() + "%' ";
+            }
+            String paymentStatus = unPaid ? "S" : "U";
+            search += " and b.payment_status = '" + paymentStatus + "'";
+            System.out.println("search "+search);
+            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
             Statement stat = conn.createStatement();
             ResultSet rset = stat.executeQuery(search);
-            ResultSetMetaData metadata = rset.getMetaData();
             while (rset.next()) {
-                String[] rsets = new String[4];
+                String[] rsets = new String[5];
                 rsets[0] = rset.getString(1);
-                rsets[1] = rset.getString(2);
-                rsets[2] = rset.getString(3);
-                rsets[3] = rset.getString(4);
-                
+
+                search = "select hotel_name from hotel where hotel_id = '" + rset.getString(5) + "'";
+                conn = Database.getInstance().getDBConnection("FIT5148A");
+                stat = conn.createStatement();
+                ResultSet hrset = stat.executeQuery(search);
+                if (hrset.next()) {
+                    rsets[1] = hrset.getString(1);
+                }
+                rsets[2] = rset.getString(2);
+                rsets[3] = rset.getString(3);
+                rsets[4] = rset.getString(4);
+                this.customerIds.add(Integer.parseInt(rset.getString(6)));
                 //System.out.println(rsets[0] + ", " + rsets[1] + ", " + rsets[2] + ", " + rsets[3]);
-                
                 model.addRow(rsets);
             }
-            
+            model.fireTableDataChanged();
         } catch (SQLException ex) {
             Logger.getLogger(Searching.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-        // double click a row and go to the booking GUI
-//        jTable1.addMouseListener(new MouseAdapter(){
-//            public void mouseClicked(MouseEvent e){
-//                
-//                if(e.getClickCount() == 2){
-//                    
-//                    // access seleced row data
-////                    javax.swing.JTable target = (javax.swing.JTable)e.getSource();
-////                    int row = target.getSelectedRow();
-////                    
-////                    String[] rowData = new String[4];
-////                    
-////                    for(int i = 0; i < 4; i++){
-////                        rowData[i] = (String)target.getValueAt(row, i);
-////                    }
-////                        
-////                    for(int i = 0; i < 4; i++){
-////                        System.out.print(rowData[i]);
-////                    }
-//
-//                 // access booking GUI
-////                 MainFrame mf = new MainFrame();
-////                 mf.bookingActionPerformed();
-//                }
-//            }
-//        });
-    }//GEN-LAST:event_searchActionPerformed
-
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
