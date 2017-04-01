@@ -10,6 +10,7 @@ import Guest.GuestPanel;
 import Customer.CustomerPanel;
 import Hotel.HotelPanel;
 import Room.RoomPanel;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 
@@ -306,13 +307,13 @@ public class MainFrame extends javax.swing.JFrame {
     }
     
     // Payment GUI
-    public void accessPaymentGUI(String booking_id, String[] selectedRow, String customer_id) {                                           
+    public void accessPaymentGUI(String booking_id, String[] selectedRow, String customer_id, List<Integer> guests) {                                           
 
         jPanel2.removeAll();
 
         javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
 
-        Payment payment1 = new Payment(booking_id, selectedRow, customer_id, this);
+        Payment payment1 = new Payment(booking_id, selectedRow, customer_id, guests, this);
 
         jPanel2Layout.setHorizontalGroup(
                 jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -363,12 +364,12 @@ public class MainFrame extends javax.swing.JFrame {
     }
     
     // Do Repayment with booking id and customer id
-    public void  RepaymentBidCid(String customer_id, String[] bookid_price){
+    public void  RepaymentBidCid(String customer_id, String[] bookid_price, String[] bookedInfor, List<Integer> guests){
          jPanel2.removeAll();
 
         javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
 
-        Dorepayment repayment1 = new Dorepayment(customer_id, bookid_price, this);
+        Dorepayment repayment1 = new Dorepayment(customer_id, bookid_price, bookedInfor, guests, this);
 
         jPanel2Layout.setHorizontalGroup(
                 jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -10,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
@@ -22,14 +24,18 @@ public class Payment extends javax.swing.JPanel {
     private String customer_id;
     private MainFrame mf;
     private String book_id;
+    String[] bookedInfor ;
+    
+    List<Integer> guests = new ArrayList();
     
     /**
      * Creates new form Payment
      */
-    public Payment(String book_id, String[] selectedRow, String customer_id, MainFrame mf) {
+    public Payment(String book_id, String[] selectedRow, String customer_id, List<Integer> guests, MainFrame mf) {
         initComponents();
         initCurrentBooking(book_id, selectedRow);
         
+        this.guests = guests;
         this.customer_id = customer_id;
         this.mf = mf;
     }
@@ -42,20 +48,18 @@ public class Payment extends javax.swing.JPanel {
     // Initial payment GUI with current booking order
     public void initCurrentBooking(String book_id, String[] selectedRow){
         
-        String[] row = new String[5];
+        bookedInfor = new String[5];
         
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);    
         
-        row[0] = book_id; 
-        row[1] = selectedRow[0];
-        row[2] = selectedRow[1];
-        row[3] = selectedRow[2];
-        row[4] = selectedRow[3];
+        bookedInfor[0] = book_id; 
+        bookedInfor[1] = selectedRow[0];
+        bookedInfor[2] = selectedRow[1];
+        bookedInfor[3] = selectedRow[2];
+        bookedInfor[4] = selectedRow[3];
         
-        model.addRow(row);
-        
-        
+        model.addRow(bookedInfor);
     }
 
     /**
@@ -239,7 +243,7 @@ public class Payment extends javax.swing.JPanel {
         
         //System.out.println("customer " + customer_id);
         
-        mf.RepaymentBidCid(customer_id, bookid_price);
+        mf.RepaymentBidCid(customer_id, bookid_price, bookedInfor, guests);
     }//GEN-LAST:event_paymentActionPerformed
 
     private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
@@ -275,14 +279,12 @@ public class Payment extends javax.swing.JPanel {
         }
         
         try {
-            
-            
-            String search = "SELECT citizen_id from guest WHERE citizne_id = '" + jTextField4.getText() + "'";
+            String search = "SELECT citizen_id from guest WHERE citizen_id = '" + jTextField4.getText() + "'";
             
             System.out.println(jTextField4.getText());
             System.out.println(search);
             
-            Connection conn = Database.getInstance().getDBConnection("FIT5148A");
+            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
             Statement stat = conn.createStatement();
             ResultSet rset = stat.executeQuery(search);
             ResultSetMetaData metadata = rset.getMetaData();

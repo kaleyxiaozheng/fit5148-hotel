@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import oracle.jdbc.OracleDriver;
@@ -24,15 +26,20 @@ import oracle.jdbc.OracleDriver;
  */
 public class Dorepayment extends javax.swing.JPanel {
 
+    private String[] bookedInfor;
     private MainFrame mf;
+    
+    List<Integer> guests = new ArrayList();
     /**
      * Creates new form Dorepayment
      */
-    public Dorepayment(String customer_id, String[] bookid_price, MainFrame mf) {
+    public Dorepayment(String customer_id, String[] bookid_price, String[] bookedInfor, List<Integer> guests, MainFrame mf) {
         initComponents();
         initRepayment(customer_id, bookid_price);
         
+        this.guests = guests;
         this.mf = mf;
+        this.bookedInfor = bookedInfor;
     }
     
     // get membership tire with customer id
@@ -281,25 +288,53 @@ public class Dorepayment extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        mf.removePanel2();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    // get Hotel id
+    public int getHotelId(String hotelName){
+        int hotelID = 0;
+        
+         try {
+            String search = "SELECT hotel_id from hotel WHERE hotel_name = '" + hotelName + "'";
+            
+            Connection conn = Database.getInstance().getDBConnection("FIT5148A");
+            Statement stat = conn.createStatement();
+            ResultSet rset = stat.executeQuery(search);
+            if(rset.next()){
+                hotelID = rset.getInt(1);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Searching.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return hotelID;
+    }
     
     // insert data into payment table
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
             String insertPayment = "INSERT INTO payment VALUES(" + Integer.valueOf(jTextField1.getText()) + ", TO_DATE('" + jTextField2.getText() + "', 'DD/MM/YYYY'), '" + (String)jComboBox1.getSelectedItem() + "', " + jTextField3.getText() + ")";
-            //System.out.println(insertPayment);
+            System.out.println(insertPayment);
             
             DriverManager.registerDriver(new OracleDriver());
             Connection conn = Database.getInstance().getDBConnection("FIT5148B");
             Statement stmt = conn.createStatement();
             stmt.execute(insertPayment);
             
+            for(int i = 0; i < guests.size(); i++){
+                 String insertBookGuests = "INSERT INTO bookingroomguest VALUES(" + this.bookedInfor[0] + ", " + getHotelId(this.bookedInfor[1]) + ", '" + this.bookedInfor[2] + "', " + guests.get(i) + ")";
+                 
+                 System.out.println(insertBookGuests);
+                 stmt = conn.createStatement();
+                stmt.execute(insertBookGuests);
+                 
+            
             javax.swing.JOptionPane.showMessageDialog(this, "The booking is piad, thank you!");
             mf.removePanel2();
-            
-        } catch (SQLException ex) {
+        }
+        }catch (SQLException ex) {
             Logger.getLogger(Booking.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton2ActionPerformed

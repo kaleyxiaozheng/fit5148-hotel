@@ -407,7 +407,7 @@ public class Booking extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelActionPerformed
-        // TODO add your handling code here:
+        mf.removePanel2();
     }//GEN-LAST:event_cancelActionPerformed
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
@@ -425,6 +425,28 @@ public class Booking extends javax.swing.JPanel {
         guest = getGuestInfor(citizen_id);
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private List<Integer> guests = new ArrayList();
+    
+    // get guest id
+    public int getGuestID(String citizen_id){
+        int guest_id = 0;
+        
+         try {
+                    String search = "SELECT guest_id from guest WHERE citizen_id = " + citizen_id;
+            
+                     Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+                     Statement stat = conn.createStatement();
+                     ResultSet rset = stat.executeQuery(search);
+                     ResultSetMetaData metadata = rset.getMetaData();
+                    if(rset.next()) {
+                         guest_id = Integer.valueOf(rset.getString(1));
+            }} catch (SQLException ex) {
+            Logger.getLogger(Searching.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return guest_id;
+    }
+    
     private void addGuestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addGuestActionPerformed
         
         if(numberOfCurrentGuest == numberOfRoomGuest){
@@ -434,6 +456,10 @@ public class Booking extends javax.swing.JPanel {
             if(!guest.isEmpty()){
                 numberOfCurrentGuest++;
                 this.jLabel14.setText(String.valueOf(numberOfCurrentGuest));
+                
+                int gueID = getGuestID(jTextField8.getText());
+                this.guests.add(gueID);
+                
             }
             else{
                 javax.swing.JOptionPane.showMessageDialog(this, "Guest does not exists.");
@@ -462,7 +488,8 @@ public class Booking extends javax.swing.JPanel {
             DriverManager.registerDriver(new OracleDriver());
             Connection conn = Database.getInstance().getDBConnection("FIT5148B");
             Statement stmt = conn.createStatement();
-            stmt.execute(insertBooking);
+            //stmt.execute(insertBooking);
+            stmt.executeUpdate(insertBooking);
             
             String search = "SELECT booking_id FROM booking ORDER BY booking_id DESC";
             stmt = conn.createStatement();
@@ -471,7 +498,7 @@ public class Booking extends javax.swing.JPanel {
                                 book_id = rset.getString(1);
                             }
             
-            mf.accessPaymentGUI(book_id, selectedRow, customer_id);
+            mf.accessPaymentGUI(book_id, selectedRow, customer_id, guests);
         } catch (SQLException ex) {
             Logger.getLogger(Booking.class.getName()).log(Level.SEVERE, null, ex);
         }
