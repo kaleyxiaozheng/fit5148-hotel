@@ -23,6 +23,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Payment extends javax.swing.JPanel {
 
+    private boolean mode;
     private String customer_id;
     private MainFrame mf;
     private String book_id;
@@ -38,16 +39,32 @@ public class Payment extends javax.swing.JPanel {
     public Payment(String book_id, String[] selectedRow, String customer_id, List<Integer> guests, MainFrame mf) {
         initComponents();
         initCurrentBooking(book_id, selectedRow);
-
+        mode = false;
+        setVisiable(mode);
+        
         this.guests = guests;
         this.customer_id = customer_id;
         this.mf = mf;
     }
 
     public Payment(MainFrame mf) {
+        mode = true;
         this.mf = mf;
         initComponents();
         this.initializeTableData();
+        setVisiable(mode);
+    }
+    
+    // set visiable 
+    public void setVisiable(boolean mode){
+            jLabel5.setVisible(mode);
+            jTextField4.setVisible(mode);
+            jLabel1.setVisible(mode);
+            jTextField2.setVisible(mode);
+            jLabel2.setVisible(mode);
+            jTextField3.setVisible(mode);
+            jCheckBox2.setVisible(mode);
+            search.setVisible(mode);
     }
 
     // Initial payment GUI with current booking order
