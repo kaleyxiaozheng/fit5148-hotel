@@ -427,7 +427,7 @@ public class Booking extends javax.swing.JPanel {
 
         //if not insert into guest table
         if (guestId == 0) {
-            String query = "select * from customer where citizen_id=" + citizen_id;
+            String query = "select title, first_name, last_name, citizen_id, dob, country, city, street, email from customer where citizen_id=" + citizen_id;
 
             Connection conn = Database.getInstance().getDBConnection("FIT5148B");
             try {
@@ -435,7 +435,7 @@ public class Booking extends javax.swing.JPanel {
                 ResultSet rset = stat.executeQuery(query);
                 if (rset.next()) {
                     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-                    String insert = "insert into guest values(null, '" + rset.getString(2)
+                    String insert = "insert into guest (guest_id, title, first_name, last_name, citizen_id, dob, country, city, street, email) values(null, '" + rset.getString(2)
                             + "','" + rset.getString(3) + "','" + rset.getString(4) + "'," + rset.getString(5) + ","
                             + "TO_DATE('" + format.format(rset.getDate(6)) + "', 'DD/MM/YYYY'),'" + rset.getString(7)
                             + "','" + rset.getString(8) + "','" + rset.getString(9) + "','" + rset.getString(14) + "')";
@@ -524,13 +524,14 @@ public class Booking extends javax.swing.JPanel {
         return 0;
     }
 
-    private void bookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookingActionPerformed
-
+    // synchronize
+    
+    public synchronized void booking(){
         int citizenId = Integer.valueOf(citizen_id);
         String book_id = "";
         int cus = this.getCustomerId(citizenId);
         try {
-            String insertBooking = "INSERT INTO booking VALUES(null, " + cus + ", TO_DATE('" + check_in + "', 'DD/MM/YYYY'), TO_DATE('" + check_out + "', 'DD/MM/YYYY'), " + price + ", 'U')";
+            String insertBooking = "INSERT INTO booking (booking_id, customer_id, check_in_date, check_out_date, total_amount, payment_status) VALUES(null, " + cus + ", TO_DATE('" + check_in + "', 'DD/MM/YYYY'), TO_DATE('" + check_out + "', 'DD/MM/YYYY'), " + price + ", 'U')";
             //System.out.println(insertBooking);
 
             Connection conn = Database.getInstance().getDBConnection("FIT5148B");
@@ -549,6 +550,11 @@ public class Booking extends javax.swing.JPanel {
         } catch (SQLException ex) {
             Logger.getLogger(Booking.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    private void bookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookingActionPerformed
+
+       booking();
     }//GEN-LAST:event_bookingActionPerformed
 
 

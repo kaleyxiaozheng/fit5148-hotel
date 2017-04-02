@@ -298,7 +298,7 @@ public class Dorepayment extends javax.swing.JPanel {
     // insert data into payment table
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
-            String insertPayment = "INSERT INTO payment VALUES(" + Integer.valueOf(jTextField1.getText()) + ", TO_DATE('" + jTextField2.getText() + "', 'DD/MM/YYYY'), '" + (String) jComboBox1.getSelectedItem() + "', " + jTextField3.getText() + " )";
+            String insertPayment = "INSERT INTO payment (booking_id, payment_day, payment_method, payment_amount) VALUES(" + Integer.valueOf(jTextField1.getText()) + ", TO_DATE('" + jTextField2.getText() + "', 'DD/MM/YYYY'), '" + (String) jComboBox1.getSelectedItem() + "', " + jTextField3.getText() + " )";
             System.out.println(insertPayment);
 
             DriverManager.registerDriver(new OracleDriver());

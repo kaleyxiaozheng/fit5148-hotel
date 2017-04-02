@@ -235,7 +235,7 @@ public class Payment extends javax.swing.JPanel {
         try {
             Connection conn = Database.getInstance().getDBConnection("FIT5148B");
             Statement stat = conn.createStatement();
-            ResultSet rset = stat.executeQuery("select * from payment where booking_id=" + bookid_price[0]);
+            ResultSet rset = stat.executeQuery("select booking_id, payment_day, payment_method, payment_amount from payment where booking_id=" + bookid_price[0]);
             if (rset.next()) {
                 JOptionPane.showMessageDialog(this, "Already Paid");
                 return;
@@ -252,7 +252,7 @@ public class Payment extends javax.swing.JPanel {
         }
         try {
             for (int i = 0; i < guests.size(); i++) {
-                String insertBookGuests = "INSERT INTO bookingroomguest VALUES(" + this.bookedInfor[0] + ", " + getHotelId(this.bookedInfor[1]) + ", '" + this.bookedInfor[2] + "', " + guests.get(i) + ")";
+                String insertBookGuests = "INSERT INTO bookingroomguest (booking_id, hotel_id, room_number, guest_id) VALUES(" + this.bookedInfor[0] + ", " + getHotelId(this.bookedInfor[1]) + ", '" + this.bookedInfor[2] + "', " + guests.get(i) + ")";
 
                 Connection conn = Database.getInstance().getDBConnection("FIT5148B");
                 System.out.println(insertBookGuests);
