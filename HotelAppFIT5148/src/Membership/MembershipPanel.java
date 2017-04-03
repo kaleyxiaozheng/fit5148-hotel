@@ -11,8 +11,7 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -35,6 +34,7 @@ public class MembershipPanel extends javax.swing.JPanel {
      */
     public MembershipPanel() {
         initComponents();
+        this.showMembership();
     }
 
     /**
@@ -188,8 +188,7 @@ public class MembershipPanel extends javax.swing.JPanel {
         return membership;
     }
     
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+    private void showMembership(){
         String availCredit = jTextField1.getText();
         StringBuffer sb = new StringBuffer(WarningMessage.SELECT_MEMBERSHIP);
         if(!"".equals(availCredit)){        
@@ -224,6 +223,11 @@ public class MembershipPanel extends javax.swing.JPanel {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+    }
+    
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        this.showMembership();
         
     }//GEN-LAST:event_jButton1ActionPerformed
 

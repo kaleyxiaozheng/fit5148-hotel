@@ -38,6 +38,38 @@ public class GuestPanel extends javax.swing.JPanel {
      */
     public GuestPanel() {
         initComponents();
+        showGuest();
+    }
+    
+    private void showGuest(){
+        //Remove table content in case there's any
+        for (int i = dtm.getRowCount() - 1; i >= 0; i--){
+            dtm.removeRow(i);
+        }
+        
+        StringBuffer sb = new StringBuffer(SELECT_GUEST);
+        if (!"".equals(jTextField1.getText())){
+            sb.append(SELECT_GUEST_WITH_FIRSTNAME).append(jTextField1.getText())
+                    .append(SELECT_GUEST_WITH_LASTNAME).append(jTextField1.getText()).append("%'");
+        }
+        
+        try {
+            ResultSet rs = Database.getInstance().selectRecords(Database.DB_FIT5148B, sb.toString());
+            ResultSetMetaData mdata = rs.getMetaData();
+            int numberOfColumns = mdata.getColumnCount();
+            while (rs.next()) {
+                Object[] rowData = new Object[numberOfColumns];
+                for (int i = 0; i < rowData.length; i++) {
+                    rowData[i] = rs.getObject(i + 1);
+                }
+                dtm.addRow(rowData);
+            }
+            rs.close();
+            //Close connection
+            Database.getInstance().closeDBConnection();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -141,35 +173,7 @@ public class GuestPanel extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        //Remove table content in case there's any
-        for (int i = dtm.getRowCount() - 1; i >= 0; i--){
-            dtm.removeRow(i);
-        }
-        
-        StringBuffer sb = new StringBuffer(SELECT_GUEST);
-        if (!"".equals(jTextField1.getText())){
-            sb.append(SELECT_GUEST_WITH_FIRSTNAME).append(jTextField1.getText())
-                    .append(SELECT_GUEST_WITH_LASTNAME).append(jTextField1.getText()).append("%'");
-        }
-        
-        try {
-            ResultSet rs = Database.getInstance().selectRecords(Database.DB_FIT5148B, sb.toString());
-            ResultSetMetaData mdata = rs.getMetaData();
-            int numberOfColumns = mdata.getColumnCount();
-            while (rs.next()) {
-                Object[] rowData = new Object[numberOfColumns];
-                for (int i = 0; i < rowData.length; i++) {
-                    rowData[i] = rs.getObject(i + 1);
-                }
-                dtm.addRow(rowData);
-            }
-            rs.close();
-            //Close connection
-            Database.getInstance().closeDBConnection();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        
+        this.showGuest();        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

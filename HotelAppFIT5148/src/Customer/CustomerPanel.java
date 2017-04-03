@@ -47,7 +47,7 @@ public class CustomerPanel extends javax.swing.JPanel {
      */
     public CustomerPanel() {
         initComponents();
-        
+        showCustomers();
     }
 
     /**
@@ -191,7 +191,7 @@ public class CustomerPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButton5ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+    private void showCustomers(){
         try {
             // TODO add your handling code here:
             //Remove table content in case there's any
@@ -226,6 +226,9 @@ public class CustomerPanel extends javax.swing.JPanel {
             //Logger.getLogger(CustomerPanel.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
         }
+    }
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+        this.showCustomers();
     }
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
