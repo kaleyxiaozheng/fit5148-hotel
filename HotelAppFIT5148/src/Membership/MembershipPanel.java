@@ -5,6 +5,7 @@
  */
 package Membership;
 
+import Util.SQLStatement;
 import Util.WarningMessage;
 import hotelappfit5148.Database;
 import java.math.BigDecimal;
@@ -190,14 +191,14 @@ public class MembershipPanel extends javax.swing.JPanel {
     
     private void showMembership(){
         String availCredit = jTextField1.getText();
-        StringBuffer sb = new StringBuffer(WarningMessage.SELECT_MEMBERSHIP);
+        StringBuffer sb = new StringBuffer(SQLStatement.SELECT_MEMBERSHIP);
         if(!"".equals(availCredit)){        
             boolean availCredit_Numeric = availCredit.chars().allMatch(Character :: isDigit);
             if(availCredit_Numeric == false){
                 JOptionPane.showMessageDialog(null, WarningMessage.DIGIT_CREDIT_ONLY);
                 return;
             }else{
-                sb.append(WarningMessage.SELECT_MEMBERSHIP_BY_CREDIT).append(Integer.valueOf(availCredit));
+                sb.append(SQLStatement.SELECT_MEMBERSHIP_BY_CREDIT).append(Integer.valueOf(availCredit));
             }
         }
         
@@ -245,7 +246,7 @@ public class MembershipPanel extends javax.swing.JPanel {
                 int selectedCustomer = jTable1.getSelectedRow();
                 int tierId = ((BigDecimal)jTable1.getModel().getValueAt(selectedCustomer, 0)).intValue();
                 
-                StringBuffer sb = new StringBuffer(WarningMessage.DELETE_MEMBERSHIP);
+                StringBuffer sb = new StringBuffer(SQLStatement.DELETE_MEMBERSHIP);
                 sb.append(tierId);
                 
                 //boolean updateResult;

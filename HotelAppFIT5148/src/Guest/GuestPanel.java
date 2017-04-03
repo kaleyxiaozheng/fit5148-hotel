@@ -5,6 +5,7 @@
  */
 package Guest;
 
+import Util.SQLStatement;
 import Util.WarningMessage;
 import hotelappfit5148.Database;
 import java.math.BigDecimal;
@@ -24,12 +25,7 @@ public class GuestPanel extends javax.swing.JPanel {
     Object columnHeaders[] = {"GUEST_ID","Title", "First Name", "Last Name",
         "Citizen Id", "DateOfBirth", "Country", "City", "Street", "Email"};
     Object data[][] = {{}};
-    DefaultTableModel dtm = new DefaultTableModel(data, columnHeaders);
-    
-    public final static String SELECT_GUEST = "SELECT GUEST_ID, TITLE, FIRST_NAME, "
-            + "LAST_NAME, CITIZEN_ID, DOB, COUNTRY, CITY, STREET, EMAIL FROM GUEST";
-    public final static String SELECT_GUEST_WITH_FIRSTNAME = " WHERE FIRST_NAME LIKE '%";
-    public final static String SELECT_GUEST_WITH_LASTNAME = "%' OR LAST_NAME LIKE '%";    
+    DefaultTableModel dtm = new DefaultTableModel(data, columnHeaders);          
     
     public final static String UPDATE_GUEST = "UpdateGuest";
     public final static String INSERT_GUEST = "InsertGuest";
@@ -47,10 +43,10 @@ public class GuestPanel extends javax.swing.JPanel {
             dtm.removeRow(i);
         }
         
-        StringBuffer sb = new StringBuffer(SELECT_GUEST);
+        StringBuffer sb = new StringBuffer(SQLStatement.SELECT_GUEST);
         if (!"".equals(jTextField1.getText())){
-            sb.append(SELECT_GUEST_WITH_FIRSTNAME).append(jTextField1.getText())
-                    .append(SELECT_GUEST_WITH_LASTNAME).append(jTextField1.getText()).append("%'");
+            sb.append(SQLStatement.SELECT_GUEST_WITH_FIRSTNAME).append(jTextField1.getText())
+                    .append(SQLStatement.SELECT_GUEST_WITH_LASTNAME).append(jTextField1.getText()).append("%'");
         }
         
         try {

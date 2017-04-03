@@ -5,6 +5,7 @@
  */
 package Room;
 
+import Util.SQLStatement;
 import Util.WarningMessage;
 
 import Util.WarningMessage;
@@ -44,8 +45,7 @@ public class RoomPanel extends javax.swing.JPanel {
         try {
             DriverManager.registerDriver(new OracleDriver());
             stmt = conn.createStatement();
-            ResultSet rset = stmt.executeQuery("select room_number, hotel_id, room_type, "
-                    + "price, description from room  order by room_number DESC");
+            ResultSet rset = stmt.executeQuery(SQLStatement.SELECT_ROOM);
 
             ResultSetMetaData mdata = rset.getMetaData();
             int numberOfColumns = mdata.getColumnCount();
@@ -77,7 +77,7 @@ public class RoomPanel extends javax.swing.JPanel {
     }
 
     private List<FacilityBean> getListFacilityOfRoom(String roomNumber, Long hotelId) {
-        conn = Database.getInstance().getDBConnection("FIT5148B");
+        conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
     
 //    private List<FacilityBean> getListFacilityOfRoom(String roomNumber, Long hotelId){
 //        conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
