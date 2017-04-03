@@ -198,34 +198,6 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void hotelMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hotelMenuActionPerformed
         // TODO add your handling code here:
-//        dispose();
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new ViewHotel().setVisible(true);
-//            }
-//        });
-//        jPanel2.removeAll();
-//
-//        javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
-//
-//        HotelPanel hotelPanel = new HotelPanel();
-//
-//        jPanel2Layout.setHorizontalGroup(
-//                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-//                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//                        .addComponent(hotelPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-//                        .addContainerGap())
-//        );
-//        jPanel2Layout.setVerticalGroup(
-//                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-//                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//                        .addComponent(hotelPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-//                        .addContainerGap())
-//        );
-//
-//        jPanel2.revalidate();
         loadHotelpanel();
     }//GEN-LAST:event_hotelMenuActionPerformed
 
