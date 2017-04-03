@@ -74,7 +74,7 @@ public class BookingGuestInfo extends javax.swing.JPanel {
                 totalGuest = "2";
                 break;
             default:
-                System.out.println(WarningMessage.INVALID_NUMBER);
+                //System.out.println(WarningMessage.INVALID_NUMBER);
                 break;
         }
         return totalGuest;
@@ -128,7 +128,7 @@ public class BookingGuestInfo extends javax.swing.JPanel {
 
             }
         } catch (SQLException f) {
-            System.out.println(f.getMessage());
+            //System.out.println(f.getMessage());
             f.printStackTrace();
         }
         return guest;
@@ -412,6 +412,7 @@ public class BookingGuestInfo extends javax.swing.JPanel {
         
         return 0;
     }
+    //Snow TODO : Revise this function
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
         if(!this.jCheckBox1.isSelected()){
@@ -526,7 +527,7 @@ public class BookingGuestInfo extends javax.swing.JPanel {
     }
 
     // synchronize
-    //Snow : Need to revise this function
+    //Snow TODO : Need to revise this function
     public synchronized void booking(){
         int citizenId = Integer.valueOf(citizen_id);
         String book_id = "";
@@ -534,7 +535,7 @@ public class BookingGuestInfo extends javax.swing.JPanel {
         try {
             String insertBooking = SQLStatement.INSERT_BOOKING + cus + ", TO_DATE('" + check_in + "', '" + Database.DB_DATE_FORMAT 
                     + "'), TO_DATE('" + check_out + "', '" + Database.DB_DATE_FORMAT + "'), " + price + ", 'U')";
-            System.out.println(insertBooking);
+            //System.out.println(insertBooking);
 
             Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
             Statement stmt = conn.createStatement();

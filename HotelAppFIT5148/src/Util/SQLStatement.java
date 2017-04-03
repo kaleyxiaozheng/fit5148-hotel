@@ -66,4 +66,12 @@ public class SQLStatement {
     public final static String INSERT_PAYMENT = "INSERT INTO PAYMENT (booking_id, payment_day, payment_method, payment_amount) VALUES(";
     
     public final static String UPDATE_PAYMENT_STATUS_WITH_BOOKING = "UPDATE BOOKING SET payment_status = 'S' where booking_id = ";
+    
+    public final static String SELECT_FACILITY = "select facility_number,room_number, hotel_id, description "
+                    + "from facility  where hotel_id = ";
+    public final static String SELECT_FACILITY_WITH_ROOM = " and room_number = '";
+    
+    public final static String DELETE_ROOM = "delete room where room_number = '";
+    
+    public final static String DELETE_ROOM_WITH_HOTEL = "' and hotel_id = ";
 }

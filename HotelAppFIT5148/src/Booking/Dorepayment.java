@@ -70,7 +70,7 @@ public class Dorepayment extends javax.swing.JPanel {
                 membership[3] = rset.getString(4);
             }
         } catch (SQLException f) {
-            System.out.println(f.getMessage());
+            //System.out.println(f.getMessage());
             f.printStackTrace();
         }
         return membership;
@@ -289,7 +289,7 @@ public class Dorepayment extends javax.swing.JPanel {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
             String insertPayment = SQLStatement.INSERT_PAYMENT + Integer.valueOf(jTextField1.getText()) + ", TO_DATE('" + jTextField2.getText() + "', '" + Database.DB_DATE_FORMAT + "'), '" + (String) jComboBox1.getSelectedItem() + "', " + jTextField3.getText() + " )";
-            System.out.println(insertPayment);
+            //System.out.println(insertPayment);
 
             DriverManager.registerDriver(new OracleDriver());
             Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);

@@ -87,10 +87,9 @@ public class RoomPanel extends javax.swing.JPanel {
         try {
             DriverManager.registerDriver(new OracleDriver());
             stmt = conn.createStatement();
-            StringBuilder str = new StringBuilder("select facility_number,room_number, hotel_id, description "
-                    + "from facility  where hotel_id = ");
+            StringBuilder str = new StringBuilder(SQLStatement.SELECT_FACILITY);
             str.append(hotelId);
-            str.append(" and room_number = '");
+            str.append(SQLStatement.SELECT_FACILITY_WITH_ROOM);
             str.append(roomNumber).append("'");
             ResultSet rset = stmt.executeQuery(str.toString());
 
@@ -296,9 +295,9 @@ public class RoomPanel extends javax.swing.JPanel {
                 String roomNumber = jTable1.getModel().getValueAt(selectedHotel, 0).toString();
                 Long hotelId = Long.parseLong(jTable1.getModel().getValueAt(selectedHotel, 1).toString());
 
-                StringBuilder sb = new StringBuilder("delete room where room_number = '");
+                StringBuilder sb = new StringBuilder(SQLStatement.DELETE_ROOM);
                 sb.append(roomNumber);
-                sb.append("' and hotel_id = ");
+                sb.append(SQLStatement.DELETE_ROOM_WITH_HOTEL);
                 sb.append(hotelId);
 
                 boolean deleteResult;
