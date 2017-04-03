@@ -532,7 +532,7 @@ public class Booking extends javax.swing.JPanel {
         int cus = this.getCustomerId(citizenId);
         try {
             String insertBooking = "INSERT INTO booking (booking_id, customer_id, check_in_date, check_out_date, total_amount, payment_status) VALUES(null, " + cus + ", TO_DATE('" + check_in + "', 'DD/MM/YYYY'), TO_DATE('" + check_out + "', 'DD/MM/YYYY'), " + price + ", 'U')";
-            //System.out.println(insertBooking);
+            System.out.println(insertBooking);
 
             Connection conn = Database.getInstance().getDBConnection("FIT5148B");
             Statement stmt = conn.createStatement();
