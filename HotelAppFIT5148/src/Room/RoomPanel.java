@@ -5,6 +5,7 @@
  */
 package Room;
 
+import Util.WarningMessage;
 
 import Util.WarningMessage;
 import java.sql.Connection;
@@ -13,6 +14,8 @@ import hotelappfit5148.*;
 import javax.swing.table.DefaultTableModel;
 import oracle.jdbc.OracleDriver;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
@@ -21,7 +24,7 @@ import javax.swing.JOptionPane;
  */
 public class RoomPanel extends javax.swing.JPanel {
 
-    Object columnHeaders[] = {"ROOM_NUMBER", "HOTEL_ID", "ROOM_TYPE", "PRICE", "DESCRIPTION"};
+    Object columnHeaders[] = {"ROOM_NUMBER", "HOTEL_ID", "ROOM_TYPE", "PRICE", "DESCRIPTION", "FACILITY"};
     Object data[][] = {{}};
     DefaultTableModel dtm = new DefaultTableModel(data, columnHeaders);
     Connection conn = null;
@@ -46,47 +49,68 @@ public class RoomPanel extends javax.swing.JPanel {
 
             ResultSetMetaData mdata = rset.getMetaData();
             int numberOfColumns = mdata.getColumnCount();
+            Object[] rowData = new Object[numberOfColumns + 1];
+
             while (rset.next()) {
-                Object[] rowData = new Object[numberOfColumns];
-                for (int i = 0; i < rowData.length; i++) {
+                for (int i = 0; i < rowData.length - 1; i++) {
                     rowData[i] = rset.getObject(i + 1);
                 }
+
                 dtm.addRow(rowData);
             }
+//            add facility
+            for (int i = 0; i < dtm.getRowCount(); i++) {
+                //                get facility
+                List<FacilityBean> facilityList = getListFacilityOfRoom(dtm.getValueAt(i, 0).toString(), Long.parseLong(dtm.getValueAt(i, 1).toString()));
+                String description = "";
+                for (FacilityBean temp : facilityList) {
+                    description += temp.getDescription();
+                    description += "\n";
+                }
+                dtm.setValueAt(description, i, 5);
+            }
+
             Database.getInstance().closeDBConnection();
         } catch (SQLException f) {
             System.out.println(f.getMessage());
         }
     }
+
+    private List<FacilityBean> getListFacilityOfRoom(String roomNumber, Long hotelId) {
+        conn = Database.getInstance().getDBConnection("FIT5148B");
     
 //    private List<FacilityBean> getListFacilityOfRoom(String roomNumber, Long hotelId){
 //        conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
 //        dtm.setRowCount(0);
-//        try {
-//            DriverManager.registerDriver(new OracleDriver());
-//            stmt = conn.createStatement();
-//            StringBuilder str = new StringBuilder("select facility_number,room_number, hotel_id, description "
-//                    + "from facility  where hotel_id = ");
-//            str.append(hotelId);
-//            str.append(" and room_number = '");
-//            str.append(roomNumber + "'");
-//            ResultSet rset = stmt.executeQuery(str.toString());
-//            
-//
-//            ResultSetMetaData mdata = rset.getMetaData();
-//            int numberOfColumns = mdata.getColumnCount();
-//            while (rset.next()) {
-//                Object[] rowData = new Object[numberOfColumns];
-//                for (int i = 0; i < rowData.length; i++) {
-//                    rowData[i] = rset.getObject(i + 1);
-//                }
-//                dtm.addRow(rowData);
-//            }
-//            Database.getInstance().closeDBConnection();
-//        } catch (SQLException f) {
-//            System.out.println(f.getMessage());
-//        }
-//    }
+        List<FacilityBean> facilityList = new ArrayList<FacilityBean>();
+
+        try {
+            DriverManager.registerDriver(new OracleDriver());
+            stmt = conn.createStatement();
+            StringBuilder str = new StringBuilder("select facility_number,room_number, hotel_id, description "
+                    + "from facility  where hotel_id = ");
+            str.append(hotelId);
+            str.append(" and room_number = '");
+            str.append(roomNumber).append("'");
+            ResultSet rset = stmt.executeQuery(str.toString());
+
+            ResultSetMetaData mdata = rset.getMetaData();
+            while (rset.next()) {
+                FacilityBean facility = new FacilityBean();
+                facility.setFacilityNumeber(rset.getObject(1).toString());
+                facility.setRoomNumber(rset.getObject(2).toString());
+                facility.setHotelId(Long.parseLong(rset.getObject(3).toString()));
+                facility.setDescription(rset.getObject(4).toString());
+
+                facilityList.add(facility);
+
+            }
+            Database.getInstance().closeDBConnection();
+        } catch (SQLException f) {
+            System.out.println(f.getMessage());
+        }
+        return facilityList;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -144,7 +168,6 @@ public class RoomPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(HotelScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
@@ -162,6 +185,25 @@ public class RoomPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(deleteRoomButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(HotelScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 616, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(facilityTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(searchButton))
+                            .addComponent(jLabel1)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(163, 163, 163)
+                        .addComponent(newRoomButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(updateRoomButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(deleteRoomButton)))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -174,11 +216,22 @@ public class RoomPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(HotelScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(facilityTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(HotelScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(newRoomButton)
                     .addComponent(updateRoomButton)
                     .addComponent(deleteRoomButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(24, 24, 24))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -195,20 +248,33 @@ public class RoomPanel extends javax.swing.JPanel {
 
             if (!"".equals(facility)) {
                 sbSQL.append(", facility where room.room_number = facility.room_number and room.hotel_id = facility.hotel_id ");
-                sbSQL.append("and lower(facility.description) like '%" + facility.toLowerCase() + "%' ");
+                sbSQL.append("and lower(facility.description) like '%").append(facility.toLowerCase()).append("%' ");
             }
             sbSQL.append(" order by room_number DESC");
             System.out.print(sbSQL);
             ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, sbSQL.toString());
             ResultSetMetaData mdata = rset.getMetaData();
-            int numberOfColumns = mdata.getColumnCount();
+            int numberOfColumns = mdata.getColumnCount() + 1;
             while (rset.next()) {
                 Object[] rowData = new Object[numberOfColumns];
-                for (int i = 0; i < rowData.length; i++) {
+                for (int i = 0; i < rowData.length - 1; i++) {
                     rowData[i] = rset.getObject(i + 1);
                 }
                 dtm.addRow(rowData);
             }
+
+            //            add facility
+            for (int i = 0; i < dtm.getRowCount(); i++) {
+                //                get facility
+                List<FacilityBean> facilityList = getListFacilityOfRoom(dtm.getValueAt(i, 0).toString(), Long.parseLong(dtm.getValueAt(i, 1).toString()));
+                String description = "";
+                for (FacilityBean temp : facilityList) {
+                    description += temp.getDescription();
+                    description += "\n";
+                }
+                dtm.setValueAt(description, i, 5);
+            }
+
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
