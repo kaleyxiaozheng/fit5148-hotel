@@ -5,6 +5,10 @@
  */
 package hotelappfit5148;
 
+import Booking.Dorepayment;
+import Booking.PaymentInfo;
+import Booking.BookingGuestInfo;
+import Booking.SearchingRoom;
 import Membership.MembershipPanel;
 import Guest.GuestPanel;
 import Customer.CustomerPanel;
@@ -231,7 +235,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
 
-        Searching searching1 = new Searching(this);
+        SearchingRoom searching1 = new SearchingRoom(this);
 
         jPanel2Layout.setHorizontalGroup(
                 jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -252,13 +256,13 @@ public class MainFrame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
-    // Booking GUI
+    // BookingGuestInfo GUI
     public void bookingActionPerformed(String room_type, String check_in, String check_out, double price, String citizen_id, String[] selectedRow){
         jPanel2.removeAll();
         
         javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
         
-        Booking booking1 = new Booking(room_type, this, check_in, check_out, price, citizen_id, selectedRow);
+        BookingGuestInfo booking1 = new BookingGuestInfo(room_type, this, check_in, check_out, price, citizen_id, selectedRow);
         
          jPanel2Layout.setHorizontalGroup(
                 jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -278,14 +282,14 @@ public class MainFrame extends javax.swing.JFrame {
         jPanel2.revalidate();
     }
     
-    // Payment GUI
+    // PaymentInfo GUI
     public void accessPaymentGUI(String booking_id, String[] selectedRow, String customer_id, List<Integer> guests) {                                           
 
         jPanel2.removeAll();
 
         javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
 
-        Payment payment1 = new Payment(booking_id, selectedRow, customer_id, guests, this);
+        PaymentInfo payment1 = new PaymentInfo(booking_id, selectedRow, customer_id, guests, this);
 
         jPanel2Layout.setHorizontalGroup(
                 jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -367,7 +371,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();
 
-        Payment payment1 = new Payment(this);
+        PaymentInfo payment1 = new PaymentInfo(this);
 
         jPanel2Layout.setHorizontalGroup(
                 jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

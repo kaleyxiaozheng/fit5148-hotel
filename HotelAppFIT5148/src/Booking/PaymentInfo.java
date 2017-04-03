@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotelappfit5148;
+package Booking;
 
+import Booking.SearchingRoom;
+import hotelappfit5148.Database;
+import hotelappfit5148.MainFrame;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -21,7 +24,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Kaley
  */
-public class Payment extends javax.swing.JPanel {
+public class PaymentInfo extends javax.swing.JPanel {
 
     private boolean mode;
     private String customer_id;
@@ -36,7 +39,7 @@ public class Payment extends javax.swing.JPanel {
     /**
      * Creates new form Payment
      */
-    public Payment(String book_id, String[] selectedRow, String customer_id, List<Integer> guests, MainFrame mf) {
+    public PaymentInfo(String book_id, String[] selectedRow, String customer_id, List<Integer> guests, MainFrame mf) {
         initComponents();
         initCurrentBooking(book_id, selectedRow);
         mode = false;
@@ -47,7 +50,7 @@ public class Payment extends javax.swing.JPanel {
         this.mf = mf;
     }
 
-    public Payment(MainFrame mf) {
+    public PaymentInfo(MainFrame mf) {
         mode = true;
         this.mf = mf;
         initComponents();
@@ -296,7 +299,7 @@ public class Payment extends javax.swing.JPanel {
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(Searching.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SearchingRoom.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return hotelID;
@@ -393,7 +396,7 @@ public class Payment extends javax.swing.JPanel {
             }
             model.fireTableDataChanged();
         } catch (SQLException ex) {
-            Logger.getLogger(Searching.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SearchingRoom.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

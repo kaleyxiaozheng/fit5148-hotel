@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotelappfit5148;
+package Booking;
 
+import hotelappfit5148.Database;
+import hotelappfit5148.MainFrame;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -303,7 +305,7 @@ public class Dorepayment extends javax.swing.JPanel {
             mf.removePanel2();
 
         } catch (SQLException ex) {
-            Logger.getLogger(Booking.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BookingGuestInfo.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 

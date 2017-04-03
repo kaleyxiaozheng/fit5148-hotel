@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotelappfit5148;
+package Booking;
 
 import Util.WarningMessage;
+import hotelappfit5148.Database;
+import hotelappfit5148.MainFrame;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
@@ -31,7 +33,7 @@ import oracle.jdbc.OracleDriver;
  *
  * @author Kaley
  */
-public class Searching extends javax.swing.JPanel {
+public class SearchingRoom extends javax.swing.JPanel {
 
     private List countriesAndCities;
     private List room_Type;
@@ -40,7 +42,7 @@ public class Searching extends javax.swing.JPanel {
     /**
      * Creates new form Searching
      */
-    public Searching(MainFrame mf) {
+    public SearchingRoom(MainFrame mf) {
         initComponents();
         initDate();
         countriesAndCities = initHotel();
@@ -297,7 +299,7 @@ public class Searching extends javax.swing.JPanel {
             ResultSet rset = stmt.executeQuery(search);
             flag = rset.next();
         } catch (SQLException ex) {
-            Logger.getLogger(Searching.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SearchingRoom.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return flag;
@@ -384,7 +386,7 @@ public class Searching extends javax.swing.JPanel {
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(Searching.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SearchingRoom.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         // double click a row and go to the booking GUI
@@ -423,7 +425,7 @@ public class Searching extends javax.swing.JPanel {
                     if (whetherExistCitizenId(citizen_id)) {
                         mf.bookingActionPerformed(room_type, check_in, check_out, price, citizen_id, rowData);
                     } else {
-                        javax.swing.JOptionPane.showMessageDialog(Searching.this, "customer does not exist");
+                        javax.swing.JOptionPane.showMessageDialog(SearchingRoom.this, "customer does not exist");
                     }
                 }
             }

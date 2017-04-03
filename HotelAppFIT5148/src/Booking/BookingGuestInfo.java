@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotelappfit5148;
+package Booking;
 
+import Booking.SearchingRoom;
+import hotelappfit5148.Database;
+import hotelappfit5148.MainFrame;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -24,7 +27,7 @@ import oracle.jdbc.OracleDriver;
  *
  * @author Kaley
  */
-public class Booking extends javax.swing.JPanel {
+public class BookingGuestInfo extends javax.swing.JPanel {
 
     private String[] selectedRow;
     private String citizen_id;
@@ -42,7 +45,7 @@ public class Booking extends javax.swing.JPanel {
     /**
      * Creates new form Booking
      */
-    public Booking(String room_type, MainFrame mf, String check_in, String check_out, double price, String citizen_id, String[] selectedRow) {
+    public BookingGuestInfo(String room_type, MainFrame mf, String check_in, String check_out, double price, String citizen_id, String[] selectedRow) {
         initComponents();
         jLabel12.setText(totalGuest(room_type));
         jLabel14.setText("0");
@@ -474,7 +477,7 @@ public class Booking extends javax.swing.JPanel {
                 guest_id = Integer.valueOf(rset.getString(1));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(Searching.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SearchingRoom.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return guest_id;
@@ -545,7 +548,7 @@ public class Booking extends javax.swing.JPanel {
 
             mf.accessPaymentGUI(book_id, selectedRow, cus + "", guests);
         } catch (SQLException ex) {
-            Logger.getLogger(Booking.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BookingGuestInfo.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
