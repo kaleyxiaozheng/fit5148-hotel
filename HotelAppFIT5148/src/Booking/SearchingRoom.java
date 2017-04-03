@@ -35,8 +35,9 @@ import oracle.jdbc.OracleDriver;
  */
 public class SearchingRoom extends javax.swing.JPanel {
 
-    private List countriesAndCities;
-    private List room_Type;
+    private List countries;
+    private List cities;
+    private List roomTypes;
     private MainFrame mf;
 
     /**
@@ -45,22 +46,28 @@ public class SearchingRoom extends javax.swing.JPanel {
     public SearchingRoom(MainFrame mf) {
         initComponents();
         initDate();
-        countriesAndCities = initHotel();
-        room_Type = initRoom();
+        countries = initCountries();
+        cities = initCities();
+        roomTypes = initRoomType();
 
         jComboBox2.removeAllItems();
         jComboBox1.removeAllItems();
         jComboBox4.removeAllItems();
 
-        for (Iterator iterator = countriesAndCities.iterator(); iterator.hasNext();) {
-            String[] cc = (String[]) iterator.next();
-            jComboBox2.addItem(cc[0]);
-            jComboBox1.addItem(cc[1]);
+        for (Iterator iterator = countries.iterator(); iterator.hasNext();) {
+            String country = (String) iterator.next();
+            jComboBox2.addItem(country);
         }
 
-        for (Iterator iterator = room_Type.iterator(); iterator.hasNext();) {
-            String room = iterator.next().toString();
-            jComboBox4.addItem(room);
+        for (Iterator iterator = cities.iterator(); iterator.hasNext();) {
+            String city = (String) iterator.next();
+            jComboBox1.addItem(city);
+        }
+
+        jComboBox4.addItem("All");
+        for (Iterator iterator = roomTypes.iterator(); iterator.hasNext();) {
+            String roomType = iterator.next().toString();
+            jComboBox4.addItem(roomType);
         }
 
         this.mf = mf;
@@ -68,38 +75,55 @@ public class SearchingRoom extends javax.swing.JPanel {
 
     // Set current date as value of check-in and check-out
     public void initDate() {
-        jXDatePicker1.setDate(Calendar.getInstance().getTime());
-        jXDatePicker2.setDate(Calendar.getInstance().getTime());
+        //jXDatePicker1.setDate(Calendar.getInstance().getTime());
+        //jXDatePicker2.setDate(Calendar.getInstance().getTime());
     }
 
-    // Access hotel country and hotel city
-    public List initHotel() {
-        List countriesAndCities = new ArrayList();
+    // search country in order to add it into jComboBox1
+    public List initCountries() {
+        String searchCountries = "select DISTINCT country from hotel";
+        List countries = new ArrayList();
         try {
             DriverManager.registerDriver(new OracleDriver());
             Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148A);
-            DatabaseMetaData md = conn.getMetaData();
 
-            ResultSet rs = md.getTables(null, null, "%", null);
             Statement stmt = conn.createStatement();
 
-            ResultSet rset = stmt.executeQuery("select country, city from hotel");
-            ResultSetMetaData metadata = rset.getMetaData();
+            ResultSet rset = stmt.executeQuery(searchCountries);
             while (rset.next()) {
-                String[] rsets = new String[2];
-                rsets[0] = rset.getString(1);
-                rsets[1] = rset.getString(2);
-                countriesAndCities.add(rsets);
+                countries.add(rset.getString(1));
             }
         } catch (SQLException f) {
             System.out.println(f.getMessage());
             f.printStackTrace();
         }
-        return countriesAndCities;
+        return countries;
     }
 
-    // Access room type and rate range
-    public List initRoom() {
+    // search city in order to add it into jComboBox1
+    public List initCities() {
+        String searchCities = "select DISTINCT city from hotel";
+        List cities = new ArrayList();
+        try {
+            DriverManager.registerDriver(new OracleDriver());
+            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148A);
+
+            Statement stmt = conn.createStatement();
+
+            ResultSet rset = stmt.executeQuery(searchCities);
+            while (rset.next()) {
+                cities.add(rset.getString(1));
+            }
+        } catch (SQLException f) {
+            System.out.println(f.getMessage());
+            f.printStackTrace();
+        }
+        return cities;
+    }
+
+    // search room type in order to add it into jComboBox4
+    public List initRoomType() {
+        String searchRoomTypes = "select DISTINCT room_type from room";
         List roomType = new ArrayList();
         try {
             DriverManager.registerDriver(new OracleDriver());
@@ -108,18 +132,16 @@ public class SearchingRoom extends javax.swing.JPanel {
 
             Statement stmt = conn.createStatement();
 
-            ResultSet rset = stmt.executeQuery("select DISTINCT room_type from room");
+            ResultSet rset = stmt.executeQuery(searchRoomTypes);
             ResultSetMetaData metadata = rset.getMetaData();
             while (rset.next()) {
-                String room_type = rset.getString(1);
-                roomType.add(room_type);
+                roomType.add(rset.getString(1));
             }
         } catch (SQLException f) {
             System.out.println(f.getMessage());
             f.printStackTrace();
         }
         return roomType;
-
     }
 
     /**
@@ -148,6 +170,8 @@ public class SearchingRoom extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jCheckBox1 = new javax.swing.JCheckBox();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
 
         search.setLabel("Search");
         search.addActionListener(new java.awt.event.ActionListener() {
@@ -179,7 +203,7 @@ public class SearchingRoom extends javax.swing.JPanel {
             }
         });
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1-200", "200-400", "400-600", "600-800", "800-1000", ">1000" }));
+        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "1-200", "200-400", "400-600", "600-800", "800-1000", ">1000" }));
 
         jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "item1", "item2", "item3", "item4" }));
 
@@ -195,6 +219,13 @@ public class SearchingRoom extends javax.swing.JPanel {
 
     jCheckBox1.setText("available");
 
+    jLabel8.setForeground(new java.awt.Color(255, 0, 51));
+    jLabel8.setText("*");
+
+    jLabel9.setForeground(new java.awt.Color(255, 0, 0));
+    jLabel9.setText("*");
+    jLabel9.setToolTipText("");
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
     this.setLayout(layout);
     layout.setHorizontalGroup(
@@ -207,49 +238,48 @@ public class SearchingRoom extends javax.swing.JPanel {
                         .addComponent(jLabel6)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel4)
-                                .addComponent(jLabel3)
-                                .addComponent(jLabel1)
-                                .addComponent(jLabel2)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel2))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addComponent(jLabel7))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(23, 23, 23)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(18, 18, 18)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jCheckBox1)))
-                        .addGroup(layout.createSequentialGroup()
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jXDatePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jXDatePicker2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGap(18, 18, 18))
+                        .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jCheckBox1)
+                        .addComponent(jXDatePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jXDatePicker2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap()
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(search)
                     .addGap(67, 67, 67)))
             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addContainerGap(18, Short.MAX_VALUE))
+            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
     layout.setVerticalGroup(
         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-            .addContainerGap()
+            .addGap(36, 36, 36)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jLabel1)
-                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(18, 18, 18)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jLabel2)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel8)
+                .addComponent(jLabel1))
+            .addGap(28, 28, 28)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jLabel9))
             .addGap(25, 25, 25)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel3)
@@ -290,13 +320,14 @@ public class SearchingRoom extends javax.swing.JPanel {
         boolean flag = false;
 
         // search customer in customer table with customer id
-        String search = "SELECT citizen_id from customer where citizen_id = " + Integer.valueOf(citizenId);
+        StringBuffer sb = new StringBuffer("SELECT citizen_id from customer where citizen_id = ");
+        sb.append(Integer.valueOf(citizenId));
         //System.out.println(search);
         try {
             Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
             Statement stmt = conn.createStatement();
 
-            ResultSet rset = stmt.executeQuery(search);
+            ResultSet rset = stmt.executeQuery(sb.toString());
             flag = rset.next();
         } catch (SQLException ex) {
             Logger.getLogger(SearchingRoom.class.getName()).log(Level.SEVERE, null, ex);
@@ -307,129 +338,141 @@ public class SearchingRoom extends javax.swing.JPanel {
 
 
     private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
-
-        // check check-in and check-out date
-        Date checkinDate = this.jXDatePicker1.getDate();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(checkinDate);
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 58);
-        checkinDate = calendar.getTime();
-        Date checkoutDate = this.jXDatePicker2.getDate();
-        Date todayDate = Calendar.getInstance().getTime();
-        if(checkinDate.before(todayDate)){
-            JOptionPane.showMessageDialog(this, "Checkin date must be after today");
-            return;
-        }
-        if(checkoutDate.before(todayDate)){
-            JOptionPane.showMessageDialog(this, "Checkout date must be after today");
-            return;
-        }
-        if(checkoutDate.before(checkinDate)){
-            JOptionPane.showMessageDialog(this, "Checkout date must be after checkin date");
-            return;
-        }
-        
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.setRowCount(0);
-
         String country = String.valueOf(jComboBox2.getSelectedItem());
         String city = String.valueOf(jComboBox1.getSelectedItem());
-        String room_type = String.valueOf(jComboBox4.getSelectedItem());
-        String rate_range = String.valueOf(jComboBox3.getSelectedItem());
 
-        SimpleDateFormat formater = new SimpleDateFormat(Database.DB_DATE_FORMAT);
-        String check_in = formater.format(jXDatePicker1.getDate());
-        String check_out = formater.format(jXDatePicker2.getDate());
-
-        boolean avaliable = jCheckBox1.isSelected();
-        String avail = "";
-
-        if (avaliable) {
-            avail = "true";
-        } else {
-            avail = "false";
-        }
-
-        try {
-
-            String search = "SELECT hotel_name, r.room_number, r.room_type, r.price from room@FIT5148B r, hotel@FIT5148A h WHERE h.country =  '"
-                    + country + "' and h.city = '" + city + "'" + " and h.hotel_id = r.hotel_id and r.room_type = '"
-                    + room_type + "' ";
-            String selectedPriceRange = this.jComboBox3.getSelectedItem().toString();
-            int priceStart = Integer.MIN_VALUE;
-            int priceEnd = Integer.MAX_VALUE;
-            if (selectedPriceRange.contains("-")) {
-                priceStart = Integer.parseInt(selectedPriceRange.split("-")[0]);
-                priceEnd = Integer.parseInt(selectedPriceRange.split("-")[1]);
-            }else if (selectedPriceRange.contains(">")) {
-                priceStart = Integer.parseInt(selectedPriceRange.split(">")[1].trim());
+// Searching room with value of country and city
+            StringBuffer sb = new StringBuffer("SELECT h.hotel_name, r.room_number, r.room_type, r.price from room@FIT5148B r, hotel@FIT5148A h WHERE h.country = '");
+            sb.append(country);
+            sb.append("' and h.city = '");
+            sb.append(city);
+            sb.append("' and r.hotel_id = h.hotel_id");
+         
+// check check-in and check-out date
+        if (this.jXDatePicker1.getDate() != null && this.jXDatePicker2.getDate() != null) {
+            Date checkinDate = this.jXDatePicker1.getDate();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(checkinDate);
+            calendar.set(Calendar.HOUR_OF_DAY, 23);
+            calendar.set(Calendar.MINUTE, 58);
+            checkinDate = calendar.getTime();
+            Date checkoutDate = this.jXDatePicker2.getDate();
+            Date todayDate = Calendar.getInstance().getTime();
+            if (checkinDate.before(todayDate)) {
+                JOptionPane.showMessageDialog(this, "CHECKIN_DATE_AFTER_TODAY");
             }
-            search += " and r.price >= " + priceStart + " and r.price <=" + priceEnd;
-            if(this.jCheckBox1.isSelected()){
-                search += " and  not EXISTS (select bgm.room_number from bookingroomguest@FIT5148B bgm)  ";
+            if (checkoutDate.before(todayDate)) {
+                JOptionPane.showMessageDialog(this, "CHECKOUT_DATE_AFTER_TODAY");
+                return;
+            }
+            if (checkoutDate.before(checkinDate)) {
+                JOptionPane.showMessageDialog(this, "CHECKOUT_DATE_AFTER_CHECKIN_DATE");
+                return;
             }
             
-            System.out.println(search);
-            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148A);
-            Statement stat = conn.createStatement();
-            ResultSet rset = stat.executeQuery(search);
-            while (rset.next()) {
-                String[] rsets = new String[4];
-                rsets[0] = rset.getString(1);
-                rsets[1] = rset.getString(2);
-                rsets[2] = rset.getString(3);
-                rsets[3] = rset.getString(4);
-
-                //System.out.println(rsets[0] + ", " + rsets[1] + ", " + rsets[2] + ", " + rsets[3]);
-                model.addRow(rsets);
-            }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(SearchingRoom.class.getName()).log(Level.SEVERE, null, ex);
+            // sb= sb
         }
+//
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            model.setRowCount(0);
+//
+//        String country = String.valueOf(jComboBox2.getSelectedItem());
+//        String city = String.valueOf(jComboBox1.getSelectedItem());
+//        String room_type = String.valueOf(jComboBox4.getSelectedItem());
+//        String rate_range = String.valueOf(jComboBox3.getSelectedItem());
+//
+//        SimpleDateFormat formater = new SimpleDateFormat(Database.DB_DATE_FORMAT);
+//        String check_in = formater.format(jXDatePicker1.getDate());
+//        String check_out = formater.format(jXDatePicker2.getDate());
+//
+//        boolean avaliable = jCheckBox1.isSelected();
+//        String avail = "";
+//
+//        if (avaliable) {
+//            avail = "true";
+//        } else {
+//            avail = "false";
+//        }
+//
+            try {
+//            String search = "SELECT hotel_name, r.room_number, r.room_type, r.price from room@FIT5148B r, hotel@FIT5148A h WHERE h.country =  '"
+//                    + country + "' and h.city = '" + city + "'" + " and h.hotel_id = r.hotel_id and r.room_type = '"
+//                    + room_type + "' ";
+//            String selectedPriceRange = this.jComboBox3.getSelectedItem().toString();
+//            int priceStart = Integer.MIN_VALUE;
+//            int priceEnd = Integer.MAX_VALUE;
+//            if (selectedPriceRange.contains("-")) {
+//                priceStart = Integer.parseInt(selectedPriceRange.split("-")[0]);
+//                priceEnd = Integer.parseInt(selectedPriceRange.split("-")[1]);
+//            } else if (selectedPriceRange.contains(">")) {
+//                priceStart = Integer.parseInt(selectedPriceRange.split(">")[1].trim());
+//            }
+//            search += " and r.price >= " + priceStart + " and r.price <=" + priceEnd;
+//            if (this.jCheckBox1.isSelected()) {
+//                search += " and  not EXISTS (select bgm.room_number from bookingroomguest@FIT5148B bgm)  ";
+//            }
+//
+//            System.out.println(search);
+                Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148A);
+                Statement stat = conn.createStatement();
+                ResultSet rset = stat.executeQuery(sb.toString());
+                while (rset.next()) {
+                    String[] rsets = new String[4];
+                    rsets[0] = rset.getString(1);
+                    rsets[1] = rset.getString(2);
+                    rsets[2] = rset.getString(3);
+                    rsets[3] = rset.getString(4);
 
-        // double click a row and go to the booking GUI
-        jTable1.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-
-                if (e.getClickCount() == 2) {
-
-                    // access seleced row data
-                    javax.swing.JTable target = (javax.swing.JTable) e.getSource();
-                    int row1 = target.getSelectedRow();
-
-                    String[] rowData = new String[4];
-
-                    for (int i = 0; i < 4; i++) {
-                        rowData[i] = (String) target.getValueAt(row1, i);
-                    }
-//                        
-//                    for(int i = 0; i < 4; i++){
-//                        System.out.print(rowData[i]);
-//                    }
-
-                    String citizen_id = javax.swing.JOptionPane.showInputDialog(WarningMessage.EMPTY_CITIZEN_ID);
-                    //System.out.println(customer_id);
-
-                    if(citizen_id == null){
-                        return;
-                    }
-                    target = (javax.swing.JTable) e.getSource();
-                    int row2 = target.getSelectedRow();
-                    String room_type = (String) target.getValueAt(row2, 2);
-                    double price = Double.valueOf((String) target.getValueAt(row2, 3));
-                    //System.out.println(room_type);
-
-                    // access booking GUI
-                    if (whetherExistCitizenId(citizen_id)) {
-                        mf.bookingActionPerformed(room_type, check_in, check_out, price, citizen_id, rowData);
-                    } else {
-                        javax.swing.JOptionPane.showMessageDialog(SearchingRoom.this, "customer does not exist");
-                    }
+                    //System.out.println(rsets[0] + ", " + rsets[1] + ", " + rsets[2] + ", " + rsets[3]);
+                    model.addRow(rsets);
                 }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(SearchingRoom.class.getName()).log(Level.SEVERE, null, ex);
             }
-        });
+        
+//
+//        // double click a row and go to the booking GUI
+//        jTable1.addMouseListener(new MouseAdapter() {
+//            public void mouseClicked(MouseEvent e) {
+//
+//                if (e.getClickCount() == 2) {
+//
+//                    // access seleced row data
+//                    javax.swing.JTable target = (javax.swing.JTable) e.getSource();
+//                    int row1 = target.getSelectedRow();
+//
+//                    String[] rowData = new String[4];
+//
+//                    for (int i = 0; i < 4; i++) {
+//                        rowData[i] = (String) target.getValueAt(row1, i);
+//                    }
+////                        
+////                    for(int i = 0; i < 4; i++){
+////                        System.out.print(rowData[i]);
+////                    }
+//
+//                    String citizen_id = javax.swing.JOptionPane.showInputDialog(WarningMessage.EMPTY_CITIZEN_ID);
+//                    //System.out.println(customer_id);
+//
+//                    if (citizen_id == null) {
+//                        return;
+//                    }
+//                    target = (javax.swing.JTable) e.getSource();
+//                    int row2 = target.getSelectedRow();
+//                    String room_type = (String) target.getValueAt(row2, 2);
+//                    double price = Double.valueOf((String) target.getValueAt(row2, 3));
+//                    //System.out.println(room_type);
+//
+//                    // access booking GUI
+//                    if (whetherExistCitizenId(citizen_id)) {
+//                        mf.bookingActionPerformed(room_type, check_in, check_out, price, citizen_id, rowData);
+//                    } else {
+//                        javax.swing.JOptionPane.showMessageDialog(SearchingRoom.this, "customer does not exist");
+//                    }
+//                }
+//            }
+//        });
     }//GEN-LAST:event_searchActionPerformed
 
 
@@ -446,6 +489,8 @@ public class SearchingRoom extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private org.jdesktop.swingx.JXDatePicker jXDatePicker1;

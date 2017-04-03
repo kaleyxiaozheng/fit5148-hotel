@@ -84,4 +84,7 @@ public class WarningMessage {
     public final static String GUEST_NOT_EXIST = "Guest does not exists.";
     
     public final static String PAYMENT_SUCCESSFUL = "The booking is piad, thank you!";
+    
+    public final static String CHECKOUT_DATE_AFTER_TODAY = "Checkout date must be after today";
+    public final static String CHECKOUT_DATE_AFTER_CHECKIN_DATE = "Checkout date must be after checkin date";
 }
