@@ -7,8 +7,6 @@ package Room;
 
 import Util.SQLStatement;
 import Util.WarningMessage;
-
-import Util.WarningMessage;
 import java.sql.Connection;
 import java.sql.Statement;
 import hotelappfit5148.*;
@@ -208,6 +206,7 @@ public class RoomPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    //Thao TODO: Revise the SQL with SEMI Join instead of left join
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         // TODO add your handling code here:
         dtm.setRowCount(0);

@@ -42,6 +42,10 @@ public class BookingGuestInfo extends javax.swing.JPanel {
     private List<String> guest = new ArrayList();
     private static CallableStatement cstmt;
     
+    private final static String ROOMTYPE_SINGLE = "single";
+    private final static String ROOMTYPE_STUDIO = "studio";
+    private final static String ROOMTYPE_SUITE = "suite";
+    private final static String ROOMTYPE_DOUBLE = "double";
 
     /**
      * Creates new form Booking
@@ -65,12 +69,12 @@ public class BookingGuestInfo extends javax.swing.JPanel {
     public String totalGuest(String room_type) {
         String totalGuest = "";
         switch (room_type.toLowerCase()) {
-            case "single":
-            case "studio":
-            case "suite":
+            case ROOMTYPE_SINGLE:
+            case ROOMTYPE_STUDIO:
+            case ROOMTYPE_SUITE:
                 totalGuest = "1";
                 break;
-            case "double":
+            case ROOMTYPE_DOUBLE:
                 totalGuest = "2";
                 break;
             default:
@@ -83,7 +87,7 @@ public class BookingGuestInfo extends javax.swing.JPanel {
     // Access guest information from table guest
     public List getGuestInfor(int citizen_id) {
 
-        List countriesAndCities = new ArrayList();
+        //List countriesAndCities = new ArrayList();
         try {
             DriverManager.registerDriver(new OracleDriver());
             Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
@@ -234,12 +238,6 @@ public class BookingGuestInfo extends javax.swing.JPanel {
 
         jTextField7.setEditable(false);
         jTextField7.setText(" ");
-
-        jTextField8.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField8ActionPerformed(evt);
-            }
-        });
 
         jCheckBox1.setText("Add current customer as guest");
         jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
@@ -450,10 +448,6 @@ public class BookingGuestInfo extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
-
-    private void jTextField8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField8ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField8ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // search citizen ID from guest table
