@@ -5,6 +5,7 @@
  */
 package Hotel;
 
+import Util.WarningMessage;
 import hotelappfit5148.Database;
 import javax.swing.table.DefaultTableModel;
 import oracle.jdbc.OracleDriver;
@@ -34,7 +35,7 @@ public class ViewHotel  extends javax.swing.JFrame {
     }
 
     private void showAllHotelToTable() {
-        conn = Database.getInstance().getDBConnection("FIT5148A");
+        conn = Database.getInstance().getDBConnection(Database.DB_FIT5148A);
         dtm.setRowCount(0);
         try {
             DriverManager.registerDriver(new OracleDriver());
@@ -180,7 +181,7 @@ public class ViewHotel  extends javax.swing.JFrame {
                 sbSQL.append(" where hotel_type = '" + selectedHotelType + "'");
             }
             sbSQL.append(" order by hotel_id DESC");
-            ResultSet rset = Database.getInstance().selectRecords("FIT5148A", sbSQL.toString());
+            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148A, sbSQL.toString());
             ResultSetMetaData mdata = rset.getMetaData();
             int numberOfColumns = mdata.getColumnCount();
             while (rset.next()) {
@@ -206,7 +207,7 @@ public class ViewHotel  extends javax.swing.JFrame {
 //        newHotelDialog.setVisible(true);
 //        
 //        dtm.setRowCount(0);
-//        conn = DBConnection.getDBConnection("FIT5148A");
+//        conn = DBConnection.getDBConnection(Database.DB_FIT5148A);
 //        try {
 //            DriverManager.registerDriver(new OracleDriver());
 //            stmt = conn.createStatement();
@@ -235,7 +236,7 @@ public class ViewHotel  extends javax.swing.JFrame {
         // TODO add your handling code here:
         int selectedRowCount = jTable1.getSelectedRowCount();
         if (selectedRowCount != 1) {
-            JOptionPane.showMessageDialog(null, "Please select one record.");
+            JOptionPane.showMessageDialog(null, WarningMessage.SELECT_ONE_RECORD);
         } else {
             HotelBean hotel = this.constructHotelBean();
             /* Create and display the form */
@@ -270,7 +271,7 @@ public class ViewHotel  extends javax.swing.JFrame {
         String getHotelType = "select distinct hotel_type from hotel order by hotel_type";
 
         try {
-            ResultSet rset = Database.getInstance().selectRecords("FIT5148A", getHotelType);
+            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148A, getHotelType);
 
             List<String> hotelTypeList = new ArrayList<String>();
             while (rset.next()) {

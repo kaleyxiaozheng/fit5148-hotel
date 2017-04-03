@@ -5,7 +5,7 @@
  */
 package Hotel;
 
-import Util.ErrorMessage;
+import Util.WarningMessage;
 import hotelappfit5148.*;
 import javax.swing.JOptionPane;
 import java.sql.*;
@@ -224,7 +224,7 @@ public class NewHotel extends javax.swing.JFrame {
         // TODO add your handling code here:
         HotelBean hotel = new HotelBean();
         if (hotelNameText.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please enter hotel name.");
+            JOptionPane.showMessageDialog(null, WarningMessage.EMPTY_HOTEL_NAME);
             return;
         }
         hotel.setAddress(addressText.getText().trim());
@@ -262,13 +262,16 @@ Connection dbConnection = Database.getInstance().getDBConnection("FIT5148A");
                  hotel_id = hotel_id_set.getLong(1);
             }           
             hotel.setHotelId(hotel_id);
-            JOptionPane.showMessageDialog(null, "Create successfully.");
+            JOptionPane.showMessageDialog(null, WarningMessage.CREATE_S);
             preparedStatement.close();
             Database.getInstance().closeDBConnection();
         } catch (SQLException ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, ErrorMessage.UNKNOWN_ERROR);
+            JOptionPane.showMessageDialog(null, WarningMessage.UNKNOWN_ERROR);
         }
+        
+//        this.dispose();
+//        new UpdateHotel(hotel).setVisible(true);
         
 //        this.dispose();
 //        new UpdateHotel(hotel).setVisible(true);

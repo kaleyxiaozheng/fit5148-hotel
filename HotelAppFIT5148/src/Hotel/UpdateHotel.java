@@ -5,6 +5,7 @@
  */
 package Hotel;
 
+import Util.WarningMessage;
 import hotelappfit5148.Database;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -244,11 +245,11 @@ public class UpdateHotel extends javax.swing.JFrame {
 
         // TODO add your handling code here:
         if (hotelNameText.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please enter required fields.");
+            JOptionPane.showMessageDialog(null, WarningMessage.MANDATORY_FIELD_EMPTY);
             return;
         }
         if (emailText.getText().trim().contains("@") == false) {
-            JOptionPane.showMessageDialog(null, "Please enter correct email.");
+            JOptionPane.showMessageDialog(null, WarningMessage.INCORRECT_EMAIL);
             return;
         }
 
@@ -262,11 +263,11 @@ public class UpdateHotel extends javax.swing.JFrame {
             hotel.setHotelName(hotelNameText.getText().trim());
             hotel.setHotelType(String.valueOf(typeComboBox.getSelectedItem()));
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Please enter correct data type.");
+            JOptionPane.showMessageDialog(null, WarningMessage.INCORRECT_DATA_TYPE);
             return;
         }
         PreparedStatement preparedStatement = null;
-        Connection dbConnection = Database.getInstance().getDBConnection("FIT5148A");
+        Connection dbConnection = Database.getInstance().getDBConnection(Database.DB_FIT5148A);
         String insertTableSQL = "update  hotel set "
                 + "hotel_name = ?, hotel_type = ?, construction_year = ?, "
                 + "country = ?, city = ?, address = ?, contact_number = ?, email = ? where hotel_id = ?";
@@ -284,7 +285,7 @@ public class UpdateHotel extends javax.swing.JFrame {
             preparedStatement.setLong(9, hotel.getHotelId());
             preparedStatement.executeUpdate();
 
-            JOptionPane.showMessageDialog(null, "Update successfully.");
+            JOptionPane.showMessageDialog(null, WarningMessage.UPDATE_S);
             preparedStatement.close();
             Database.getInstance().closeDBConnection();
 

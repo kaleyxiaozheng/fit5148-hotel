@@ -5,7 +5,7 @@
  */
 package Hotel;
 
-import Util.ErrorMessage;
+import Util.WarningMessage;
 import hotelappfit5148.*;
 import java.math.BigDecimal;
 import javax.swing.table.DefaultTableModel;
@@ -36,7 +36,7 @@ public class HotelPanel extends javax.swing.JPanel {
     }
 
     private void showAllHotelToTable() {
-        conn = Database.getInstance().getDBConnection("FIT5148A");
+        conn = Database.getInstance().getDBConnection(Database.DB_FIT5148A);
         dtm.setRowCount(0);
         try {
             DriverManager.registerDriver(new OracleDriver());
@@ -181,7 +181,7 @@ public class HotelPanel extends javax.swing.JPanel {
                 sbSQL.append(" where hotel_type = '" + selectedHotelType + "'");
             }
             sbSQL.append(" order by hotel_id DESC");
-            ResultSet rset = Database.getInstance().selectRecords("FIT5148A", sbSQL.toString());
+            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148A, sbSQL.toString());
             ResultSetMetaData mdata = rset.getMetaData();
             int numberOfColumns = mdata.getColumnCount();
             while (rset.next()) {
@@ -206,7 +206,7 @@ public class HotelPanel extends javax.swing.JPanel {
         //        newHotelDialog.setVisible(true);
         //
         //        dtm.setRowCount(0);
-        //        conn = DBConnection.getDBConnection("FIT5148A");
+        //        conn = DBConnection.getDBConnection("Database.DB_FIT5148A");
         //        try {
         //            DriverManager.registerDriver(new OracleDriver());
         //            stmt = conn.createStatement();
@@ -234,7 +234,7 @@ public class HotelPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         int selectedRowCount = jTable1.getSelectedRowCount();
         if (selectedRowCount != 1) {
-            JOptionPane.showMessageDialog(null, "Please select one record.");
+            JOptionPane.showMessageDialog(null, WarningMessage.SELECT_ONE_RECORD);
         } else {
             HotelBean hotel = this.constructHotelBean();
             /* Create and display the form */
@@ -251,11 +251,11 @@ public class HotelPanel extends javax.swing.JPanel {
 
         int selectedRowCount = jTable1.getSelectedRowCount();
         if (selectedRowCount > 1) {
-            JOptionPane.showMessageDialog(null, ErrorMessage.MULTIPLE_SELECTION);
+            JOptionPane.showMessageDialog(null, WarningMessage.MULTIPLE_SELECTION);
         } else if (selectedRowCount == 0) {
-            JOptionPane.showMessageDialog(null, ErrorMessage.NO_SELECTION);
+            JOptionPane.showMessageDialog(null, WarningMessage.NO_SELECTION);
         } else {
-            int confirmDelete = JOptionPane.showConfirmDialog(null, ErrorMessage.CONFIRM_DELETE, null, JOptionPane.YES_NO_OPTION);
+            int confirmDelete = JOptionPane.showConfirmDialog(null, WarningMessage.CONFIRM_DELETE, null, JOptionPane.YES_NO_OPTION);
             if (JOptionPane.YES_OPTION == confirmDelete) {
                 int selectedHotel = jTable1.getSelectedRow();
                 Long hotelId = Long.parseLong(jTable1.getModel().getValueAt(selectedHotel, 0).toString());
@@ -268,16 +268,16 @@ public class HotelPanel extends javax.swing.JPanel {
                 try {
                     deleteResult = Database.getInstance().updateTable(Database.DB_FIT5148A, sb.toString());
                     if (deleteResult == true) {
-                        JOptionPane.showMessageDialog(null, ErrorMessage.DELETE_S);
+                        JOptionPane.showMessageDialog(null, WarningMessage.DELETE_S);
                         this.showAllHotelToTable();
                     } else {
-                        JOptionPane.showMessageDialog(null, ErrorMessage.DELETE_F);
+                        JOptionPane.showMessageDialog(null, WarningMessage.DELETE_F);
                     }
 
                 } catch (SQLException ex) {
 
                     if (ex.getErrorCode() == 20002) {
-                        JOptionPane.showMessageDialog(null, ErrorMessage.FOREIGN_KEY_DELETE);
+                        JOptionPane.showMessageDialog(null, WarningMessage.FOREIGN_KEY_DELETE);
                         return;
                     }
 
@@ -311,7 +311,7 @@ public class HotelPanel extends javax.swing.JPanel {
         String getHotelType = "select distinct hotel_type from hotel order by hotel_type";
 
         try {
-            ResultSet rset = Database.getInstance().selectRecords("FIT5148A", getHotelType);
+            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148A, getHotelType);
 
             List<String> hotelTypeList = new ArrayList<String>();
             while (rset.next()) {

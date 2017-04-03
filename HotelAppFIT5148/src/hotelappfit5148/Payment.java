@@ -250,7 +250,7 @@ public class Payment extends javax.swing.JPanel {
 
         bookid_price[0] = (String) jTable1.getModel().getValueAt(row, 0);
         try {
-            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
             Statement stat = conn.createStatement();
             ResultSet rset = stat.executeQuery("select booking_id, payment_day, payment_method, payment_amount from payment where booking_id=" + bookid_price[0]);
             if (rset.next()) {
@@ -271,7 +271,7 @@ public class Payment extends javax.swing.JPanel {
             for (int i = 0; i < guests.size(); i++) {
                 String insertBookGuests = "INSERT INTO bookingroomguest (booking_id, hotel_id, room_number, guest_id) VALUES(" + this.bookedInfor[0] + ", " + getHotelId(this.bookedInfor[1]) + ", '" + this.bookedInfor[2] + "', " + guests.get(i) + ")";
 
-                Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+                Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
                 System.out.println(insertBookGuests);
                 Statement stmt = conn.createStatement();
                 stmt.execute(insertBookGuests);
@@ -297,7 +297,7 @@ public class Payment extends javax.swing.JPanel {
         try {
             String search = "SELECT hotel_id from hotel WHERE hotel_name = '" + hotelName + "'";
 
-            Connection conn = Database.getInstance().getDBConnection("FIT5148A");
+            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148A);
             Statement stat = conn.createStatement();
             ResultSet rset = stat.executeQuery(search);
             if (rset.next()) {
@@ -324,7 +324,7 @@ public class Payment extends javax.swing.JPanel {
         String deleteSql = "delete from booking where booking_id = " + bookId;
         String deleteRelSql = "delete from bookingroomguest where booking_id = " + bookId;
         try {
-            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
             Statement stat = conn.createStatement();
             stat.executeUpdate(deleteRelSql);
             stat.executeUpdate(deleteSql);
@@ -379,7 +379,7 @@ public class Payment extends javax.swing.JPanel {
             }
             
             System.out.println("search "+search);
-            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
             Statement stat = conn.createStatement();
             ResultSet rset = stat.executeQuery(search);
             while (rset.next()) {
@@ -387,7 +387,7 @@ public class Payment extends javax.swing.JPanel {
                 rsets[0] = rset.getString(1);
 
                 search = "select hotel_name from hotel where hotel_id = '" + rset.getString(5) + "'";
-                conn = Database.getInstance().getDBConnection("FIT5148A");
+                conn = Database.getInstance().getDBConnection(Database.DB_FIT5148A);
                 stat = conn.createStatement();
                 ResultSet hrset = stat.executeQuery(search);
                 if (hrset.next()) {

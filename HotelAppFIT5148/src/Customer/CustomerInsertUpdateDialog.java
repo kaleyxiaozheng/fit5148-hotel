@@ -6,6 +6,7 @@
 package Customer;
 
 import Util.CustomerGuestUtil;
+import Util.WarningMessage;
 import hotelappfit5148.Database;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -25,11 +26,7 @@ import javax.swing.JOptionPane;
 public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
 
     public final static String CHECK_CUST_EXISTANCE_B4INSERT = "SELECT COUNT(1) "
-            + "FROM CUSTOMER WHERE CITIZEN_ID = ";
-    private final static String CUSTOMER_INSERT_UPDATE_S = "Customer added/updated successfully. Please go back to Customer page and refresh.";
-    private final static String CUSTOMER_INSERT_UPDATE_F = "Failed to add/update customer. Other guest is using this citizen id."
-            + "Please double check the information";
-    
+            + "FROM CUSTOMER WHERE CITIZEN_ID = ";       
     
     private static CallableStatement cstmt;
     private final static String CALLSP_INSERTORUPDATECUSTOMER = "{call insertOrUpdateCustomer(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
@@ -318,7 +315,7 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:        
-        int cancelInput = JOptionPane.showConfirmDialog(null, CustomerGuestUtil.DISCARD_CHANGE, null, JOptionPane.YES_NO_OPTION);
+        int cancelInput = JOptionPane.showConfirmDialog(null, WarningMessage.DISCARD_CHANGE, null, JOptionPane.YES_NO_OPTION);
         if (JOptionPane.NO_OPTION == cancelInput){
             dispose();
         }
@@ -328,7 +325,7 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
         // TODO add your handling code here:
         String citizenID = jTextField4.getText();
         if (null == citizenID || "".equals(citizenID)){
-            JOptionPane.showMessageDialog(null, CustomerGuestUtil.EMPTY_CITIZEN_ID);
+            JOptionPane.showMessageDialog(null, WarningMessage.EMPTY_CITIZEN_ID);
             return;
         }
         boolean citizenId_Numeric = citizenID.chars().allMatch(Character :: isDigit);
@@ -336,16 +333,16 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
             if (!CustomerGuestUtil.checkCitizenID(citizenID, CHECK_CUST_EXISTANCE_B4INSERT)){
                 boolean insertResult = performInsertOrUpdate(CustomerPanel.INSERT_CUST);
                 if (insertResult == true){
-                    JOptionPane.showMessageDialog(null, CUSTOMER_INSERT_UPDATE_S);
+                    JOptionPane.showMessageDialog(null, WarningMessage.CUSTOMER_INSERT_UPDATE_S);
                     dispose();
                 }else{
-                    JOptionPane.showMessageDialog(null, CUSTOMER_INSERT_UPDATE_F);
+                    JOptionPane.showMessageDialog(null, WarningMessage.CUSTOMER_INSERT_UPDATE_F);
                 }
             }else{
-                JOptionPane.showMessageDialog(null, CustomerGuestUtil.EXISTED_CITIZEN);
+                JOptionPane.showMessageDialog(null, WarningMessage.EXISTED_CITIZEN);
             }
         }else{
-            JOptionPane.showMessageDialog(null, CustomerGuestUtil.INVALID_CITIZEN_ID);
+            JOptionPane.showMessageDialog(null, WarningMessage.INVALID_CITIZEN_ID);
             
         }
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -354,10 +351,10 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
         // TODO add your handling code here: update here
         boolean updateResult = performInsertOrUpdate(CustomerPanel.UPDATE_CUST);
         if (updateResult == true){
-            JOptionPane.showMessageDialog(null, CUSTOMER_INSERT_UPDATE_S);
+            JOptionPane.showMessageDialog(null, WarningMessage.CUSTOMER_INSERT_UPDATE_S);
             dispose();
         }else{
-            JOptionPane.showMessageDialog(null, CUSTOMER_INSERT_UPDATE_F);
+            JOptionPane.showMessageDialog(null, WarningMessage.CUSTOMER_INSERT_UPDATE_F);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 

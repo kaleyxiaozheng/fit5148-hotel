@@ -5,6 +5,7 @@
  */
 package Membership;
 
+import Util.WarningMessage;
 import hotelappfit5148.Database;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -24,22 +25,11 @@ public class MembershipPanel extends javax.swing.JPanel {
     Object columnHeaders[] = {"TIER_ID", "MEMBERSHIP_TIER", "TIER_CREDIT", "DISCOUNT", "OTHER_REWARDS"};
     Object data[][] = {{}};
     DefaultTableModel dtm = new DefaultTableModel(data, columnHeaders);
-    
-    public final static String DIGIT_CREDIT_ONLY = "Please input digit for available credit only.";
-    
-    public final static String SELECT_MEMBERSHIP = "SELECT TIER_ID, MEMBERSHIP_TIER, "
-            + "TIER_CREDIT, DISCOUNT, OTHER_REWARDS FROM MEMBERSHIP";
-    public final static String SELECT_MEMBERSHIP_BY_CREDIT = " WHERE TIER_CREDIT <= ";
-    public final static String MULTIPLE_SELECTION = "Please select one membership only.";
-    public final static String NO_SELECTION = "Please select at least one membership.";
+   
     public final static String UPDATE_MEMBERSHIP = "UpdateMembership";
     public final static String INSERT_MEMBERSHIP = "InsertMembership";
     
-    public final static String CONFIRM_DELETE_MEMBERSHIP = "The membership information will be deleted. Please click Yes to proceed.";
-    public final static String UPDATE_MEMBERSHIP_S = "Membership is deleted. Please refresh.";
-    public final static String UPDATE_MEMBERSHIP_F = "Fail to delete membership, there is customer attached to this membership. "
-            + "Please delete correpondent customer first";
-    public final static String DELETE_MEMBERSHIP = "DELETE MEMBERSHIP WHERE TIER_ID = ";
+    
     /**
      * Creates new form MembershipFrame
      */
@@ -168,9 +158,9 @@ public class MembershipPanel extends javax.swing.JPanel {
         // TODO add your handling code here: update
         int selectedRowCount = jTable1.getSelectedRowCount();
         if (selectedRowCount > 1){
-            JOptionPane.showMessageDialog(null, MULTIPLE_SELECTION);
+            JOptionPane.showMessageDialog(null, WarningMessage.MULTIPLE_SELECTION);
         }else if (selectedRowCount == 0){
-            JOptionPane.showMessageDialog(null, NO_SELECTION);
+            JOptionPane.showMessageDialog(null, WarningMessage.NO_SELECTION);
         }else{
             MembershipBean membership = constructMembershipBean();
             /* Create and display the form */
@@ -201,14 +191,14 @@ public class MembershipPanel extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         String availCredit = jTextField1.getText();
-        StringBuffer sb = new StringBuffer(SELECT_MEMBERSHIP);
+        StringBuffer sb = new StringBuffer(WarningMessage.SELECT_MEMBERSHIP);
         if(!"".equals(availCredit)){        
             boolean availCredit_Numeric = availCredit.chars().allMatch(Character :: isDigit);
             if(availCredit_Numeric == false){
-                JOptionPane.showMessageDialog(null, DIGIT_CREDIT_ONLY);
+                JOptionPane.showMessageDialog(null, WarningMessage.DIGIT_CREDIT_ONLY);
                 return;
             }else{
-                sb.append(SELECT_MEMBERSHIP_BY_CREDIT).append(Integer.valueOf(availCredit));
+                sb.append(WarningMessage.SELECT_MEMBERSHIP_BY_CREDIT).append(Integer.valueOf(availCredit));
             }
         }
         
@@ -241,25 +231,26 @@ public class MembershipPanel extends javax.swing.JPanel {
         // TODO add your handling code here: delete
         int selectedRowCount = jTable1.getSelectedRowCount();
         if (selectedRowCount > 1){
-            JOptionPane.showMessageDialog(null, MULTIPLE_SELECTION);
+            JOptionPane.showMessageDialog(null, WarningMessage.MULTIPLE_SELECTION);
         }else if (selectedRowCount == 0){
-            JOptionPane.showMessageDialog(null, NO_SELECTION);
+            JOptionPane.showMessageDialog(null, WarningMessage.NO_SELECTION);
         }else{
-            int confirmDelete = JOptionPane.showConfirmDialog(null, CONFIRM_DELETE_MEMBERSHIP, null, JOptionPane.YES_NO_OPTION);
+            int confirmDelete = JOptionPane.showConfirmDialog(null, WarningMessage.CONFIRM_DELETE_MEMBERSHIP,
+                    null, JOptionPane.YES_NO_OPTION);
             if (JOptionPane.YES_OPTION == confirmDelete){
                 int selectedCustomer = jTable1.getSelectedRow();
                 int tierId = ((BigDecimal)jTable1.getModel().getValueAt(selectedCustomer, 0)).intValue();
                 
-                StringBuffer sb = new StringBuffer(DELETE_MEMBERSHIP);
+                StringBuffer sb = new StringBuffer(WarningMessage.DELETE_MEMBERSHIP);
                 sb.append(tierId);
                 
                 //boolean updateResult;
                 try {
                     Database.getInstance().updateTable(Database.DB_FIT5148B, sb.toString());
                     Database.getInstance().closeDBConnection();
-                    JOptionPane.showMessageDialog(null, UPDATE_MEMBERSHIP_S);
+                    JOptionPane.showMessageDialog(null, WarningMessage.UPDATE_MEMBERSHIP_S);
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(null, UPDATE_MEMBERSHIP_F);
+                    JOptionPane.showMessageDialog(null, WarningMessage.UPDATE_MEMBERSHIP_F);
                 }
                 
             }

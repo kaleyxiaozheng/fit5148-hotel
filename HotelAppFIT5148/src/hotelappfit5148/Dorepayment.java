@@ -49,7 +49,7 @@ public class Dorepayment extends javax.swing.JPanel {
 
         try {
             DriverManager.registerDriver(new OracleDriver());
-            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
             DatabaseMetaData md = conn.getMetaData();
 
             Statement stmt = conn.createStatement();
@@ -302,7 +302,7 @@ public class Dorepayment extends javax.swing.JPanel {
             System.out.println(insertPayment);
 
             DriverManager.registerDriver(new OracleDriver());
-            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
             Statement stmt = conn.createStatement();
             stmt.execute(insertPayment);
 

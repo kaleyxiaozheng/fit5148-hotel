@@ -5,6 +5,7 @@
  */
 package hotelappfit5148;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -35,6 +36,8 @@ public class Booking extends javax.swing.JPanel {
     private int numberOfRoomGuest;
 
     private List<String> guest = new ArrayList();
+    private static CallableStatement cstmt;
+    private final static String CALLSP_ADDCUSTOMERTOGUEST = "{call addCustomerToGuest(?,?)}";
 
     /**
      * Creates new form Booking
@@ -79,7 +82,7 @@ public class Booking extends javax.swing.JPanel {
         List countriesAndCities = new ArrayList();
         try {
             DriverManager.registerDriver(new OracleDriver());
-            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
             DatabaseMetaData md = conn.getMetaData();
 
             Statement stmt = conn.createStatement();
@@ -411,6 +414,12 @@ public class Booking extends javax.swing.JPanel {
         mf.removePanel2();
     }//GEN-LAST:event_cancelActionPerformed
 
+    private int callSPAddCustomerAsGuest(int citizen_id){
+        Connection dbConnection = null;
+        
+        
+        return 0;
+    }
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
         if(!this.jCheckBox1.isSelected()){
@@ -429,7 +438,7 @@ public class Booking extends javax.swing.JPanel {
         if (guestId == 0) {
             String query = "select title, first_name, last_name, citizen_id, dob, country, city, street, email from customer where citizen_id=" + citizen_id;
 
-            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
             try {
                 Statement stat = conn.createStatement();
                 ResultSet rset = stat.executeQuery(query);
@@ -469,7 +478,7 @@ public class Booking extends javax.swing.JPanel {
         try {
             String search = "SELECT guest_id from guest WHERE citizen_id = " + citizen_id;
 
-            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
             Statement stat = conn.createStatement();
             ResultSet rset = stat.executeQuery(search);
             ResultSetMetaData metadata = rset.getMetaData();
@@ -511,7 +520,7 @@ public class Booking extends javax.swing.JPanel {
     private int getCustomerId(int citizenId) {
         String sql = "select customer_id from customer where citizen_id = " + citizenId;
 
-        Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+        Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
         try {
             Statement stmt = conn.createStatement();
             ResultSet set = stmt.executeQuery(sql);
@@ -534,7 +543,7 @@ public class Booking extends javax.swing.JPanel {
             String insertBooking = "INSERT INTO booking (booking_id, customer_id, check_in_date, check_out_date, total_amount, payment_status) VALUES(null, " + cus + ", TO_DATE('" + check_in + "', 'DD/MM/YYYY'), TO_DATE('" + check_out + "', 'DD/MM/YYYY'), " + price + ", 'U')";
             System.out.println(insertBooking);
 
-            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
             Statement stmt = conn.createStatement();
             //stmt.execute(insertBooking);
             stmt.executeUpdate(insertBooking);
