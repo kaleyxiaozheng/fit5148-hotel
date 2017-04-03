@@ -74,7 +74,7 @@ public class Searching extends javax.swing.JPanel {
         List countriesAndCities = new ArrayList();
         try {
             DriverManager.registerDriver(new OracleDriver());
-            Connection conn = Database.getInstance().getDBConnection("FIT5148A");
+            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148A);
             DatabaseMetaData md = conn.getMetaData();
 
             ResultSet rs = md.getTables(null, null, "%", null);
@@ -100,7 +100,7 @@ public class Searching extends javax.swing.JPanel {
         List roomType = new ArrayList();
         try {
             DriverManager.registerDriver(new OracleDriver());
-            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
             DatabaseMetaData md = conn.getMetaData();
 
             Statement stmt = conn.createStatement();
@@ -290,7 +290,7 @@ public class Searching extends javax.swing.JPanel {
         String search = "SELECT citizen_id from customer where citizen_id = " + Integer.valueOf(citizenId);
         //System.out.println(search);
         try {
-            Connection conn = Database.getInstance().getDBConnection("FIT5148B");
+            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
             Statement stmt = conn.createStatement();
 
             ResultSet rset = stmt.executeQuery(search);
@@ -368,7 +368,7 @@ public class Searching extends javax.swing.JPanel {
             }
             
             System.out.println(search);
-            Connection conn = Database.getInstance().getDBConnection("FIT5148A");
+            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148A);
             Statement stat = conn.createStatement();
             ResultSet rset = stat.executeQuery(search);
             while (rset.next()) {

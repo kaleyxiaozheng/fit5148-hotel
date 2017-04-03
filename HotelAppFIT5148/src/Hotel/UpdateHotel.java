@@ -266,7 +266,7 @@ public class UpdateHotel extends javax.swing.JFrame {
             return;
         }
         PreparedStatement preparedStatement = null;
-        Connection dbConnection = Database.getInstance().getDBConnection("FIT5148A");
+        Connection dbConnection = Database.getInstance().getDBConnection(Database.DB_FIT5148A);
         String insertTableSQL = "update  hotel set "
                 + "hotel_name = ?, hotel_type = ?, construction_year = ?, "
                 + "country = ?, city = ?, address = ?, contact_number = ?, email = ? where hotel_id = ?";

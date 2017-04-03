@@ -5,18 +5,14 @@
  */
 package Room;
 
-import Hotel.NewHotel;
-import Util.ErrorMessage;
+
+import Util.WarningMessage;
 import java.sql.Connection;
 import java.sql.Statement;
-import javax.swing.table.DefaultTableModel;
 import hotelappfit5148.*;
-import java.math.BigDecimal;
 import javax.swing.table.DefaultTableModel;
 import oracle.jdbc.OracleDriver;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
@@ -40,7 +36,7 @@ public class RoomPanel extends javax.swing.JPanel {
     }
 
     private void showAllRoomToTable() {
-        conn = Database.getInstance().getDBConnection("FIT5148B");
+        conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
         dtm.setRowCount(0);
         try {
             DriverManager.registerDriver(new OracleDriver());
@@ -64,7 +60,7 @@ public class RoomPanel extends javax.swing.JPanel {
     }
     
 //    private List<FacilityBean> getListFacilityOfRoom(String roomNumber, Long hotelId){
-//        conn = Database.getInstance().getDBConnection("FIT5148B");
+//        conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
 //        dtm.setRowCount(0);
 //        try {
 //            DriverManager.registerDriver(new OracleDriver());
@@ -209,7 +205,7 @@ public class RoomPanel extends javax.swing.JPanel {
             }
             sbSQL.append(" order by room_number DESC");
             System.out.print(sbSQL);
-            ResultSet rset = Database.getInstance().selectRecords("FIT5148B", sbSQL.toString());
+            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, sbSQL.toString());
             ResultSetMetaData mdata = rset.getMetaData();
             int numberOfColumns = mdata.getColumnCount();
             while (rset.next()) {
@@ -228,7 +224,7 @@ public class RoomPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new InsertUpdateHRoomDialog(null, ErrorMessage.INSERT_ACT).setVisible(true);
+                new InsertUpdateHRoomDialog(null, WarningMessage.INSERT_ACT).setVisible(true);
             }
         });
 
@@ -245,7 +241,7 @@ public class RoomPanel extends javax.swing.JPanel {
             /* Create and display the form */
             java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {
-                    new InsertUpdateHRoomDialog(hotel, ErrorMessage.UPDATE_ACT).setVisible(true);
+                    new InsertUpdateHRoomDialog(hotel, WarningMessage.UPDATE_ACT).setVisible(true);
                 }
             });
         }
@@ -256,11 +252,11 @@ public class RoomPanel extends javax.swing.JPanel {
 
         int selectedRowCount = jTable1.getSelectedRowCount();
         if (selectedRowCount > 1) {
-            JOptionPane.showMessageDialog(null, ErrorMessage.MULTIPLE_SELECTION);
+            JOptionPane.showMessageDialog(null, WarningMessage.MULTIPLE_SELECTION);
         } else if (selectedRowCount == 0) {
-            JOptionPane.showMessageDialog(null, ErrorMessage.NO_SELECTION);
+            JOptionPane.showMessageDialog(null, WarningMessage.NO_SELECTION);
         } else {
-            int confirmDelete = JOptionPane.showConfirmDialog(null, ErrorMessage.CONFIRM_DELETE, null, JOptionPane.YES_NO_OPTION);
+            int confirmDelete = JOptionPane.showConfirmDialog(null, WarningMessage.CONFIRM_DELETE, null, JOptionPane.YES_NO_OPTION);
             if (JOptionPane.YES_OPTION == confirmDelete) {
                 int selectedHotel = jTable1.getSelectedRow();
                 String roomNumber = jTable1.getModel().getValueAt(selectedHotel, 0).toString();
@@ -276,16 +272,16 @@ public class RoomPanel extends javax.swing.JPanel {
                 try {
                     deleteResult = Database.getInstance().updateTable(Database.DB_FIT5148B, sb.toString());
                     if (deleteResult == true) {
-                        JOptionPane.showMessageDialog(null, ErrorMessage.DELETE_S);
+                        JOptionPane.showMessageDialog(null, WarningMessage.DELETE_S);
                         this.showAllRoomToTable();
                     } else {
-                        JOptionPane.showMessageDialog(null, ErrorMessage.DELETE_F);
+                        JOptionPane.showMessageDialog(null, WarningMessage.DELETE_F);
                     }
 
                 } catch (SQLException ex) {
                     System.out.println(ex.getMessage());
                     if (ex.getErrorCode() == 2292) {
-                        JOptionPane.showMessageDialog(null, ErrorMessage.FOREIGN_KEY_DELETE);
+                        JOptionPane.showMessageDialog(null, WarningMessage.FOREIGN_KEY_DELETE);
                         return;
                     }
 

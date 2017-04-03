@@ -6,7 +6,7 @@
 package Room;
 
 import hotelappfit5148.Database;
-import Util.ErrorMessage;
+import Util.WarningMessage;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,7 +28,7 @@ public class InsertUpdateHRoomDialog extends javax.swing.JDialog {
 //        super(parent, modal);
         initComponents();
         
-        if (ErrorMessage.UPDATE_ACT.equals(action)) {
+        if (WarningMessage.UPDATE_ACT.equals(action)) {
             room = roomTempt;
             viewRoomDetail(roomTempt);
             this.roomNumberText.setEditable(false);
@@ -36,7 +36,7 @@ public class InsertUpdateHRoomDialog extends javax.swing.JDialog {
             newRoomjButton1.setVisible(false);
         } else {
             room = new RoomBean();
-            this.roomNumberText.setText(Database.getInstance().getSequenceNextval("FIT5148B", "room_seq").toString());
+            this.roomNumberText.setText(Database.getInstance().getSequenceNextval(Database.DB_FIT5148B, "room_seq").toString());
 
             updateRoomjButton2.setVisible(false);
         }
@@ -205,12 +205,12 @@ public class InsertUpdateHRoomDialog extends javax.swing.JDialog {
             room.setDescription(this.descriptionTextArea.getText().trim());
         } catch (Exception ex) {
 
-            JOptionPane.showMessageDialog(null, ErrorMessage.INPUT_FORMAT_ER);
+            JOptionPane.showMessageDialog(null, WarningMessage.INPUT_FORMAT_ER);
             return;
         }
 
         PreparedStatement preparedStatement = null;
-        Connection dbConnection = Database.getInstance().getDBConnection("FIT5148B");
+        Connection dbConnection = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
         String insertTableSQL = "INSERT INTO room"
                 + "(room_number, hotel_id, room_type, price, description) VALUES"
                 + "(?,?,?,?,?)";
@@ -230,17 +230,17 @@ public class InsertUpdateHRoomDialog extends javax.swing.JDialog {
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             if (ex.getErrorCode() == 1) {
-                JOptionPane.showMessageDialog(null, ErrorMessage.UNIQUE_CONSTRAINT_ROOM);
+                JOptionPane.showMessageDialog(null, WarningMessage.UNIQUE_CONSTRAINT_ROOM);
                 return;
 
             };
             if (ex.getErrorCode() == 20001) {
 
-                JOptionPane.showMessageDialog(null, ErrorMessage.NOT_EXIST_HOTEL_ID_ER);
+                JOptionPane.showMessageDialog(null, WarningMessage.NOT_EXIST_HOTEL_ID_ER);
                 return;
 
             }
-            JOptionPane.showMessageDialog(null, ErrorMessage.UNKNOWN_ERROR);
+            JOptionPane.showMessageDialog(null, WarningMessage.UNKNOWN_ERROR);
         };
 
     }//GEN-LAST:event_newRoomjButton1ActionPerformed
@@ -259,12 +259,12 @@ public class InsertUpdateHRoomDialog extends javax.swing.JDialog {
             room.setDescription(this.descriptionTextArea.getText().trim());
         } catch (Exception ex) {
 
-            JOptionPane.showMessageDialog(null, ErrorMessage.INPUT_FORMAT_ER);
+            JOptionPane.showMessageDialog(null, WarningMessage.INPUT_FORMAT_ER);
             return;
         }
 
         PreparedStatement preparedStatement = null;
-        Connection dbConnection = Database.getInstance().getDBConnection("FIT5148B");
+        Connection dbConnection = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
         String insertTableSQL = "update room set "
                 + "room_type = ?, price = ?, description = ? where "
                 + " room_number = ? and hotel_id = ? ";
@@ -285,17 +285,17 @@ public class InsertUpdateHRoomDialog extends javax.swing.JDialog {
             
 ex.printStackTrace();
 if (ex.getErrorCode() == 1) {
-                JOptionPane.showMessageDialog(null, ErrorMessage.UNIQUE_CONSTRAINT_ROOM);
+                JOptionPane.showMessageDialog(null, WarningMessage.UNIQUE_CONSTRAINT_ROOM);
                 return;
 
             };
             if (ex.getErrorCode() == 20001) {
 
-                JOptionPane.showMessageDialog(null, ErrorMessage.NOT_EXIST_HOTEL_ID_ER);
+                JOptionPane.showMessageDialog(null, WarningMessage.NOT_EXIST_HOTEL_ID_ER);
                 return;
 
             }
-            JOptionPane.showMessageDialog(null, ErrorMessage.UNKNOWN_ERROR);
+            JOptionPane.showMessageDialog(null, WarningMessage.UNKNOWN_ERROR);
         };
     }//GEN-LAST:event_updateRoomjButton2ActionPerformed
 
