@@ -5,6 +5,7 @@
  */
 package Hotel;
 
+import Util.WarningMessage;
 import hotelappfit5148.Database;
 import javax.swing.table.DefaultTableModel;
 import oracle.jdbc.OracleDriver;
@@ -235,7 +236,7 @@ public class ViewHotel  extends javax.swing.JFrame {
         // TODO add your handling code here:
         int selectedRowCount = jTable1.getSelectedRowCount();
         if (selectedRowCount != 1) {
-            JOptionPane.showMessageDialog(null, "Please select one record.");
+            JOptionPane.showMessageDialog(null, WarningMessage.SELECT_ONE_RECORD);
         } else {
             HotelBean hotel = this.constructHotelBean();
             /* Create and display the form */

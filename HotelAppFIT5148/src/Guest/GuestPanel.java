@@ -5,6 +5,7 @@
  */
 package Guest;
 
+import Util.WarningMessage;
 import hotelappfit5148.Database;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -28,15 +29,7 @@ public class GuestPanel extends javax.swing.JPanel {
     public final static String SELECT_GUEST = "SELECT GUEST_ID, TITLE, FIRST_NAME, "
             + "LAST_NAME, CITIZEN_ID, DOB, COUNTRY, CITY, STREET, EMAIL FROM GUEST";
     public final static String SELECT_GUEST_WITH_FIRSTNAME = " WHERE FIRST_NAME LIKE '%";
-    public final static String SELECT_GUEST_WITH_LASTNAME = "%' OR LAST_NAME LIKE '%";
-    
-    public final static String MULTIPLE_SELECTION = "Please select one guest only.";
-    public final static String NO_SELECTION = "Please select at least one guest.";
-    
-    public final static String CONFIRM_DELETE_GUEST = "The guest information will be deleted. Please click Yes to proceed.";
-    public final static String DELETE_GUEST = "DELETE GUEST WHERE GUEST_ID = ";
-    public final static String UPDATE_GUEST_S = "Membership is deleted. Please refresh.";
-    public final static String UPDATE_GUEST_F = "Fail to delete guest, there is booking for this guest in the system.";
+    public final static String SELECT_GUEST_WITH_LASTNAME = "%' OR LAST_NAME LIKE '%";    
     
     public final static String UPDATE_GUEST = "UpdateGuest";
     public final static String INSERT_GUEST = "InsertGuest";
@@ -193,9 +186,9 @@ public class GuestPanel extends javax.swing.JPanel {
         // TODO add your handling code here: Update
         int selectedRowCount = jTable1.getSelectedRowCount();
         if (selectedRowCount > 1){
-            JOptionPane.showMessageDialog(null, MULTIPLE_SELECTION);
+            JOptionPane.showMessageDialog(null, WarningMessage.MULTIPLE_SELECTION);
         }else if (selectedRowCount == 0){
-            JOptionPane.showMessageDialog(null, NO_SELECTION);
+            JOptionPane.showMessageDialog(null, WarningMessage.NO_SELECTION);
         }else{
             GuestBean guestBean = constructGuestBean();
             /* Create and display the form */
@@ -233,24 +226,24 @@ public class GuestPanel extends javax.swing.JPanel {
         // TODO add your handling code here: Delete
         int selectedRowCount = jTable1.getSelectedRowCount();
         if (selectedRowCount > 1){
-            JOptionPane.showMessageDialog(null, MULTIPLE_SELECTION);
+            JOptionPane.showMessageDialog(null, WarningMessage.MULTIPLE_SELECTION);
         }else if (selectedRowCount == 0){
-            JOptionPane.showMessageDialog(null, NO_SELECTION);
+            JOptionPane.showMessageDialog(null, WarningMessage.NO_SELECTION);
         }else{
-            int confirmDelete = JOptionPane.showConfirmDialog(null, CONFIRM_DELETE_GUEST, null, JOptionPane.YES_NO_OPTION);
+            int confirmDelete = JOptionPane.showConfirmDialog(null, WarningMessage.CONFIRM_DELETE_GUEST, null, JOptionPane.YES_NO_OPTION);
             if (JOptionPane.YES_OPTION == confirmDelete){
                 int selectedCustomer = jTable1.getSelectedRow();
                 int guestID = ((BigDecimal)jTable1.getModel().getValueAt(selectedCustomer, 0)).intValue();
-                StringBuffer sb = new StringBuffer(DELETE_GUEST);
+                StringBuffer sb = new StringBuffer(WarningMessage.DELETE_GUEST);
                 sb.append(guestID);
                 
                 //boolean updateResult;
                 try {
                     Database.getInstance().updateTable(Database.DB_FIT5148B, sb.toString());
                     Database.getInstance().closeDBConnection();
-                    JOptionPane.showMessageDialog(null, UPDATE_GUEST_S);
+                    JOptionPane.showMessageDialog(null, WarningMessage.UPDATE_GUEST_S);
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(null, UPDATE_GUEST_F);
+                    JOptionPane.showMessageDialog(null, WarningMessage.UPDATE_GUEST_F);
                 }
                 
             }

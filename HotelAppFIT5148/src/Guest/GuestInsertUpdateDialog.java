@@ -8,6 +8,7 @@ package Guest;
 import Customer.CustomerPanel;
 import Customer.CustomerInsertUpdateDialog;
 import Util.CustomerGuestUtil;
+import Util.WarningMessage;
 import hotelappfit5148.Database;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -28,9 +29,7 @@ public class GuestInsertUpdateDialog extends javax.swing.JDialog {
     
     public final static String CHECK_GUEST_EXISTANCE_B4INSERT = "SELECT COUNT(1) "
             + "FROM GUEST WHERE CITIZEN_ID = ";
-    private final static String GUEST_INSERT_UPDATE_S = "Guest added/updated successfully. Please go back to Customer page and refresh.";
-    private final static String GUEST_INSERT_UPDATE_F = "Failed to add/update guest. Other customer is using this citizen id."
-            + "Please double check the information";
+    
     
     private static CallableStatement cstmt;
     private final static String CALLSP_INSERTORUPDATEGUEST = "{call insertOrUpdateGuest(?,?,?,?,?,?,?,?,?,?,?,?)}";
@@ -266,7 +265,7 @@ public class GuestInsertUpdateDialog extends javax.swing.JDialog {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        int cancelInput = JOptionPane.showConfirmDialog(null, CustomerGuestUtil.DISCARD_CHANGE, null, JOptionPane.YES_NO_OPTION);
+        int cancelInput = JOptionPane.showConfirmDialog(null, WarningMessage.DISCARD_CHANGE, null, JOptionPane.YES_NO_OPTION);
         if (JOptionPane.NO_OPTION == cancelInput){
             dispose();
         }
@@ -276,7 +275,7 @@ public class GuestInsertUpdateDialog extends javax.swing.JDialog {
         // TODO add your handling code here: Insert
         String citizenID = jTextField4.getText();
         if (null == citizenID || "".equals(citizenID)){
-            JOptionPane.showMessageDialog(null, CustomerGuestUtil.EMPTY_CITIZEN_ID);
+            JOptionPane.showMessageDialog(null, WarningMessage.EMPTY_CITIZEN_ID);
             return;
         }
         boolean citizenId_Numeric = citizenID.chars().allMatch(Character :: isDigit);
@@ -284,16 +283,16 @@ public class GuestInsertUpdateDialog extends javax.swing.JDialog {
             if (!CustomerGuestUtil.checkCitizenID(citizenID, CHECK_GUEST_EXISTANCE_B4INSERT)){
                 boolean insertResult = performInsertOrUpdate(CustomerPanel.INSERT_CUST);
                 if (insertResult == true){
-                    JOptionPane.showMessageDialog(null, GUEST_INSERT_UPDATE_S);
+                    JOptionPane.showMessageDialog(null, WarningMessage.GUEST_INSERT_UPDATE_S);
                     dispose();
                 }else{
-                    JOptionPane.showMessageDialog(null, GUEST_INSERT_UPDATE_F);
+                    JOptionPane.showMessageDialog(null, WarningMessage.GUEST_INSERT_UPDATE_F);
                 }
             }else{
-                JOptionPane.showMessageDialog(null, CustomerGuestUtil.EXISTED_CITIZEN);
+                JOptionPane.showMessageDialog(null, WarningMessage.EXISTED_CITIZEN);
             }
         }else{
-            JOptionPane.showMessageDialog(null, CustomerGuestUtil.INVALID_CITIZEN_ID);
+            JOptionPane.showMessageDialog(null, WarningMessage.INVALID_CITIZEN_ID);
             
         }
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -302,10 +301,10 @@ public class GuestInsertUpdateDialog extends javax.swing.JDialog {
         // TODO add your handling code here: Update
         boolean updateResult = performInsertOrUpdate(GuestPanel.UPDATE_GUEST);
         if (updateResult == true){
-            JOptionPane.showMessageDialog(null, GUEST_INSERT_UPDATE_S);
+            JOptionPane.showMessageDialog(null, WarningMessage.GUEST_INSERT_UPDATE_S);
             dispose();
         }else{
-            JOptionPane.showMessageDialog(null, GUEST_INSERT_UPDATE_F);
+            JOptionPane.showMessageDialog(null, WarningMessage.GUEST_INSERT_UPDATE_F);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 

@@ -5,6 +5,7 @@
  */
 package hotelappfit5148;
 
+import Util.WarningMessage;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
@@ -406,7 +407,7 @@ public class Searching extends javax.swing.JPanel {
 //                        System.out.print(rowData[i]);
 //                    }
 
-                    String citizen_id = javax.swing.JOptionPane.showInputDialog("Please input your citizen ID:");
+                    String citizen_id = javax.swing.JOptionPane.showInputDialog(WarningMessage.EMPTY_CITIZEN_ID);
                     //System.out.println(customer_id);
 
                     if(citizen_id == null){

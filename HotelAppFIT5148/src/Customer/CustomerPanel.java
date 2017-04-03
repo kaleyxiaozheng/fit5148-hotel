@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package Customer;
+import Util.WarningMessage;
 import hotelappfit5148.Database;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
@@ -38,11 +39,7 @@ public class CustomerPanel extends javax.swing.JPanel {
     
     
     
-    public final static String MULTIPLE_SELECTION = "Please select one customer only.";
-    public final static String NO_SELECTION = "Please select at least one customer.";
-    public final static String CONFIRM_DELETE_CUSTOMER = "The customer information will be deleted. Please click Yes to proceed.";
-    public final static String UPDATE_CUSTOMER_S = "Customer is deleted. Please refresh.";
-    public final static String UPDATE_CUSTOMER_F = "Fail to delete customer, please re-try later.";
+    
     
     
     /**
@@ -168,11 +165,11 @@ public class CustomerPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         int selectedRowCount = jTable1.getSelectedRowCount();
         if (selectedRowCount > 1){
-            JOptionPane.showMessageDialog(null, MULTIPLE_SELECTION);
+            JOptionPane.showMessageDialog(null, WarningMessage.MULTIPLE_SELECTION);
         }else if (selectedRowCount == 0){
-            JOptionPane.showMessageDialog(null, NO_SELECTION);
+            JOptionPane.showMessageDialog(null, WarningMessage.NO_SELECTION);
         }else{
-            int confirmDelete = JOptionPane.showConfirmDialog(null, CONFIRM_DELETE_CUSTOMER, null, JOptionPane.YES_NO_OPTION);
+            int confirmDelete = JOptionPane.showConfirmDialog(null, WarningMessage.CONFIRM_DELETE_CUSTOMER, null, JOptionPane.YES_NO_OPTION);
             if (JOptionPane.YES_OPTION == confirmDelete){
                 try {
                     int selectedCustomer = jTable1.getSelectedRow();
@@ -184,11 +181,11 @@ public class CustomerPanel extends javax.swing.JPanel {
                     Database.getInstance().updateTable(Database.DB_FIT5148B, sb.toString());
                     
                     Database.getInstance().closeDBConnection();
-                    JOptionPane.showMessageDialog(null, UPDATE_CUSTOMER_S);
+                    JOptionPane.showMessageDialog(null, WarningMessage.UPDATE_CUSTOMER_S);
                     
                 } catch (SQLException ex) {
                     //Logger.getLogger(CustomerPanel.class.getName()).log(Level.SEVERE, null, ex);
-                    JOptionPane.showMessageDialog(null, UPDATE_CUSTOMER_F);
+                    JOptionPane.showMessageDialog(null, WarningMessage.UPDATE_CUSTOMER_F);
                 }
             }
         }
@@ -235,9 +232,9 @@ public class CustomerPanel extends javax.swing.JPanel {
         // TODO add your handling code here:        
         int selectedRowCount = jTable1.getSelectedRowCount();
         if (selectedRowCount > 1){
-            JOptionPane.showMessageDialog(null, MULTIPLE_SELECTION);
+            JOptionPane.showMessageDialog(null, WarningMessage.MULTIPLE_SELECTION);
         }else if (selectedRowCount == 0){
-            JOptionPane.showMessageDialog(null, NO_SELECTION);
+            JOptionPane.showMessageDialog(null, WarningMessage.NO_SELECTION);
         }else{
             CustomerBean customer = this.constructCustomerBean();
             /* Create and display the form */

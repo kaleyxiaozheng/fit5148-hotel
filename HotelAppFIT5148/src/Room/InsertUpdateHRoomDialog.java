@@ -193,7 +193,7 @@ public class InsertUpdateHRoomDialog extends javax.swing.JDialog {
         // TODO add your handling code here:
 //                RoomBean room = new RoomBean();
         if (this.hotelIdText.getText().trim().isEmpty() || this.roomNumberText.getText().trim().isEmpty() || this.priceText.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please enter required fields.");
+            JOptionPane.showMessageDialog(null, WarningMessage.MANDATORY_FIELD_EMPTY);
             return;
         }
 
@@ -224,7 +224,7 @@ public class InsertUpdateHRoomDialog extends javax.swing.JDialog {
             preparedStatement.setString(5, room.getDescription());
             preparedStatement.executeUpdate();
 
-            JOptionPane.showMessageDialog(null, "Create successfully.");
+            JOptionPane.showMessageDialog(null, WarningMessage.CREATE_S);
             preparedStatement.close();
             Database.getInstance().closeDBConnection();
         } catch (SQLException ex) {
@@ -247,7 +247,7 @@ public class InsertUpdateHRoomDialog extends javax.swing.JDialog {
 
     private void updateRoomjButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateRoomjButton2ActionPerformed
         if (this.hotelIdText.getText().trim().isEmpty() || this.roomNumberText.getText().trim().isEmpty() || this.priceText.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please enter required fields.");
+            JOptionPane.showMessageDialog(null, WarningMessage.MANDATORY_FIELD_EMPTY);
             return;
         }
 
@@ -278,7 +278,7 @@ public class InsertUpdateHRoomDialog extends javax.swing.JDialog {
             preparedStatement.setLong(5, room.getHotelId());
             preparedStatement.executeUpdate();
 
-            JOptionPane.showMessageDialog(null, "Update successfully.");
+            JOptionPane.showMessageDialog(null, WarningMessage.UPDATE_S);
             preparedStatement.close();
             Database.getInstance().closeDBConnection();
         } catch (SQLException ex) {

@@ -5,6 +5,7 @@
  */
 package Membership;
 
+import Util.WarningMessage;
 import hotelappfit5148.Database;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -20,15 +21,13 @@ import javax.swing.JOptionPane;
  */
 public class MembershipInsertUpdateDialog extends javax.swing.JDialog {
 
-    private final static String DISCARD_CHANGE = "Your change will be discarded. Please click Yes if you want to stay.";
+    
     private static CallableStatement cstmt;
     private final static String CALLSP_INSERTORUPDATEMEMBERSHIP = "{call insertOrUpdateMembership(?,?,?,?,?,?)}";
     
     public final static String CHECK_MEMBERSHIP_EXISTANCE_B4INSERT = "SELECT COUNT(1) "
             + "FROM MEMBERSHIP WHERE MEMBERSHIP_TIER = '";
-    private final static String EMPTY_MEMBERSHIP_TIER = "Please input tier for this membership.";
-    private final static String MEMBERSHIP_INSERT_UPDATE_S = "Membership added/updated successfully. Please go back to Membership page and refresh.";
-    private final static String MEMBERSHIP_INSERT_UPDATE_F = "Failed to add/update membership. Please double check the information";
+    
     private final static String SUCCESS = "S";
     private final static String FAIL = "F";
     /**
@@ -180,7 +179,7 @@ public class MembershipInsertUpdateDialog extends javax.swing.JDialog {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        int cancelInput = JOptionPane.showConfirmDialog(null, DISCARD_CHANGE, null, JOptionPane.YES_NO_OPTION);
+        int cancelInput = JOptionPane.showConfirmDialog(null, WarningMessage.DISCARD_CHANGE, null, JOptionPane.YES_NO_OPTION);
         if (JOptionPane.NO_OPTION == cancelInput){
             dispose();
         }
@@ -194,7 +193,7 @@ public class MembershipInsertUpdateDialog extends javax.swing.JDialog {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here: Insert
         if ("".equals(jTextField2.getText())){
-            JOptionPane.showMessageDialog(null, EMPTY_MEMBERSHIP_TIER);
+            JOptionPane.showMessageDialog(null, WarningMessage.EMPTY_MEMBERSHIP_TIER);
            
         }else{
             performInsertOrUpdate(MembershipPanel.INSERT_MEMBERSHIP);
@@ -224,10 +223,10 @@ public class MembershipInsertUpdateDialog extends javax.swing.JDialog {
         Database.getInstance().closeDBConnection();
         
         if (result == true){
-            JOptionPane.showMessageDialog(null, MEMBERSHIP_INSERT_UPDATE_S);
+            JOptionPane.showMessageDialog(null, WarningMessage.MEMBERSHIP_INSERT_UPDATE_S);
             dispose();
         }else{
-            JOptionPane.showMessageDialog(null, MEMBERSHIP_INSERT_UPDATE_F);
+            JOptionPane.showMessageDialog(null, WarningMessage.MEMBERSHIP_INSERT_UPDATE_F);
         }
 
     }

@@ -14,10 +14,7 @@ import java.sql.SQLException;
  * @author situsnow
  */
 public class CustomerGuestUtil {
-    public final static String DISCARD_CHANGE = "Your change will be discarded. Please click Yes if you want to stay.";
-    public final static String EMPTY_CITIZEN_ID = "Please input Citizen ID.";
-    public final static String INVALID_CITIZEN_ID = "Please input digit for Citizen ID.";
-    public final static String EXISTED_CITIZEN = "Citizen Id is existed for other customer, please double check";
+
     public final static String FAIL_PROCEDURE = "F";
     public final static String SUCCESS_PROCEDURE = "S";
     public static boolean checkCitizenID(String citizenId, String sql){
