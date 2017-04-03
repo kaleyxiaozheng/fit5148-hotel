@@ -40,4 +40,30 @@ public class SQLStatement {
     
     public final static String SELECT_ROOM = "select room_number, hotel_id, room_type, "
                     + "price, description from room  order by room_number DESC";
+    
+    public final static String INSERT_ROOM = "INSERT INTO room"
+                + "(room_number, hotel_id, room_type, price, description) VALUES"
+                + "(?,?,?,?,?)";
+    public final static String UPDATE_ROOM = "update room set "
+                + "room_type = ?, price = ?, description = ? where "
+                + " room_number = ? and hotel_id = ? ";
+    
+    public final static String CALLSP_ADDCUSTOMERTOGUEST = "{call addCustomerToGuest(?,?)}";
+    
+    public final static String SELECT_GUEST_WITH_CITIZEN = "select title, first_name, last_name, citizen_id, dob, country, city, street, email from guest where citizen_id = ";
+    
+    public final static String SELECT_CUSTOMER_WITH_CITIZEN = "select title, first_name, last_name, citizen_id, dob, country, city, street, email from customer where citizen_id=";
+    
+    public final static String SELECT_GUESTID_FROM_CITIZEN = "SELECT guest_id from guest WHERE citizen_id = ";
+    public final static String SELECT_CUSTID_FROM_CITIZEN = "select customer_id from customer where citizen_id = ";
+    public final static String SELECT_BOOKING_ID = "SELECT booking_id FROM booking ORDER BY booking_id DESC";
+    public final static String INSERT_BOOKING = "INSERT INTO booking (booking_id, customer_id, check_in_date, check_out_date, total_amount, payment_status) VALUES(null, ";
+    
+    public final static String INSERT_GUEST = "INSERT INTO GUEST (guest_id, title, first_name, last_name, citizen_id, dob, country, city, street, email) values(null, '";
+    
+    public final static String GET_MEMBERSHIP_WITH_CUSTID = "SELECT membership_tier, tier_credit, discount, other_rewards FROM membership WHERE tier_id = (SELECT tier_id FROM customer WHERE customer_id = ";
+    
+    public final static String INSERT_PAYMENT = "INSERT INTO PAYMENT (booking_id, payment_day, payment_method, payment_amount) VALUES(";
+    
+    public final static String UPDATE_PAYMENT_STATUS_WITH_BOOKING = "UPDATE BOOKING SET payment_status = 'S' where booking_id = ";
 }

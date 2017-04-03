@@ -338,7 +338,7 @@ public class SearchingRoom extends javax.swing.JPanel {
         String room_type = String.valueOf(jComboBox4.getSelectedItem());
         String rate_range = String.valueOf(jComboBox3.getSelectedItem());
 
-        SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat formater = new SimpleDateFormat(Database.DB_DATE_FORMAT);
         String check_in = formater.format(jXDatePicker1.getDate());
         String check_out = formater.format(jXDatePicker2.getDate());
 

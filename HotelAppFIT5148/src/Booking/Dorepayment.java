@@ -5,6 +5,8 @@
  */
 package Booking;
 
+import Util.SQLStatement;
+import Util.WarningMessage;
 import hotelappfit5148.Database;
 import hotelappfit5148.MainFrame;
 import java.sql.Connection;
@@ -56,7 +58,7 @@ public class Dorepayment extends javax.swing.JPanel {
 
             Statement stmt = conn.createStatement();
 
-            String search = "SELECT membership_tier, tier_credit, discount, other_rewards FROM membership WHERE tier_id = (SELECT tier_id FROM customer WHERE customer_id = " + customer_id + ")";
+            String search = SQLStatement.GET_MEMBERSHIP_WITH_CUSTID + customer_id + ")";
             //System.out.println(search);
 
             ResultSet rset = stmt.executeQuery(search);
@@ -76,7 +78,7 @@ public class Dorepayment extends javax.swing.JPanel {
 
     // initial current booking payment 
     public void initRepayment(String customer_id, String[] bookid_price) {
-        String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(new Timestamp(System.currentTimeMillis()));
+        String timeStamp = new SimpleDateFormat(Database.DB_DATE_FORMAT).format(new Timestamp(System.currentTimeMillis()));
         jTextField2.setText(timeStamp);
         jTextField1.setText(bookid_price[0]);
         jTextField4.setText(customer_id);
@@ -286,7 +288,7 @@ public class Dorepayment extends javax.swing.JPanel {
     // insert data into payment table
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
-            String insertPayment = "INSERT INTO payment (booking_id, payment_day, payment_method, payment_amount) VALUES(" + Integer.valueOf(jTextField1.getText()) + ", TO_DATE('" + jTextField2.getText() + "', 'DD/MM/YYYY'), '" + (String) jComboBox1.getSelectedItem() + "', " + jTextField3.getText() + " )";
+            String insertPayment = SQLStatement.INSERT_PAYMENT + Integer.valueOf(jTextField1.getText()) + ", TO_DATE('" + jTextField2.getText() + "', '" + Database.DB_DATE_FORMAT + "'), '" + (String) jComboBox1.getSelectedItem() + "', " + jTextField3.getText() + " )";
             System.out.println(insertPayment);
 
             DriverManager.registerDriver(new OracleDriver());
@@ -294,13 +296,13 @@ public class Dorepayment extends javax.swing.JPanel {
             Statement stmt = conn.createStatement();
             stmt.execute(insertPayment);
 
-            String updateStatus = "update booking set payment_status = 'S' where booking_id = " + this.bookedInfor[0];
+            String updateStatus = SQLStatement.UPDATE_PAYMENT_STATUS_WITH_BOOKING + this.bookedInfor[0];
             stmt = conn.createStatement();
             stmt.executeUpdate(updateStatus);
 
             
 
-            javax.swing.JOptionPane.showMessageDialog(this, "The booking is piad, thank you!");
+            javax.swing.JOptionPane.showMessageDialog(this, WarningMessage.PAYMENT_SUCCESSFUL);
 
             mf.removePanel2();
 

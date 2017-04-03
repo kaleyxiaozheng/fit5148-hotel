@@ -77,4 +77,11 @@ public class WarningMessage {
     
     public final static String INCORRECT_DATA_TYPE = "Please enter correct data type.";
     public final static String INCORRECT_EMAIL = "Please enter correct email.";
+    
+    public final static String INVALID_NUMBER = "Invalide number.";
+    public final static String MAXIMUM_GUEST_EXCEEDS = "Can't add one more guest, sorry.";
+    
+    public final static String GUEST_NOT_EXIST = "Guest does not exists.";
+    
+    public final static String PAYMENT_SUCCESSFUL = "The booking is piad, thank you!";
 }
