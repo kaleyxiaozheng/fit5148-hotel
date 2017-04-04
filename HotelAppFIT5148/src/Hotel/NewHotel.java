@@ -252,11 +252,6 @@ public class NewHotel extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, WarningMessage.UNKNOWN_ERROR);
         }
 
-//        this.dispose();
-//        new UpdateHotel(hotel).setVisible(true);
-//        this.dispose();
-//        new UpdateHotel(hotel).setVisible(true);
-
     }//GEN-LAST:event_newHotelButtonActionPerformed
 
     private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed

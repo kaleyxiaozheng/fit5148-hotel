@@ -8,7 +8,7 @@ exception
     end if;
 end;
 /
-CREATE TABLE  hotel (
+create table hotel (
   hotel_id number(6) not null,
   hotel_name varchar(50) not null,
   hotel_type varchar(20),
