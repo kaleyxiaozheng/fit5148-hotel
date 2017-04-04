@@ -99,7 +99,7 @@ BEGIN
     :new.guest_id := guest_sequence.nextval;
 END;
 
---TODO : Write trigger to check both Customer/Guest's citizen_id
+
 
 INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id, dob, country, city, street, email) 
     VALUES (NULL, 'Miss', 'Xuelin', 'Situ', 6, TO_date('2017/03/31','yyyy/mm/dd'), 

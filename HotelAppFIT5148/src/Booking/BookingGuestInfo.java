@@ -568,7 +568,6 @@ public class BookingGuestInfo extends javax.swing.JPanel {
     }
 
     // synchronize
-    //Snow TODO : Need to revise this function
     public synchronized void booking(){
         
         int book_id = 0;
@@ -591,7 +590,8 @@ public class BookingGuestInfo extends javax.swing.JPanel {
               
             mf.accessPaymentGUI(book_id, selectedRow, cus + "", bookingGuests);
         } catch (SQLException ex) {
-            Logger.getLogger(BookingGuestInfo.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(BookingGuestInfo.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
     

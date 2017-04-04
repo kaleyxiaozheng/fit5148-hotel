@@ -31,7 +31,6 @@ public class PaymentInfo extends javax.swing.JPanel {
     private boolean mode;
     private String customer_id;
     private MainFrame mf;
-    private String book_id;
     String[] bookedInfor;
     private List<Integer> customerIds = new ArrayList();
 
@@ -62,14 +61,14 @@ public class PaymentInfo extends javax.swing.JPanel {
     
     // set visiable 
     public void setVisiable(boolean mode){
-            jLabel5.setVisible(mode);
-            jTextField4.setVisible(mode);
-            jLabel1.setVisible(mode);
-            jTextField2.setVisible(mode);
-            jLabel2.setVisible(mode);
-            jTextField3.setVisible(mode);
-            jCheckBox2.setVisible(mode);
-            search.setVisible(mode);
+        jLabel5.setVisible(mode);
+        jTextField4.setVisible(mode);
+        jLabel1.setVisible(mode);
+        jTextField2.setVisible(mode);
+        jLabel2.setVisible(mode);
+        jTextField3.setVisible(mode);
+        jCheckBox2.setVisible(mode);
+        search.setVisible(mode);
     }
 
     // Initial payment GUI with current booking order
@@ -139,11 +138,6 @@ public class PaymentInfo extends javax.swing.JPanel {
     jLabel4.setText("Booking Information");
 
     jCheckBox2.setText("Unpaid");
-    jCheckBox2.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jCheckBox2ActionPerformed(evt);
-        }
-    });
 
     jTextField2.setText(" ");
 
@@ -302,10 +296,6 @@ public class PaymentInfo extends javax.swing.JPanel {
 
         return hotelID;
     }
-    private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox2ActionPerformed
-
     private void deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteActionPerformed
         // TODO add your handling code here:
         int row = jTable1.getSelectedRow();

@@ -42,7 +42,7 @@ public class Dorepayment extends javax.swing.JPanel {
     }
 
     // get membership tire with customer id
-    //Snow TODO: The membership credit is incorrect
+    
     public String[] getMembership(String customer_id) {
         String[] membership = new String[4];
 
