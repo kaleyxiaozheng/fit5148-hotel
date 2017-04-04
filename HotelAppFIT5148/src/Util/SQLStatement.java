@@ -33,6 +33,8 @@ public class SQLStatement {
     
     public final static String CALLSP_INSERTORUPDATEGUEST = "{call insertOrUpdateGuest(?,?,?,?,?,?,?,?,?,?,?,?)}";
     
+    public final static String CALLSP_UPGRADECUSTOMER = "{call upgradeCustomer(?)}";
+    
     public final static String DELETE_MEMBERSHIP = "DELETE MEMBERSHIP WHERE TIER_ID = ";
     public final static String SELECT_MEMBERSHIP = "SELECT TIER_ID, MEMBERSHIP_TIER, "
             + "TIER_CREDIT, DISCOUNT, OTHER_REWARDS FROM MEMBERSHIP";

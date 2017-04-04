@@ -9,6 +9,8 @@ import Util.SQLStatement;
 import Util.WarningMessage;
 import hotelappfit5148.Database;
 import hotelappfit5148.MainFrame;
+import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -28,6 +30,8 @@ public class Dorepayment extends javax.swing.JPanel {
     private MainFrame mf;
 
     List<Integer> guests = new ArrayList();
+    
+    private static CallableStatement cstmt;
 
     /**
      * Creates new form Dorepayment
@@ -286,7 +290,7 @@ public class Dorepayment extends javax.swing.JPanel {
             
             Database.getInstance().updateTable(Database.DB_FIT5148B, updateStatus);
             
-
+            callSPUpgradeCustomer(Database.DB_FIT5148B, Integer.parseInt(this.bookedInfor[0]));
             javax.swing.JOptionPane.showMessageDialog(this, WarningMessage.PAYMENT_SUCCESSFUL);
 
             mf.removePanel2();
@@ -298,6 +302,22 @@ public class Dorepayment extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void callSPUpgradeCustomer(String dbName, int booking_id){
+        Connection dbConnection = null;
+        
+        try{
+            dbConnection = Database.getInstance().getDBConnection(dbName);
+            cstmt = dbConnection.prepareCall(SQLStatement.CALLSP_UPGRADECUSTOMER);
+            cstmt.setInt(1, booking_id);
+            
+            cstmt.executeUpdate();
+            cstmt.close();
+            Database.getInstance().closeDBConnection();
+            
+        }catch (SQLException ex){
+            ex.printStackTrace();
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
