@@ -140,9 +140,7 @@ public class UpdateHotel extends javax.swing.JFrame {
                                             .addGroup(layout.createSequentialGroup()
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                     .addComponent(countryText, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addGroup(layout.createSequentialGroup()
-                                                        .addComponent(constructionYearText, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addGap(121, 121, 121))
+                                                    .addComponent(constructionYearText, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                     .addComponent(addressText, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE))
                                                 .addGap(0, 0, Short.MAX_VALUE))
                                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -162,7 +160,7 @@ public class UpdateHotel extends javax.swing.JFrame {
                                     .addComponent(jLabel5))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(hotelIdLable, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(hotelIdLable, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(typeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -179,7 +177,7 @@ public class UpdateHotel extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(hotelIdLable, javax.swing.GroupLayout.DEFAULT_SIZE, 21, Short.MAX_VALUE)
+                .addComponent(hotelIdLable, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -231,7 +229,7 @@ public class UpdateHotel extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, WarningMessage.MANDATORY_FIELD_EMPTY);
             return;
         }
-        if (emailText.getText().trim().contains("@") == false) {
+        if (emailText.getText().trim().length() > 0 && emailText.getText().trim().contains("@") == false) {
             JOptionPane.showMessageDialog(null, WarningMessage.INCORRECT_EMAIL);
             return;
         }
@@ -239,7 +237,10 @@ public class UpdateHotel extends javax.swing.JFrame {
         try {
             hotel.setAddress(addressText.getText().trim());
             hotel.setCity(cityText.getText().trim());
-            hotel.setConstructionYear(Integer.parseInt(constructionYearText.getText().trim()));
+            if (!"".equals(constructionYearText.getText().trim())) {
+                hotel.setConstructionYear(Integer.parseInt(constructionYearText.getText().trim()));
+
+            }
             hotel.setContactNumber(contactNumberText.getText().trim());
             hotel.setCountry(countryText.getText().trim());
             hotel.setEmail(emailText.getText().trim());

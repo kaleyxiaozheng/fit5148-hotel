@@ -47,10 +47,7 @@
                                           <Group type="102" alignment="0" attributes="0">
                                               <Group type="103" groupAlignment="0" attributes="0">
                                                   <Component id="countryText" min="-2" pref="120" max="-2" attributes="0"/>
-                                                  <Group type="102" alignment="0" attributes="0">
-                                                      <Component id="constructionYearText" min="-2" pref="79" max="-2" attributes="0"/>
-                                                      <EmptySpace min="121" pref="121" max="-2" attributes="0"/>
-                                                  </Group>
+                                                  <Component id="constructionYearText" alignment="0" min="-2" pref="79" max="-2" attributes="0"/>
                                                   <Component id="addressText" min="-2" pref="217" max="-2" attributes="0"/>
                                               </Group>
                                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -82,7 +79,7 @@
                               <EmptySpace min="23" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="hotelIdLable" min="-2" pref="50" max="-2" attributes="0"/>
+                              <Component id="hotelIdLable" min="-2" pref="176" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -107,7 +104,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="hotelIdLable" pref="21" max="32767" attributes="0"/>
+              <Component id="hotelIdLable" min="-2" pref="21" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>

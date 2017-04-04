@@ -63,7 +63,7 @@ public class RoomPanel extends javax.swing.JPanel {
                 String description = "";
                 for (FacilityBean temp : facilityList) {
                     description += temp.getDescription();
-                    description += "\n";
+                    description += " \n";
                 }
                 dtm.setValueAt(description, i, 5);
             }
@@ -76,11 +76,8 @@ public class RoomPanel extends javax.swing.JPanel {
 
     private List<FacilityBean> getListFacilityOfRoom(String roomNumber, Long hotelId) {
         conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
-    
-//    private List<FacilityBean> getListFacilityOfRoom(String roomNumber, Long hotelId){
-//        conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
-//        dtm.setRowCount(0);
-        List<FacilityBean> facilityList = new ArrayList<FacilityBean>();
+
+        List<FacilityBean> facilityList = new ArrayList<>();
 
         try {
             DriverManager.registerDriver(new OracleDriver());
@@ -91,7 +88,7 @@ public class RoomPanel extends javax.swing.JPanel {
             str.append(roomNumber).append("'");
             ResultSet rset = stmt.executeQuery(str.toString());
 
-            ResultSetMetaData mdata = rset.getMetaData();
+//            ResultSetMetaData mdata = rset.getMetaData();
             while (rset.next()) {
                 FacilityBean facility = new FacilityBean();
                 facility.setFacilityNumeber(rset.getObject(1).toString());
@@ -216,11 +213,16 @@ public class RoomPanel extends javax.swing.JPanel {
 
             String facility = this.facilityTextField1.getText().trim();
             StringBuilder sbSQL = new StringBuilder("select room.room_number, room.hotel_id, room.room_type, room.price, room.description  "
-                    + "from room");
+                    + "from room ");
 
             if (!"".equals(facility)) {
-                sbSQL.append(", facility where room.room_number = facility.room_number and room.hotel_id = facility.hotel_id ");
-                sbSQL.append("and lower(facility.description) like '%").append(facility.toLowerCase()).append("%' ");
+//                sbSQL.append(", facility where room.room_number = facility.room_number and room.hotel_id = facility.hotel_id ");
+//                sbSQL.append("and lower(facility.description) like '%").append(facility.toLowerCase()).append("%' ");
+                sbSQL.append("where exists(select * from facility "
+                        + " where room.room_number = facility.room_number and room.hotel_id = facility.hotel_id"
+                        + " and lower(facility.description) like '%");
+                sbSQL.append(facility.toLowerCase()).append("%' )");
+
             }
             sbSQL.append(" order by room_number DESC");
             System.out.print(sbSQL);

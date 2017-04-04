@@ -12,7 +12,6 @@ import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  *
  * @author thaonguyen
@@ -196,20 +195,33 @@ public class NewHotel extends javax.swing.JFrame {
         // TODO add your handling code here:
         HotelBean hotel = new HotelBean();
         if (hotelNameText.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(null, WarningMessage.EMPTY_HOTEL_NAME);
+            JOptionPane.showMessageDialog(null, WarningMessage.MANDATORY_FIELD_EMPTY);
             return;
         }
-        hotel.setAddress(addressText.getText().trim());
-        hotel.setCity(cityText.getText().trim());
-        hotel.setConstructionYear(Integer.parseInt(constructionYearText.getText().trim()));
-        hotel.setContactNumber(contactNumberText.getText().trim());
-        hotel.setCountry(countryText.getText().trim());
-        hotel.setEmail(emailText.getText().trim());
-        hotel.setHotelName(hotelNameText.getText().trim());
-        hotel.setHotelType(String.valueOf(typeComboBox.getSelectedItem()));
+        if (emailText.getText().trim().length() > 0 && emailText.getText().trim().contains("@") == false) {
+            JOptionPane.showMessageDialog(null, WarningMessage.INCORRECT_EMAIL);
+            return;
+        }
 
+        try {
+            hotel.setAddress(addressText.getText().trim());
+            hotel.setCity(cityText.getText().trim());
+
+            if (!"".equals(constructionYearText.getText().trim())) {
+                hotel.setConstructionYear(Integer.parseInt(constructionYearText.getText().trim()));
+
+            }
+            hotel.setContactNumber(contactNumberText.getText().trim());
+            hotel.setCountry(countryText.getText().trim());
+            hotel.setEmail(emailText.getText().trim());
+            hotel.setHotelName(hotelNameText.getText().trim());
+            hotel.setHotelType(String.valueOf(typeComboBox.getSelectedItem()));
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, WarningMessage.INCORRECT_DATA_TYPE);
+            return;
+        }
         PreparedStatement preparedStatement = null;
-Connection dbConnection = Database.getInstance().getDBConnection("FIT5148A");
+        Connection dbConnection = Database.getInstance().getDBConnection("FIT5148A");
         String insertTableSQL = "INSERT INTO hotel"
                 + "(hotel_name, hotel_type, construction_year, country, city, address, contact_number, email) VALUES"
                 + "(?,?,?,?,?,?,?,?)";
@@ -231,8 +243,8 @@ Connection dbConnection = Database.getInstance().getDBConnection("FIT5148A");
             ResultSet hotel_id_set = preparedStatement.getGeneratedKeys();
             Long hotel_id = null;
             if (null != hotel_id_set && hotel_id_set.next()) {
-                 hotel_id = hotel_id_set.getLong(1);
-            }           
+                hotel_id = hotel_id_set.getLong(1);
+            }
             hotel.setHotelId(hotel_id);
             JOptionPane.showMessageDialog(null, WarningMessage.CREATE_S);
             preparedStatement.close();
@@ -241,26 +253,23 @@ Connection dbConnection = Database.getInstance().getDBConnection("FIT5148A");
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, WarningMessage.UNKNOWN_ERROR);
         }
-        
-//        this.dispose();
-//        new UpdateHotel(hotel).setVisible(true);
-        
-//        this.dispose();
-//        new UpdateHotel(hotel).setVisible(true);
 
+//        this.dispose();
+//        new UpdateHotel(hotel).setVisible(true);
+//        this.dispose();
+//        new UpdateHotel(hotel).setVisible(true);
 
     }//GEN-LAST:event_newHotelButtonActionPerformed
 
     private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
         // TODO add your handling code here:
-       this.dispose();        
+        this.dispose();
     }//GEN-LAST:event_CancelButtonActionPerformed
 
     private void CancelButtonAncestorRemoved(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_CancelButtonAncestorRemoved
         // TODO add your handling code here:
     }//GEN-LAST:event_CancelButtonAncestorRemoved
 
-    
     @Override
     public void dispose() {
         super.dispose();
