@@ -3,30 +3,7 @@ CREATE TABLE  bookingRoomGuest (
   booking_id number(6),
   room_number varchar(10),
   guest_id number(6)
-);
-----------------------------------------
-/*begin 
-  execute immediate 'drop table hotel';
-exception
-  when others then
-    if sqlcode != -942 then
-      raise;
-    end if;
-end;
-/
-*/
-CREATE TABLE  hotel (
-  hotel_id number(6),
-  name varchar(50),
-  hotel_type varchar(20),
-  construction_year number(6),
-  country varchar(20),
-  city varchar(20),
-  address varchar(50),
-  contact_number varchar(20),
-  email varchar(50),
-  CONSTRAINT hotel_pk PRIMARY KEY (hotel_id)
-);
+); 
 ----------------------------------------------
 
 -- Create booking table
@@ -44,14 +21,11 @@ end;
 CREATE TABLE booking (
   booking_id number(6) NOT NULL,
   customer_id number(6),
-  hotel_id number(6),
   check_in_date date,
   check_out_date date,
   total_amount numeric(20,2),
   payment_status varchar(1),
-  CONSTRAINT PK_booking PRIMARY KEY (booking_id),
-  --CONSTRAINT FK_booking_customer FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
-  --CONSTRAINT FK_booking_hotel FOREIGN KEY (hotel_id) REFERENCES hotel(hotel_id)
+  CONSTRAINT PK_booking PRIMARY KEY (booking_id)
 );
 
 ------------------------------------
@@ -94,6 +68,7 @@ end;
 
 CREATE TABLE  bookingRoomGuest (
   booking_id number(6),
+  hotel_id number(6),
   room_number varchar(10),
   guest_id number(6)
 );
@@ -143,28 +118,20 @@ INSERT INTO booking VALUES(null, 5, TO_DATE('19/03/2014', 'DD/MM/YYYY'), TO_DATE
 INSERT INTO booking VALUES(null, 5, TO_DATE('16/03/2016', 'DD/MM/YYYY'), TO_DATE('24/03/2016', 'DD/MM/YYYY'), 1590.00, 'P');
 INSERT INTO booking VALUES(null, 5, TO_DATE('01/02/2014', 'DD/MM/YYYY'), TO_DATE('05/02/2014', 'DD/MM/YYYY'), 440.00, 'S');
 
--- Insert data into payment table
-INSERT INTO 
-
-
--- add a foreign key in table booking
-ALTER TABLE booking
-ADD CONSTRAINT FK_booking_customer
-FOREIGN KEY (customer_id) REFERENCES customer(customer_id);
-
--- drop the sequence 
---DROP SEQUENCE seq_booking_id; 
-
 -- add foreign keys and primary key in table bookingroomguest
 ALTER TABLE bookingroomguest
 ADD CONSTRAINT FK_bookingroomguest_booking
 FOREIGN KEY (booking_id) REFERENCES booking(booking_id);
 
-/*
+
 ALTER TABLE bookingroomguest
 ADD CONSTRAINT FK_bookingroomguest_room
 FOREIGN KEY (room_number) REFERENCES room(room_number);
-*/
+
+ALTER TABLE bookingroomguest
+ADD CONSTRAINT FK_bookingroomguest_hotel
+FOREIGN KEY (hotel_id) REFERENCES hotel(hotel_id);
+
 
 ALTER TABLE bookingroomguest
 ADD CONSTRAINT FK_bookingroomguest_guest
@@ -173,23 +140,4 @@ FOREIGN KEY (guest_id) REFERENCES guest(guest_id);
 ALTER TABLE bookingroomguest
 ADD CONSTRAINT PK_Person PRIMARY KEY (booking_id,room_number,guest_id);
 
-
-
--- Create trigger on table guest in ordre to creat guest id automatically
-CREATE OR REPLACE TRIGGER tri_guest_id
-  BEFORE INSERT ON guest
-  FOR EACH ROW
-BEGIN
-  :new.guest_id := seq_guest_id.nextval;
-END;
-
-INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id) 
-    VALUES (NULL, 'Miss', 'Xuelin', 'Situ', '006');
-    
-    drop trigger tri_guest_id;
-    
-    drop sequence guest_sequence;
-    
---------------------------------------------------------------------------------
--- Select hotel ID based on known country and city
 
