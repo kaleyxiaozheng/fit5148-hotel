@@ -282,4 +282,37 @@ BEGIN
     END LOOP;  
   END IF;
 END;
+
+CREATE OR REPLACE PROCEDURE upgradeCustomer(
+  in_booking_id IN BOOKING.BOOKING_ID%Type
+)
+AS
+  cur_credit NUMBER;
+  new_credit NUMBER;
+  cust_id CUSTOMER.CUSTOMER_ID%TYPE;
+  total_amt NUMBER;
+  --cur_membership NUMBER;
+  tier_credit NUMBER;
+  tmp NUMBER;
+  new_tier NUMBER;
+BEGIN
+  
+  SELECT CUSTOMER_ID, TOTAL_AMOUNT INTO cust_id, total_amt FROM BOOKING WHERE BOOKING_ID = in_booking_id;
+  
+  SELECT c.MEMBERSHIP_CREDITS INTO cur_credit 
+  FROM CUSTOMER c WHERE c.CUSTOMER_ID = cust_id;
+  
+  new_credit := cur_credit + total_amt;
+  
+  SELECT COUNT(1), TIER_ID INTO tmp, new_tier FROM MEMBERSHIP WHERE TIER_CREDIT <= new_credit AND TIER_CREDIT > cur_credit
+  group by tier_id order by tier_id desc;
+  
+  IF tmp > 0 then
+    --update both credit and membership tier
+    UPDATE customer set tier_id = new_tier, membership_credits = new_credit where customer_id = cust_id;
+  ELSE
+    --only update new credit
+    update customer set membership_credits = new_credit where customer_id = cust_id;
+  end if;
+END;
 --End of stored procedure
