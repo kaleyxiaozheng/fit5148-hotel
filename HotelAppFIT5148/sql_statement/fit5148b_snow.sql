@@ -283,7 +283,9 @@ BEGIN
   END IF;
 END;
 
-CREATE OR REPLACE PROCEDURE upgradeCustomer(
+
+
+create or replace PROCEDURE upgradeCustomer(
   in_booking_id IN BOOKING.BOOKING_ID%Type
 )
 AS
@@ -304,15 +306,15 @@ BEGIN
   
   new_credit := cur_credit + total_amt;
   
-  SELECT COUNT(1), TIER_ID INTO tmp, new_tier FROM MEMBERSHIP WHERE TIER_CREDIT <= new_credit AND TIER_CREDIT > cur_credit
-  group by tier_id order by tier_id desc;
+  SELECT COUNT(1) INTO tmp FROM MEMBERSHIP WHERE TIER_CREDIT <= new_credit AND TIER_CREDIT > cur_credit AND ROWNUM = 1 ORDER BY TIER_CREDIT DESC;
   
   IF tmp > 0 then
     --update both credit and membership tier
+    SELECT TIER_ID INTO new_tier FROM MEMBERSHIP WHERE TIER_CREDIT <= new_credit AND TIER_CREDIT > cur_credit;
     UPDATE customer set tier_id = new_tier, membership_credits = new_credit where customer_id = cust_id;
   ELSE
     --only update new credit
     update customer set membership_credits = new_credit where customer_id = cust_id;
   end if;
-END;
+END; 
 --End of stored procedure
