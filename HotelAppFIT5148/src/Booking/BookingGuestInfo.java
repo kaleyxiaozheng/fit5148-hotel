@@ -403,7 +403,7 @@ public class BookingGuestInfo extends javax.swing.JPanel {
         Connection dbConnection = null;
         try{
             dbConnection = Database.getInstance().getDBConnection(dbName);
-            cstmt = dbConnection.prepareCall(SQLStatement.CALLSP_INSERTORUPDATEMEMBERSHIP);
+            cstmt = dbConnection.prepareCall(SQLStatement.CALLSP_ADDCUSTOMERTOGUEST);
             
             cstmt.setInt(1, citizen_id);
             cstmt.registerOutParameter(2, java.sql.JDBCType.INTEGER);
