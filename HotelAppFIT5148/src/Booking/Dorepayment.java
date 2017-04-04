@@ -52,7 +52,7 @@ public class Dorepayment extends javax.swing.JPanel {
 
         try {
             
-            String search = SQLStatement.GET_MEMBERSHIP_WITH_CUSTID + customer_id + ")";
+            String search = SQLStatement.GET_MEMBERSHIP_WITH_CUSTID + customer_id;
             
             ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, search);
             while (rset.next()) {
