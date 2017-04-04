@@ -5,19 +5,15 @@
  */
 package Booking;
 
+
+import Util.SQLStatement;
 import Util.WarningMessage;
 import hotelappfit5148.Database;
 import hotelappfit5148.MainFrame;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,7 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import oracle.jdbc.OracleDriver;
+
 
 /**
  *
@@ -81,18 +77,16 @@ public class SearchingRoom extends javax.swing.JPanel {
 
     // search country in order to add it into jComboBox1
     public List initCountries() {
-        String searchCountries = "select DISTINCT country from hotel";
+        
         List countries = new ArrayList();
         try {
-            DriverManager.registerDriver(new OracleDriver());
-            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148A);
-
-            Statement stmt = conn.createStatement();
-
-            ResultSet rset = stmt.executeQuery(searchCountries);
+            
+            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148A, SQLStatement.SELECT_DISTINCT_COUNTRY);
             while (rset.next()) {
                 countries.add(rset.getString(1));
             }
+            rset.close();
+            Database.getInstance().closeDBConnection();
         } catch (SQLException f) {
             System.out.println(f.getMessage());
             f.printStackTrace();
@@ -102,18 +96,16 @@ public class SearchingRoom extends javax.swing.JPanel {
 
     // search city in order to add it into jComboBox1
     public List initCities() {
-        String searchCities = "select DISTINCT city from hotel";
+        
         List cities = new ArrayList();
         try {
-            DriverManager.registerDriver(new OracleDriver());
-            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148A);
-
-            Statement stmt = conn.createStatement();
-
-            ResultSet rset = stmt.executeQuery(searchCities);
+            
+            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148A, SQLStatement.SELECT_DISTINCT_CITY);
             while (rset.next()) {
                 cities.add(rset.getString(1));
             }
+            rset.close();
+            Database.getInstance().closeDBConnection();
         } catch (SQLException f) {
             System.out.println(f.getMessage());
             f.printStackTrace();
@@ -123,20 +115,17 @@ public class SearchingRoom extends javax.swing.JPanel {
 
     // search room type in order to add it into jComboBox4
     public List initRoomType() {
-        String searchRoomTypes = "select DISTINCT room_type from room";
+        
         List roomType = new ArrayList();
         try {
-            DriverManager.registerDriver(new OracleDriver());
-            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
-            DatabaseMetaData md = conn.getMetaData();
-
-            Statement stmt = conn.createStatement();
-
-            ResultSet rset = stmt.executeQuery(searchRoomTypes);
-            ResultSetMetaData metadata = rset.getMetaData();
+            
+            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, SQLStatement.SELECT_ROOM_TYPES);
+            
             while (rset.next()) {
                 roomType.add(rset.getString(1));
             }
+            rset.close();
+            Database.getInstance().closeDBConnection();
         } catch (SQLException f) {
             System.out.println(f.getMessage());
             f.printStackTrace();
@@ -197,11 +186,6 @@ public class SearchingRoom extends javax.swing.JPanel {
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox2ActionPerformed(evt);
-            }
-        });
 
         jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "1-200", "200-400", "400-600", "600-800", "800-1000", ">1000" }));
 
@@ -231,38 +215,45 @@ public class SearchingRoom extends javax.swing.JPanel {
     layout.setHorizontalGroup(
         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(layout.createSequentialGroup()
+            .addGap(15, 15, 15)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(15, 15, 15)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jLabel6)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel1)
-                                    .addComponent(jLabel2))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addComponent(jLabel7))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jCheckBox1)
-                        .addComponent(jXDatePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jXDatePicker2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jXDatePicker1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(search)
-                    .addGap(67, 67, 67)))
+                    .addGap(18, 18, 18)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel7)
+                            .addGap(55, 55, 55)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(search)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addGap(0, 0, Short.MAX_VALUE)
+                                    .addComponent(jCheckBox1)))
+                            .addGap(61, 61, 61))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel5)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(jLabel1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel4)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                            .addComponent(jLabel2)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                            .addComponent(jLabel9))
+                                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)))
+                                .addComponent(jLabel6))
+                            .addGap(30, 30, 30)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jXDatePicker2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
@@ -274,63 +265,59 @@ public class SearchingRoom extends javax.swing.JPanel {
                 .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(jLabel8)
                 .addComponent(jLabel1))
-            .addGap(28, 28, 28)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addComponent(jLabel9))
-            .addGap(25, 25, 25)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel2)))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel3)
                 .addComponent(jXDatePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(33, 33, 33)
+            .addGap(18, 18, 18)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel4)
                 .addComponent(jXDatePicker2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(31, 31, 31)
+            .addGap(18, 18, 18)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel5)
                 .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(26, 26, 26)
+            .addGap(18, 18, 18)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel6)
                 .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGap(18, 18, 18)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel7)
                 .addComponent(jCheckBox1))
-            .addGap(18, 18, 18)
+            .addGap(47, 47, 47)
             .addComponent(search)
-            .addGap(33, 33, 33))
+            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addContainerGap(17, Short.MAX_VALUE)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 404, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGap(17, 17, 17))
     );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox2ActionPerformed
-
-    // get citizen id from customer tablem
-    public boolean whetherExistCitizenId(String citizenId) {
-        int cusid = 0;
+    // get citizen id from customer table
+    public boolean whetherExistCitizenId(String citizenId) {        
         boolean flag = false;
-
         // search customer in customer table with customer id
-        StringBuffer sb = new StringBuffer("SELECT citizen_id from customer where citizen_id = ");
+        StringBuffer sb = new StringBuffer(SQLStatement.SELECT_CUSTOMERID_WITH_CITIZEN);
         sb.append(Integer.valueOf(citizenId));
-        //System.out.println(search);
+        
         try {
-            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
-            Statement stmt = conn.createStatement();
-
-            ResultSet rset = stmt.executeQuery(sb.toString());
+            
+            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, sb.toString());
             flag = rset.next();
+            
+            rset.close();
+            Database.getInstance().closeDBConnection();
         } catch (SQLException ex) {
-            Logger.getLogger(SearchingRoom.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(SearchingRoom.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
 
         return flag;
@@ -341,12 +328,12 @@ public class SearchingRoom extends javax.swing.JPanel {
         String country = String.valueOf(jComboBox2.getSelectedItem());
         String city = String.valueOf(jComboBox1.getSelectedItem());
 
-// Searching room with value of country and city
-            StringBuffer sb = new StringBuffer("SELECT h.hotel_name, r.room_number, r.room_type, r.price from room@FIT5148B r, hotel@FIT5148A h WHERE h.country = '");
-            sb.append(country);
-            sb.append("' and h.city = '");
-            sb.append(city);
-            sb.append("' and r.hotel_id = h.hotel_id");
+        // Searching room with value of country and city
+        StringBuffer sb = new StringBuffer(SQLStatement.LOOKUP_ROOMS);
+        sb.append(country);
+        sb.append(SQLStatement.LOOKUP_ROOMS_WITH_CITY);
+        sb.append(city);
+        sb.append(SQLStatement.LOOKUP_ROOMS_JOIN_HOTEL);
          
 // check check-in and check-out date
         if (this.jXDatePicker1.getDate() != null && this.jXDatePicker2.getDate() != null) {
@@ -359,14 +346,14 @@ public class SearchingRoom extends javax.swing.JPanel {
             Date checkoutDate = this.jXDatePicker2.getDate();
             Date todayDate = Calendar.getInstance().getTime();
             if (checkinDate.before(todayDate)) {
-                JOptionPane.showMessageDialog(this, "CHECKIN_DATE_AFTER_TODAY");
+                JOptionPane.showMessageDialog(this, WarningMessage.CHECKIN_DATE_AFTER_TODAY);
             }
             if (checkoutDate.before(todayDate)) {
-                JOptionPane.showMessageDialog(this, "CHECKOUT_DATE_AFTER_TODAY");
+                JOptionPane.showMessageDialog(this, WarningMessage.CHECKOUT_DATE_AFTER_TODAY);
                 return;
             }
             if (checkoutDate.before(checkinDate)) {
-                JOptionPane.showMessageDialog(this, "CHECKOUT_DATE_AFTER_CHECKIN_DATE");
+                JOptionPane.showMessageDialog(this, WarningMessage.CHECKOUT_DATE_AFTER_CHECKIN_DATE);
                 return;
             }
             

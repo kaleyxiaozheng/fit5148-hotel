@@ -9,8 +9,7 @@ import Util.WarningMessage;
 import hotelappfit5148.*;
 import javax.swing.JOptionPane;
 import java.sql.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  *

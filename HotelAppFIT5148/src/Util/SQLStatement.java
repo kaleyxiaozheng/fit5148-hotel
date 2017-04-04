@@ -74,4 +74,16 @@ public class SQLStatement {
     public final static String DELETE_ROOM = "delete room where room_number = '";
     
     public final static String DELETE_ROOM_WITH_HOTEL = "' and hotel_id = ";
+    
+    public final static String SELECT_DISTINCT_COUNTRY = "select DISTINCT country from hotel";
+    
+    public final static String SELECT_DISTINCT_CITY = "select DISTINCT city from hotel";
+    
+    public final static String SELECT_ROOM_TYPES = "select DISTINCT room_type from room";
+    
+    public final static String SELECT_CUSTOMERID_WITH_CITIZEN = "SELECT citizen_id from customer where citizen_id = ";
+    
+    public final static String LOOKUP_ROOMS = "SELECT h.hotel_name, r.room_number, r.room_type, r.price from room@FIT5148B r, hotel@FIT5148A h WHERE h.country = '";
+    public final static String LOOKUP_ROOMS_WITH_CITY = "' and h.city = '";
+    public final static String LOOKUP_ROOMS_JOIN_HOTEL = "' and r.hotel_id = h.hotel_id";
 }
