@@ -36,17 +36,17 @@ CREATE INDEX hotel_type_index ON hotel(hotel_type);
 --DROP SEQUENCE hotel_seq; 
 
 INSERT INTO hotel (hotel_id, hotel_name, hotel_type, construction_year, country, city, address, contact_number, email)
-   VALUES (null, 'thao Dust', '1 star', 1991, 'USA', 'New York', '13 Rose Street', '01254747747', 'diamonddust@gmail.com');
+   VALUES (null, 'Aman Resort', '1 star', 1991, 'Australia', 'Melbourne', '13 Rose Street', '01254747747', 'diamonddust@gmail.com');
 INSERT INTO hotel (hotel_name, hotel_type, construction_year, country, city, address, contact_number, email)
- VALUES ('Heaven', '3 star', 1890, 'Vietnam', 'HCM', '13 Amazing rose', '01254747747', 'Heaven@gmail.com' );
+ VALUES ('The Ascott Limited', '3 star', 1890, 'Australia', 'New South Wales', '13 Amazing rose', '01254747747', 'Heaven@gmail.com' );
 INSERT INTO hotel (hotel_name, hotel_type, construction_year, country, city, address, contact_number, email)
-   VALUES ('Happinese', '4 star', 1991, 'USA', 'New York', '13 North Road', '01254747747', 'happinese@gmail.com' );
+   VALUES ('Banyan Tree Holding', '4 star', 1991, 'Australia', 'Tasmania', '13 North Road', '01254747747', 'happinese@gmail.com' );
 INSERT INTO hotel (hotel_name, hotel_type, construction_year, country, city, address, contact_number, email)
- VALUES ('Love Paradise', '5 star', 1990, 'China', 'Bejjing', '209 Rose Street', '01254734333', 'loveparadise@gmail.com');
+ VALUES ('Best Western Hotel', '5 star', 1990, 'Australia', 'Sydney', '209 Rose Street', '01254734333', 'loveparadise@gmail.com');
 INSERT INTO hotel (hotel_name, hotel_type, construction_year, country, city, address, contact_number, email)
-   VALUES ('Big Hero', '2 star', 2007, 'Australia', 'Melbourne', '13 Flinder Street', '0125474343', 'bighero@gmail.com');
+   VALUES ('Boscolo Hotel', '2 star', 2007, 'Australia', 'Melbourne', '13 Flinder Street', '0125474343', 'bighero@gmail.com');
 INSERT INTO hotel (hotel_name, hotel_type, construction_year, country, city, address, contact_number, email)
- VALUES ('Cannal', '5 star', 2008, 'Indonesia', 'Bali', '13 No way street', '01254574232', 'cannal@gmail.com' );
+ VALUES ('Cannal', '5 star', 2008, 'Australia', 'Sydney', '13 No way street', '01254574232', 'cannal@gmail.com' );
 
 commit;
 
