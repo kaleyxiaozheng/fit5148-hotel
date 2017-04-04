@@ -23,8 +23,10 @@ public class WarningMessage {
     public final static String FOREIGN_KEY_DELETE = "This record has references from other tables, Please delete its children in advance.";
     public final static String UNKNOWN_ERROR = "Sorry! System has internal error, please wait us to upgrate";
     public final static String UNIQUE_CONSTRAINT_ROOM = "This room number and hotel id exist in database, please input unique ones.";
+    public final static String UNIQUE_CONSTRAINT_FACILITY = "This facility exists in database, please check room_number, hotel_id, facility_number.";
     public final static String INPUT_FORMAT_ER = "Please input correct format.";
     public final static String NOT_EXIST_HOTEL_ID_ER = "Hotel_id does not exist in hotel table";
+    public final static String NOT_EXIST_HOTEL_ROOM_ID_ER = "Hotel_id or Room_number does not exist in hotel table";
     
     public final static String CUSTOMER_INSERT_UPDATE_S = "Customer added/updated successfully. Please go back to Customer page and refresh.";
     public final static String CUSTOMER_INSERT_UPDATE_F = "Failed to add/update customer. Other guest is using this citizen id."

@@ -5,6 +5,7 @@
  */
 package Room;
 
+import Facility.FacilityBean;
 import Util.SQLStatement;
 import Util.WarningMessage;
 import java.sql.Connection;
@@ -287,9 +288,9 @@ public class RoomPanel extends javax.swing.JPanel {
         } else {
             int confirmDelete = JOptionPane.showConfirmDialog(null, WarningMessage.CONFIRM_DELETE, null, JOptionPane.YES_NO_OPTION);
             if (JOptionPane.YES_OPTION == confirmDelete) {
-                int selectedHotel = jTable1.getSelectedRow();
-                String roomNumber = jTable1.getModel().getValueAt(selectedHotel, 0).toString();
-                Long hotelId = Long.parseLong(jTable1.getModel().getValueAt(selectedHotel, 1).toString());
+                int selectedRoom = jTable1.getSelectedRow();
+                String roomNumber = jTable1.getModel().getValueAt(selectedRoom, 0).toString();
+                Long hotelId = Long.parseLong(jTable1.getModel().getValueAt(selectedRoom, 1).toString());
 
                 StringBuilder sb = new StringBuilder(SQLStatement.DELETE_ROOM);
                 sb.append(roomNumber);

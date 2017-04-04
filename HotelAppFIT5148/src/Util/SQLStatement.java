@@ -41,12 +41,25 @@ public class SQLStatement {
     public final static String SELECT_ALL_ROOM = "select room_number, hotel_id, room_type, "
                     + "price, description from room  order by room_number DESC";
     
+    public final static String SELECT_ALL_FACILITY = "select room_number, hotel_id, facility_number, description "
+                    + " from facility order by room_number, hotel_id DESC";
+    
     public final static String INSERT_ROOM = "INSERT INTO room"
                 + "(room_number, hotel_id, room_type, price, description) VALUES"
                 + "(?,?,?,?,?)";
     public final static String UPDATE_ROOM = "update room set "
                 + "room_type = ?, price = ?, description = ? where "
                 + " room_number = ? and hotel_id = ? ";
+    
+    public final static String UPDATE_FACILITY = "update facility set "
+                + "description = ? where "
+                + " room_number = ? and hotel_id = ?  and facility_number = ?";
+    
+    public final static String INSERT_FACILITY = "INSERT INTO facility"
+                + "(room_number, hotel_id, facility_number, description) VALUES"
+                + "(?,?,?,?)";
+    public final static String SEARCH_FACILITY_BY_NAME = "select room_number, hotel_id, facility_number, description  "
+                    + "from facility where lower(description) like '%";
     
     public final static String CALLSP_ADDCUSTOMERTOGUEST = "{call addCustomerToGuest(?,?)}";
     
@@ -66,12 +79,14 @@ public class SQLStatement {
     public final static String INSERT_PAYMENT = "INSERT INTO PAYMENT (booking_id, payment_day, payment_method, payment_amount) VALUES(";
     
     public final static String UPDATE_PAYMENT_STATUS_WITH_BOOKING = "UPDATE BOOKING SET payment_status = 'S' where booking_id = ";
+  
+    public final static String DELETE_ROOM = "delete room where room_number = '";
     
     public final static String SELECT_FACILITY = "select facility_number,room_number, hotel_id, description "
                     + "from facility  where hotel_id = ";
     public final static String SELECT_FACILITY_WITH_ROOM = " and room_number = '";
     
-    public final static String DELETE_ROOM = "delete room where room_number = '";
+    public final static String DELETE_FACILITY = "delete facility where room_number = ? and hotel_id = ? and facility_number = ?";
     
     public final static String DELETE_ROOM_WITH_HOTEL = "' and hotel_id = ";
     

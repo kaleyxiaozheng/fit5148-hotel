@@ -130,7 +130,7 @@ CREATE TABLE  facility (
   facility_number varchar(10) not null,
   room_number varchar(10) not null,
   hotel_id number not null,
-  description varchar(50),
+  description varchar(50) not null,
   CONSTRAINT facility_pk PRIMARY KEY (hotel_id, room_number, facility_number),
   constraint fk_room_number_facility foreign key (room_number, hotel_id)
       references room (room_number, hotel_id)
