@@ -18,8 +18,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 
@@ -108,17 +106,18 @@ public class BookingGuestInfo extends javax.swing.JPanel {
 
             while (rset.next()) {
 
-                currGuest.setTitle(rset.getString(1));                
-                currGuest.setFirstName(rset.getString(2));
-                currGuest.setLastName(rset.getString(3));
-                currGuest.setCitizenID(rset.getInt(4));
-                if (rset.getDate(5) != null){
-                    currGuest.setDOB(Database.dateFormat.format(rset.getDate(5)));
+                currGuest.setGuest_id(rset.getInt(1));
+                currGuest.setTitle(rset.getString(2));                
+                currGuest.setFirstName(rset.getString(3));
+                currGuest.setLastName(rset.getString(4));
+                currGuest.setCitizenID(rset.getInt(5));
+                if (rset.getDate(6) != null){
+                    currGuest.setDOB(Database.dateFormat.format(rset.getDate(6)));
                 }
-                currGuest.setCountry(rset.getString(6));
-                currGuest.setCity(rset.getString(7));
-                currGuest.setStreet(rset.getString(8));
-                currGuest.setEmail(rset.getString(9));
+                currGuest.setCountry(rset.getString(7));
+                currGuest.setCity(rset.getString(8));
+                currGuest.setStreet(rset.getString(9));
+                currGuest.setEmail(rset.getString(10));
                 
 
             }
@@ -534,8 +533,8 @@ public class BookingGuestInfo extends javax.swing.JPanel {
             bookingGuests.add(currGuest.getGuest_id());
             this.jLabel14.setText(String.valueOf(bookingGuests.size()));
 
-            int guestID = getGuestID(jTextField8.getText());
-            this.bookingGuests.add(guestID);
+            //int guestID = getGuestID(jTextField8.getText());
+            //this.bookingGuests.add(guestID);
 
         } else if( !this.jCheckBox1.isSelected()){
             javax.swing.JOptionPane.showMessageDialog(this, WarningMessage.GUEST_NOT_EXIST);

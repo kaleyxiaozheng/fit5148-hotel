@@ -375,6 +375,21 @@ public class SearchingRoom extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, WarningMessage.CHECKOUT_DATE_AFTER_CHECKIN_DATE);
                 return;
             }
+            
+            /**
+             * select distinct h.hotel_id, r.* from Hotel@FIT5148A h, Room r
+where h.hotel_id = r.hotel_id 
+and r.room_number not in(
+select brg.room_number from BookingRoomGuest brg, booking b where b.booking_id = brg.booking_id
+and (TO_DATE('2017/03/31', 'yyyy/MM/dd') > b.check_in_date OR TO_DATE('2017/04/03', 'yyyy/MM/dd') < b.check_out_date));
+             */
+            sb.append(" and r.room_number not in(SELECT brg.room_number FROM bookingroomguest brg, booking b WHERE b.booking_id = brg.booking_id and (TO_DATE('");
+            sb.append(Database.dateFormat.format(this.jXDatePicker2.getDate()));
+            sb.append("', 'yyyy/MM/dd') > b.check_in_date OR TO_DATE('");
+            sb.append(Database.dateFormat.format(this.jXDatePicker1.getDate()));
+            sb.append("', 'yyyy/MM/dd)') < b.check_out_date))");
+            
+            System.out.println(sb.toString());
         }
 
         // search room type
@@ -474,6 +489,12 @@ public class SearchingRoom extends javax.swing.JPanel {
 //                        System.out.print(rowData[i]);
 //                    }
 
+
+                     if(jXDatePicker1.getDate() == null || jXDatePicker2.getDate() == null){
+                            JOptionPane.showMessageDialog(null, WarningMessage.NULL_DATE);
+                            return;
+                        }
+
                     String citizen_id = javax.swing.JOptionPane.showInputDialog(WarningMessage.EMPTY_CITIZEN_ID);
                     //System.out.println(customer_id);
 
@@ -491,14 +512,8 @@ public class SearchingRoom extends javax.swing.JPanel {
 
                     // access booking GUI
                     if (whetherExistCitizenId(citizen_id)) {
-                        
-                        if(jXDatePicker1.getDate() == null || jXDatePicker2.getDate() == null){
-                            JOptionPane.showMessageDialog(null, WarningMessage.NULL_DATE);
-                            return;
-                        }
-                        
-                        String check_IN = new SimpleDateFormat("dd/MM/yyyy").format(jXDatePicker1.getDate());
-                        String check_OUT = new SimpleDateFormat("dd/MM/yyyy").format(jXDatePicker2.getDate());
+                        String check_IN = Database.dateFormat.format(jXDatePicker1.getDate());
+                        String check_OUT = Database.dateFormat.format(jXDatePicker2.getDate());
                         
                         mf.bookingActionPerformed(room_type, check_IN, check_OUT, price, Integer.valueOf(citizen_id), rowData);
                     } else {

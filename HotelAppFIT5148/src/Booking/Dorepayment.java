@@ -48,7 +48,7 @@ public class Dorepayment extends javax.swing.JPanel {
 
         try {
             
-            String search = SQLStatement.GET_MEMBERSHIP_WITH_CUSTID + customer_id + ")";
+            String search = SQLStatement.GET_MEMBERSHIP_WITH_CUSTID + customer_id;
             
             ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, search);
             while (rset.next()) {
@@ -72,10 +72,10 @@ public class Dorepayment extends javax.swing.JPanel {
         jTextField2.setText(timeStamp);
         jTextField1.setText(bookid_price[0]);
         jTextField4.setText(customer_id);
-        jTextField5.setText(getMembership(customer_id)[0]);
-        jTextField6.setText(getMembership(customer_id)[1]);
-        jTextField7.setText(getMembership(customer_id)[2]);
-        jTextField8.setText(getMembership(customer_id)[3]);
+        jTextField5.setText(getMembership(customer_id)[0]);  //membership tier
+        jTextField6.setText(getMembership(customer_id)[1]);  //total credit
+        jTextField7.setText(getMembership(customer_id)[2]);  //discount
+        jTextField8.setText(getMembership(customer_id)[3]);  //rewards
 
         double total_price = Math.round(Double.valueOf(bookid_price[1]) * Double.valueOf(jTextField7.getText()) / 100);
         String total = String.format("%.2f", total_price);
