@@ -210,10 +210,6 @@ public class SearchingRoom extends javax.swing.JPanel {
 
     jLabel11.setText("Max");
 
-    jTextField1.setText(" ");
-
-    jTextField2.setText(" ");
-
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
     this.setLayout(layout);
     layout.setHorizontalGroup(
@@ -379,10 +375,48 @@ public class SearchingRoom extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, WarningMessage.CHECKOUT_DATE_AFTER_CHECKIN_DATE);
                 return;
             }
-
-            // sb= sb
         }
-//
+        
+        // search room type
+        if(String.valueOf(this.jComboBox4.getSelectedItem()) != "All"){
+            sb.append(" and r.room_type = '");
+            sb.append(String.valueOf(this.jComboBox4.getSelectedItem()));
+            sb.append("'");
+        }
+        
+        // set minmum pirce
+        if (!this.jTextField1.getText().isEmpty()) {
+            try {
+                Double.valueOf(this.jTextField1.getText());
+                if (Double.valueOf(this.jTextField1.getText()) < 0) {
+                    javax.swing.JOptionPane.showMessageDialog(this, WarningMessage.NUMBER_RATERANGE);
+                } else {
+                    double min = Double.valueOf(this.jTextField1.getText());
+                    sb.append(" and r.price > ");
+                    sb.append(min);
+                }
+            } catch (NumberFormatException nfe) {
+                javax.swing.JOptionPane.showMessageDialog(this, WarningMessage.INVALID_NUMBER);
+            }
+        }
+        
+        // set maximum pirce
+        if (!this.jTextField2.getText().isEmpty()) {
+            try {
+                Double max = Double.valueOf(this.jTextField2.getText());
+                if (Double.valueOf(this.jTextField2.getText()) < 0) {
+                    javax.swing.JOptionPane.showMessageDialog(this, WarningMessage.NUMBER_RATERANGE);
+                } else {
+                    sb.append(" and r.price < ");
+                    sb.append(max);
+                }
+                
+                System.out.println(sb.toString());
+            } catch (NumberFormatException nfe) {
+                javax.swing.JOptionPane.showMessageDialog(this, WarningMessage.INVALID_NUMBER);
+            }
+        }
+        
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
 //
