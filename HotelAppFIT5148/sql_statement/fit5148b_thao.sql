@@ -7,6 +7,7 @@ exception
     end if;
 end;
 /
+--create table room
 CREATE TABLE  room (
   room_number varchar(20) not null,
   hotel_id number not null,
@@ -17,8 +18,10 @@ CREATE TABLE  room (
   constraint room_type_values check (room_type in ('Single', 'Double', 'Studio', 'Suite'))
 );
 
+--create sequence for room
 CREATE SEQUENCE room_seq START WITH 1 INCREMENT BY   1 NOCACHE NOCYCLE;
 
+--create trigger relating to hotel table in other side
 CREATE OR REPLACE TRIGGER room_insert_update_trigger
   BEFORE INSERT OR UPDATE ON room
   FOR EACH ROW
@@ -35,16 +38,81 @@ BEGIN
 END;
 
 
+--generate data for room
+declare
+ hotel_id_var number;
+begin
+SELECT hotel_id into hotel_id_var FROM
+( SELECT hotel_id FROM hotel@FIT5148A
+ORDER BY dbms_random.value )
+WHERE rownum = 1;
+
 INSERT INTO room (room_number, hotel_id, room_type, price, description)
-   VALUES (to_char(room_seq.nextval),37 , 'Single', 19999.999, 'beach view');
+   VALUES (to_char(room_seq.nextval),hotel_id_var , 'Single', 100, 'beach view');
+commit;
+end;
+/
+
+declare
+ hotel_id_var number;
+begin
+SELECT hotel_id into hotel_id_var FROM
+( SELECT hotel_id FROM hotel@FIT5148A
+ORDER BY dbms_random.value )
+WHERE rownum = 1;
+
 INSERT INTO room (room_number, hotel_id, room_type, price, description)
-   VALUES (to_char(room_seq.nextval),37 , 'Double', 19999.999, 'mountain view');
+   VALUES (to_char(room_seq.nextval),hotel_id_var , 'Double', 300, 'mountain view');
+
+commit;
+end;
+/
+
+declare
+ hotel_id_var number;
+begin
+SELECT hotel_id into hotel_id_var FROM
+( SELECT hotel_id FROM hotel@FIT5148A
+ORDER BY dbms_random.value )
+WHERE rownum = 1;
+
 INSERT INTO room (room_number, hotel_id, room_type, price, description)
-   VALUES (to_char(room_seq.nextval),37 , 'Studio', 19999.999, 'desert view');
+   VALUES (to_char(room_seq.nextval),hotel_id_var , 'Studio', 500.50, 'desert view');
+
+commit;
+end;
+/
+
+declare
+ hotel_id_var number;
+begin
+SELECT hotel_id into hotel_id_var FROM
+( SELECT hotel_id FROM hotel@FIT5148A
+ORDER BY dbms_random.value )
+WHERE rownum = 1;
+
 INSERT INTO room (room_number, hotel_id, room_type, price, description)
-   VALUES (to_char(room_seq.nextval),37 , 'Double', 19999.999, 'dophil view');
+   VALUES (to_char(room_seq.nextval),hotel_id_var , 'Suite', 900.50, 'sun set view');
+
+commit;
+end;
+/
+declare
+ hotel_id_var number;
+begin
+SELECT hotel_id into hotel_id_var FROM
+( SELECT hotel_id FROM hotel@FIT5148A
+ORDER BY dbms_random.value )
+WHERE rownum = 1;
+
 INSERT INTO room (room_number, hotel_id, room_type, price, description)
-   VALUES (to_char(room_seq.nextval),37 , 'Suite', 19999.999, 'girls view');
+   VALUES (to_char(room_seq.nextval),hotel_id_var , 'Double', 700, 'dophil view');
+
+commit;
+end;
+/
+
+
 
 
 ---------------------------------------------------------
