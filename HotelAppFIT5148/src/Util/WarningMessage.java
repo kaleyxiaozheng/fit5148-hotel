@@ -17,7 +17,7 @@ public class WarningMessage {
     public final static String CONFIRM_DELETE = "The record information will be deleted. Please click Yes to proceed.";
     public final static String DELETE_S = "Record is deleted successfull.";
     public final static String DELETE_F = "Fail to delete record, please re-try later.";
-//    public final static String HOTEL_DELETE_TRIGGER_F = "This hotel has references from other rooms, Please delete its rooms in advance.";
+
     public final static String UPDATE_ACT = "UpdateAct";
     public final static String INSERT_ACT = "InsertAct";
     public final static String FOREIGN_KEY_DELETE = "This record has references from other tables, Please delete its children in advance.";
@@ -29,18 +29,14 @@ public class WarningMessage {
     public final static String CUSTOMER_INSERT_UPDATE_S = "Customer added/updated successfully. Please go back to Customer page and refresh.";
     public final static String CUSTOMER_INSERT_UPDATE_F = "Failed to add/update customer. Other guest is using this citizen id."
             + "Please double check the information";
-    //public final static String MULTIPLE_SELECTION = "Please select one customer only.";
-    //public final static String NO_SELECTION = "Please select at least one customer.";
+    
     public final static String CONFIRM_DELETE_CUSTOMER = "The customer information will be deleted. Please click Yes to proceed.";
     public final static String UPDATE_CUSTOMER_S = "Customer is deleted. Please refresh.";
     public final static String UPDATE_CUSTOMER_F = "Fail to delete customer, please re-try later.";
     
     public final static String GUEST_INSERT_UPDATE_S = "Guest added/updated successfully. Please go back to Customer page and refresh.";
     public final static String GUEST_INSERT_UPDATE_F = "Failed to add/update guest. Other customer is using this citizen id."
-            + "Please double check the information";
-    
-    //public final static String MULTIPLE_SELECTION = "Please select one guest only.";
-    //public final static String NO_SELECTION = "Please select at least one guest.";
+            + "Please double check the information";        
     
     public final static String CONFIRM_DELETE_GUEST = "The guest information will be deleted. Please click Yes to proceed.";
     public final static String DELETE_GUEST = "DELETE GUEST WHERE GUEST_ID = ";
@@ -48,7 +44,7 @@ public class WarningMessage {
     public final static String UPDATE_GUEST_F = "Fail to delete guest, there is booking for this guest in the system.";
     
     public final static String MANDATORY_FIELD_EMPTY = "Please enter required fields.";
-    public final static String EMPTY_MEMBERSHIP_TIER = "Please input tier for this membership.";
+    
     public final static String MEMBERSHIP_INSERT_UPDATE_S = "Membership added/updated successfully. Please go back to Membership page and refresh.";
     public final static String MEMBERSHIP_INSERT_UPDATE_F = "Failed to add/update membership. Please double check the information";
     
@@ -64,11 +60,6 @@ public class WarningMessage {
     
     public final static String DIGIT_CREDIT_ONLY = "Please input digit for available credit only.";
     
-    
-    //public final static String MULTIPLE_SELECTION = "Please select one membership only.";
-    //public final static String NO_SELECTION = "Please select at least one membership.";
-    
-    //public final static String DISCARD_CHANGE = "Your change will be discarded. Please click Yes if you want to stay.";
     public final static String EMPTY_CITIZEN_ID = "Please input Citizen ID.";
     public final static String INVALID_CITIZEN_ID = "Please input digit for Citizen ID.";
     public final static String EXISTED_CITIZEN = "Citizen Id is existed for other customer, please double check";
@@ -88,4 +79,18 @@ public class WarningMessage {
     public final static String CHECKIN_DATE_AFTER_TODAY = "Please input check-in date after today.";
     public final static String CHECKOUT_DATE_AFTER_TODAY = "Checkout date should be after today";
     public final static String CHECKOUT_DATE_AFTER_CHECKIN_DATE = "Checkout date should be after checkin date";
+    
+    public final static String EMPTY_FIRST_NAME = "Please input first name.";
+    public final static String EMPTY_LAST_NAME = "Please input last name.";
+    
+    public final static String INVALID_POSTAL_CODE = "Please input valid postal code with 4 digit only.";
+    
+    public final static String EMPTY_MEMBERSHIP_TIER = "Please input tier for this membership.";
+    public final static String EMPTY_MEMBERSHIP_CREDIT = "Please input credit for this membership.";
+    public final static String EMPTY_MEMBERSHIP_DISCOUNT = "Please input discount for this membership.";
+    
+    public final static String INVALID_MEMBERSHIP_DISCOUNT_1 = "Please input valid membership discount.";
+    public final static String INVALID_MEMBERSHIP_DISCOUNT_2 = "Membership discount should be greater than 0.0 and less than 1.0";
+    public final static String EXISTED_MEMBERSHIP = "The membership tier is already existed, please revise membership tier name.";
+    
 }

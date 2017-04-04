@@ -86,4 +86,9 @@ public class SQLStatement {
     public final static String LOOKUP_ROOMS = "SELECT h.hotel_name, r.room_number, r.room_type, r.price from room@FIT5148B r, hotel@FIT5148A h WHERE h.country = '";
     public final static String LOOKUP_ROOMS_WITH_CITY = "' and h.city = '";
     public final static String LOOKUP_ROOMS_JOIN_HOTEL = "' and r.hotel_id = h.hotel_id";
+    
+    public final static String CALLSP_INSERTORUPDATEMEMBERSHIP = "{call insertOrUpdateMembership(?,?,?,?,?,?)}";
+    
+    public final static String CHECK_MEMBERSHIP_EXISTANCE_B4INSERT = "SELECT COUNT(1) "
+            + "FROM MEMBERSHIP WHERE MEMBERSHIP_TIER = '";
 }
