@@ -5,6 +5,7 @@
  */
 package Hotel;
 
+import Util.SQLStatement;
 import Util.WarningMessage;
 import hotelappfit5148.*;
 import javax.swing.JOptionPane;
@@ -24,6 +25,7 @@ public class NewHotel extends javax.swing.JFrame {
         initComponents();
     }
 
+    private final static String HOTEL_ID = "hotel_id";
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -220,14 +222,11 @@ public class NewHotel extends javax.swing.JFrame {
             return;
         }
         PreparedStatement preparedStatement = null;
-        Connection dbConnection = Database.getInstance().getDBConnection("FIT5148A");
-        String insertTableSQL = "INSERT INTO hotel"
-                + "(hotel_name, hotel_type, construction_year, country, city, address, contact_number, email) VALUES"
-                + "(?,?,?,?,?,?,?,?)";
+        Connection dbConnection = Database.getInstance().getDBConnection(Database.DB_FIT5148A);
 
         try {
 //            preparedStatement = DBConnection.getDBConnection("FIT5148A").prepareStatement(insertTableSQL, new String[]{"hotel_id"});
-            preparedStatement = dbConnection.prepareStatement(insertTableSQL, new String[]{"hotel_id"});
+            preparedStatement = dbConnection.prepareStatement(SQLStatement.NEW_HOTEL, new String[]{HOTEL_ID});
             preparedStatement.setString(1, hotel.getHotelName());
             preparedStatement.setString(2, hotel.getHotelType());
             preparedStatement.setInt(3, hotel.getConstructionYear());
@@ -241,7 +240,7 @@ public class NewHotel extends javax.swing.JFrame {
             preparedStatement.executeUpdate();
             ResultSet hotel_id_set = preparedStatement.getGeneratedKeys();
             Long hotel_id = null;
-            if (null != hotel_id_set && hotel_id_set.next()) {
+            if (hotel_id_set != null && hotel_id_set.next()) {
                 hotel_id = hotel_id_set.getLong(1);
             }
             hotel.setHotelId(hotel_id);
