@@ -9,10 +9,13 @@ import Util.SQLStatement;
 import Util.WarningMessage;
 import hotelappfit5148.Database;
 import hotelappfit5148.MainFrame;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,6 +36,8 @@ public class SearchingRoom extends javax.swing.JPanel {
     private List cities;
     private List roomTypes;
     private MainFrame mf;
+    private  Date checkinDate;
+    private Date checkoutDate;
 
     /**
      * Creates new form Searching
@@ -350,13 +355,14 @@ public class SearchingRoom extends javax.swing.JPanel {
 
 // check check-in and check-out date
         if (this.jXDatePicker1.getDate() != null && this.jXDatePicker2.getDate() != null) {
-            Date checkinDate = this.jXDatePicker1.getDate();
+            checkinDate = this.jXDatePicker1.getDate();
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(checkinDate);
             calendar.set(Calendar.HOUR_OF_DAY, 23);
             calendar.set(Calendar.MINUTE, 58);
             checkinDate = calendar.getTime();
-            Date checkoutDate = this.jXDatePicker2.getDate();
+            
+            checkoutDate = this.jXDatePicker2.getDate();
             Date todayDate = Calendar.getInstance().getTime();
             if (checkinDate.before(todayDate)) {
                 JOptionPane.showMessageDialog(this, WarningMessage.CHECKIN_DATE_AFTER_TODAY);
@@ -423,42 +429,12 @@ public class SearchingRoom extends javax.swing.JPanel {
             }
 
         }
-
-//        if(this.jCheckBox1.isSelected()){
-//            
-//        }
         //System.out.println(sb.toString());
+        
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
-//
-//        boolean avaliable = jCheckBox1.isSelected();
-//        String avail = "";
-//
-//        if (avaliable) {
-//            avail = "true";
-//        } else {
-//            avail = "false";
-//        }
-//
+        
         try {
-//            String search = "SELECT hotel_name, r.room_number, r.room_type, r.price from room@FIT5148B r, hotel@FIT5148A h WHERE h.country =  '"
-//                    + country + "' and h.city = '" + city + "'" + " and h.hotel_id = r.hotel_id and r.room_type = '"
-//                    + room_type + "' ";
-//            String selectedPriceRange = this.jComboBox3.getSelectedItem().toString();
-//            int priceStart = Integer.MIN_VALUE;
-//            int priceEnd = Integer.MAX_VALUE;
-//            if (selectedPriceRange.contains("-")) {
-//                priceStart = Integer.parseInt(selectedPriceRange.split("-")[0]);
-//                priceEnd = Integer.parseInt(selectedPriceRange.split("-")[1]);
-//            } else if (selectedPriceRange.contains(">")) {
-//                priceStart = Integer.parseInt(selectedPriceRange.split(">")[1].trim());
-//            }
-//            search += " and r.price >= " + priceStart + " and r.price <=" + priceEnd;
-//            if (this.jCheckBox1.isSelected()) {
-//                search += " and  not EXISTS (select bgm.room_number from bookingroomguest@FIT5148B bgm)  ";
-//            }
-//
-//            System.out.println(search);
             Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148A);
             Statement stat = conn.createStatement();
             ResultSet rset = stat.executeQuery(sb.toString());
@@ -477,51 +453,60 @@ public class SearchingRoom extends javax.swing.JPanel {
             Logger.getLogger(SearchingRoom.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-//
-//        // double click a row and go to the booking GUI
-//        jTable1.addMouseListener(new MouseAdapter() {
-//            public void mouseClicked(MouseEvent e) {
-//
-//                if (e.getClickCount() == 2) {
-//
-//                    // access seleced row data
-//                    javax.swing.JTable target = (javax.swing.JTable) e.getSource();
-//                    int row1 = target.getSelectedRow();
-//
-//                    String[] rowData = new String[4];
-//
-//                    for (int i = 0; i < 4; i++) {
-//                        rowData[i] = (String) target.getValueAt(row1, i);
+
+        // double click a row and go to the booking GUI
+        jTable1.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+
+                if (e.getClickCount() == 2) {
+
+                    // access seleced row data
+                    javax.swing.JTable target = (javax.swing.JTable) e.getSource();
+                    int row1 = target.getSelectedRow();
+
+                    String[] rowData = new String[4];
+
+                    for (int i = 0; i < 4; i++) {
+                        rowData[i] = (String) target.getValueAt(row1, i);
+                    }
+//                        
+//                    for(int i = 0; i < 4; i++){
+//                        System.out.print(rowData[i]);
 //                    }
-////                        
-////                    for(int i = 0; i < 4; i++){
-////                        System.out.print(rowData[i]);
-////                    }
-//
-//                    String citizen_id = javax.swing.JOptionPane.showInputDialog(WarningMessage.EMPTY_CITIZEN_ID);
-//                    //System.out.println(customer_id);
-//
-//                    if (citizen_id == null) {
-//                        return;
-//                    }else if (!citizen_id.chars().allMatch(Character :: isDigit)){
-//                        JOptionPane.showMessageDialog(null, WarningMessage.INVALID_CITIZEN_ID);
-//                        return;
-//                    }
-//                    target = (javax.swing.JTable) e.getSource();
-//                    int row2 = target.getSelectedRow();
-//                    String room_type = (String) target.getValueAt(row2, 2);
-//                    double price = Double.valueOf((String) target.getValueAt(row2, 3));
-//                    //System.out.println(room_type);
-//
-//                    // access booking GUI
-//                    if (whetherExistCitizenId(citizen_id)) {
-//                        mf.bookingActionPerformed(room_type, check_in, check_out, price, Integer.valueOf(citizen_id), rowData);
-//                    } else {
-//                        javax.swing.JOptionPane.showMessageDialog(SearchingRoom.this, "customer does not exist");
-//                    }
-//                }
-//            }
-//        });
+
+                    String citizen_id = javax.swing.JOptionPane.showInputDialog(WarningMessage.EMPTY_CITIZEN_ID);
+                    //System.out.println(customer_id);
+
+                    if (citizen_id == null) {
+                        return;
+                    }else if (!citizen_id.chars().allMatch(Character :: isDigit)){
+                        JOptionPane.showMessageDialog(null, WarningMessage.INVALID_CITIZEN_ID);
+                        return;
+                    }
+                    target = (javax.swing.JTable) e.getSource();
+                    int row2 = target.getSelectedRow();
+                    String room_type = (String) target.getValueAt(row2, 2);
+                    double price = Double.valueOf((String) target.getValueAt(row2, 3));
+                    //System.out.println(room_type);
+
+                    // access booking GUI
+                    if (whetherExistCitizenId(citizen_id)) {
+                        
+                        if(jXDatePicker1.getDate() == null || jXDatePicker2.getDate() == null){
+                            JOptionPane.showMessageDialog(null, WarningMessage.NULL_DATE);
+                            return;
+                        }
+                        
+                        String check_IN = new SimpleDateFormat("dd/MM/yyyy").format(jXDatePicker1.getDate());
+                        String check_OUT = new SimpleDateFormat("dd/MM/yyyy").format(jXDatePicker2.getDate());
+                        
+                        mf.bookingActionPerformed(room_type, check_IN, check_OUT, price, Integer.valueOf(citizen_id), rowData);
+                    } else {
+                        javax.swing.JOptionPane.showMessageDialog(SearchingRoom.this, "customer does not exist");
+                    }
+                }
+            }
+        });
     }//GEN-LAST:event_searchActionPerformed
 
 

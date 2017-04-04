@@ -75,7 +75,7 @@ public class SQLStatement {
     
     public final static String INSERT_GUEST = "INSERT INTO GUEST (guest_id, title, first_name, last_name, citizen_id, dob, country, city, street, email) values(null, '";
     
-    public final static String GET_MEMBERSHIP_WITH_CUSTID = "SELECT c.MEMBERSHIP_TIER, c.MEMBERSHIP_CREDITS, b.DISCOUNT, b.OTHER_REWARDS\n" +
+    public final static String GET_MEMBERSHIP_WITH_CUSTID = "SELECT c.MEMBERSHIP_TIER, c., b.DISCOUNT, b.OTHER_REWARDS\n" +
 "FROM CUSTOMER c, MEMBERSHIP b WHERE c.TIER_ID = b.TIER_ID AND c.CUSTOMER_ID = ";
     
     public final static String INSERT_PAYMENT = "INSERT INTO PAYMENT (booking_id, payment_day, payment_method, payment_amount) VALUES(";

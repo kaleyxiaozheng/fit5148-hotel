@@ -82,6 +82,7 @@ public class WarningMessage {
     public final static String CHECKIN_DATE_AFTER_TODAY = "Please input check-in date after today.";
     public final static String CHECKOUT_DATE_AFTER_TODAY = "Checkout date should be after today";
     public final static String CHECKOUT_DATE_AFTER_CHECKIN_DATE = "Checkout date should be after checkin date";
+    public final static String NULL_DATE = "Please choose check in date and check out date";
     
     public final static String EMPTY_FIRST_NAME = "Please input first name.";
     public final static String EMPTY_LAST_NAME = "Please input last name.";

@@ -51,13 +51,14 @@ public class Dorepayment extends javax.swing.JPanel {
             String search = SQLStatement.GET_MEMBERSHIP_WITH_CUSTID + customer_id + ")";
             
             ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, search);
-            //ResultSetMetaData metadata = rset.getMetaData();
             while (rset.next()) {
                 membership[0] = rset.getString(1);
                 membership[1] = rset.getString(2);
                 membership[2] = rset.getString(3);
                 membership[3] = rset.getString(4);
             }
+            rset.close();
+            Database.getInstance().closeDBConnection();
         } catch (SQLException f) {
             //System.out.println(f.getMessage());
             f.printStackTrace();
