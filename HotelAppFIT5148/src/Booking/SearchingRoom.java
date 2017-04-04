@@ -497,6 +497,9 @@ public class SearchingRoom extends javax.swing.JPanel {
 //
 //                    if (citizen_id == null) {
 //                        return;
+//                    }else if (!citizen_id.chars().allMatch(Character :: isDigit)){
+//                        JOptionPane.showMessageDialog(null, WarningMessage.INVALID_CITIZEN_ID);
+//                        return;
 //                    }
 //                    target = (javax.swing.JTable) e.getSource();
 //                    int row2 = target.getSelectedRow();
@@ -506,7 +509,7 @@ public class SearchingRoom extends javax.swing.JPanel {
 //
 //                    // access booking GUI
 //                    if (whetherExistCitizenId(citizen_id)) {
-//                        mf.bookingActionPerformed(room_type, check_in, check_out, price, citizen_id, rowData);
+//                        mf.bookingActionPerformed(room_type, check_in, check_out, price, Integer.valueOf(citizen_id), rowData);
 //                    } else {
 //                        javax.swing.JOptionPane.showMessageDialog(SearchingRoom.this, "customer does not exist");
 //                    }

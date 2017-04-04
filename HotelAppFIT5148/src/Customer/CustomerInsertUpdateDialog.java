@@ -14,7 +14,6 @@ import java.sql.Connection;
 
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -54,7 +53,7 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
         
         try {
             if (customer.getDOB()!= null && !"".equals(customer.getDOB())){
-                Date dob = new SimpleDateFormat(Database.DB_DATE_FORMAT).parse(customer.getDOB());
+                Date dob = Database.dateFormat.parse(customer.getDOB());
                 jXDatePicker1.setDate(dob);
             }
         } catch (ParseException ex) {
@@ -219,8 +218,7 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                         .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(31, 31, 31)
-                                        .addComponent(jLabel13)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                        .addComponent(jLabel13))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel11)
@@ -456,8 +454,8 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
         
         if (jXDatePicker1.getDate() != null){
             Date dob = jXDatePicker1.getDate();
-            SimpleDateFormat dateFormat = new SimpleDateFormat(Database.DB_DATE_FORMAT);
-            cust.setDOB(dateFormat.format(dob));
+            
+            cust.setDOB(Database.dateFormat.format(dob));
         }
         
         cust.setCountry(jTextField5.getText());

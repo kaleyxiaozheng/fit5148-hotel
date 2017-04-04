@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import javax.swing.DefaultComboBoxModel;
 /**
  *
@@ -253,8 +252,7 @@ public class CustomerPanel extends javax.swing.JPanel {
         
         //Cast SQL Date format
         if (jTable1.getModel().getValueAt(selectedCustomer, 5) != null){
-            SimpleDateFormat dateFormat = new SimpleDateFormat(Database.DB_DATE_FORMAT);        
-            customer.setDOB(dateFormat.format(jTable1.getModel().getValueAt(selectedCustomer, 5)));
+            customer.setDOB(Database.dateFormat.format(jTable1.getModel().getValueAt(selectedCustomer, 5)));
         }
         customer.setCountry((String)jTable1.getModel().getValueAt(selectedCustomer, 6));
         customer.setCity((String)jTable1.getModel().getValueAt(selectedCustomer, 7));

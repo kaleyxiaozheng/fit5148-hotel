@@ -6,6 +6,7 @@
 package hotelappfit5148;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 
 
 /**
@@ -27,6 +28,7 @@ public class Database {
     public static final String DB_FIT5148A = "FIT5148A";
     public static final String DB_FIT5148B = "FIT5148B";
 
+    public final static SimpleDateFormat dateFormat = new SimpleDateFormat(Database.DB_DATE_FORMAT);
     public final static String DB_DATE_FORMAT = "yyyy/MM/dd";
 
     private static Database dbIsntance;

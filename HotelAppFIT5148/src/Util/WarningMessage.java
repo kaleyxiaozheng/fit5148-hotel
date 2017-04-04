@@ -94,5 +94,6 @@ public class WarningMessage {
     public final static String INVALID_MEMBERSHIP_DISCOUNT_2 = "Membership discount should be greater than 0.0 and less than 1.0";
     public final static String EXISTED_MEMBERSHIP = "The membership tier is already existed, please revise membership tier name.";
     public final static String INVALID_PRICE_COMPARISON = "Minimum price should be less than maximum price.";
+	    public final static String ADD_CUSTOMER_TO_GUEST_S = "Add current customer as guest successfully.";
     
 }

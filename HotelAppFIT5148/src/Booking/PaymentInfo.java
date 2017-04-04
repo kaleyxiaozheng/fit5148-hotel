@@ -248,7 +248,7 @@ public class PaymentInfo extends javax.swing.JPanel {
             Statement stat = conn.createStatement();
             ResultSet rset = stat.executeQuery("select booking_id, payment_day, payment_method, payment_amount from payment where booking_id=" + bookid_price[0]);
             if (rset.next()) {
-                JOptionPane.showMessageDialog(this, "Already Paid");
+                JOptionPane.showMessageDialog(this, "Already Paid.");
                 return;
             }
         } catch (SQLException ex) {

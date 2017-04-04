@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -211,8 +210,8 @@ public class GuestPanel extends javax.swing.JPanel {
         guest.setCitizenID(((BigDecimal)jTable1.getModel().getValueAt(selectedGuest, 4)).intValue());
         //Cast SQL Date format
         if (jTable1.getModel().getValueAt(selectedGuest, 5) != null){
-            SimpleDateFormat dateFormat = new SimpleDateFormat(Database.DB_DATE_FORMAT);
-            guest.setDOB(dateFormat.format(jTable1.getModel().getValueAt(selectedGuest, 5)));
+            
+            guest.setDOB(Database.dateFormat.format(jTable1.getModel().getValueAt(selectedGuest, 5)));
         }
         
         guest.setCountry((String)jTable1.getModel().getValueAt(selectedGuest, 6));
