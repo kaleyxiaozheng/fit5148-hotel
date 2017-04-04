@@ -216,8 +216,6 @@ public class RoomPanel extends javax.swing.JPanel {
                     + "from room ");
 
             if (!"".equals(facility)) {
-//                sbSQL.append(", facility where room.room_number = facility.room_number and room.hotel_id = facility.hotel_id ");
-//                sbSQL.append("and lower(facility.description) like '%").append(facility.toLowerCase()).append("%' ");
                 sbSQL.append("where exists(select * from facility "
                         + " where room.room_number = facility.room_number and room.hotel_id = facility.hotel_id"
                         + " and lower(facility.description) like '%");
