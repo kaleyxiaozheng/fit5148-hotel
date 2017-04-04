@@ -61,12 +61,10 @@ public class WarningMessage {
     public final static String UPDATE_MEMBERSHIP_S = "Membership is deleted. Please refresh.";
     public final static String UPDATE_MEMBERSHIP_F = "Fail to delete membership, there is customer attached to this membership. "
             + "Please delete correpondent customer first";
-    public final static String DELETE_MEMBERSHIP = "DELETE MEMBERSHIP WHERE TIER_ID = ";
+    
     public final static String DIGIT_CREDIT_ONLY = "Please input digit for available credit only.";
     
-    public final static String SELECT_MEMBERSHIP = "SELECT TIER_ID, MEMBERSHIP_TIER, "
-            + "TIER_CREDIT, DISCOUNT, OTHER_REWARDS FROM MEMBERSHIP";
-    public final static String SELECT_MEMBERSHIP_BY_CREDIT = " WHERE TIER_CREDIT <= ";
+    
     //public final static String MULTIPLE_SELECTION = "Please select one membership only.";
     //public final static String NO_SELECTION = "Please select at least one membership.";
     
@@ -79,4 +77,14 @@ public class WarningMessage {
     
     public final static String INCORRECT_DATA_TYPE = "Please enter correct data type.";
     public final static String INCORRECT_EMAIL = "Please enter correct email.";
+    
+    public final static String INVALID_NUMBER = "Invalide number.";
+    public final static String MAXIMUM_GUEST_EXCEEDS = "Can't add one more guest, sorry.";
+    
+    public final static String GUEST_NOT_EXIST = "Guest does not exists.";
+    
+    public final static String PAYMENT_SUCCESSFUL = "The booking is piad, thank you!";
+    
+    public final static String CHECKOUT_DATE_AFTER_TODAY = "Checkout date must be after today";
+    public final static String CHECKOUT_DATE_AFTER_CHECKIN_DATE = "Checkout date must be after checkin date";
 }

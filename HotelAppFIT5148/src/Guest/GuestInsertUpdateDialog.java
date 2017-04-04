@@ -8,6 +8,7 @@ package Guest;
 import Customer.CustomerPanel;
 import Customer.CustomerInsertUpdateDialog;
 import Util.CustomerGuestUtil;
+import Util.SQLStatement;
 import Util.WarningMessage;
 import hotelappfit5148.Database;
 import java.sql.CallableStatement;
@@ -26,13 +27,8 @@ import javax.swing.JOptionPane;
  */
 public class GuestInsertUpdateDialog extends javax.swing.JDialog {
 
-    
-    public final static String CHECK_GUEST_EXISTANCE_B4INSERT = "SELECT COUNT(1) "
-            + "FROM GUEST WHERE CITIZEN_ID = ";
-    
-    
     private static CallableStatement cstmt;
-    private final static String CALLSP_INSERTORUPDATEGUEST = "{call insertOrUpdateGuest(?,?,?,?,?,?,?,?,?,?,?,?)}";
+    
     /**
      * Creates new form GuestInsertUpdateDialog
      */
@@ -280,7 +276,7 @@ public class GuestInsertUpdateDialog extends javax.swing.JDialog {
         }
         boolean citizenId_Numeric = citizenID.chars().allMatch(Character :: isDigit);
         if (citizenId_Numeric == true){
-            if (!CustomerGuestUtil.checkCitizenID(citizenID, CHECK_GUEST_EXISTANCE_B4INSERT)){
+            if (!CustomerGuestUtil.checkCitizenID(citizenID, SQLStatement.CHECK_GUEST_EXISTANCE_B4INSERT)){
                 boolean insertResult = performInsertOrUpdate(CustomerPanel.INSERT_CUST);
                 if (insertResult == true){
                     JOptionPane.showMessageDialog(null, WarningMessage.GUEST_INSERT_UPDATE_S);
@@ -323,7 +319,7 @@ public class GuestInsertUpdateDialog extends javax.swing.JDialog {
         
         try{
             dbConnection = Database.getInstance().getDBConnection(dbName);
-            cstmt = dbConnection.prepareCall(CALLSP_INSERTORUPDATEGUEST);
+            cstmt = dbConnection.prepareCall(SQLStatement.CALLSP_INSERTORUPDATEGUEST);
             
             cstmt.setInt(1, guest.getGuest_id());
             cstmt.setString(2, guest.getTitle());

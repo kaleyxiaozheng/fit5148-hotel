@@ -5,8 +5,7 @@
  */
 package Room;
 
-import Util.WarningMessage;
-
+import Util.SQLStatement;
 import Util.WarningMessage;
 import java.sql.Connection;
 import java.sql.Statement;
@@ -44,8 +43,7 @@ public class RoomPanel extends javax.swing.JPanel {
         try {
             DriverManager.registerDriver(new OracleDriver());
             stmt = conn.createStatement();
-            ResultSet rset = stmt.executeQuery("select room_number, hotel_id, room_type, "
-                    + "price, description from room  order by room_number DESC");
+            ResultSet rset = stmt.executeQuery(SQLStatement.SELECT_ROOM);
 
             ResultSetMetaData mdata = rset.getMetaData();
             int numberOfColumns = mdata.getColumnCount();
@@ -77,7 +75,7 @@ public class RoomPanel extends javax.swing.JPanel {
     }
 
     private List<FacilityBean> getListFacilityOfRoom(String roomNumber, Long hotelId) {
-        conn = Database.getInstance().getDBConnection("FIT5148B");
+        conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
     
 //    private List<FacilityBean> getListFacilityOfRoom(String roomNumber, Long hotelId){
 //        conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
@@ -87,10 +85,9 @@ public class RoomPanel extends javax.swing.JPanel {
         try {
             DriverManager.registerDriver(new OracleDriver());
             stmt = conn.createStatement();
-            StringBuilder str = new StringBuilder("select facility_number,room_number, hotel_id, description "
-                    + "from facility  where hotel_id = ");
+            StringBuilder str = new StringBuilder(SQLStatement.SELECT_FACILITY);
             str.append(hotelId);
-            str.append(" and room_number = '");
+            str.append(SQLStatement.SELECT_FACILITY_WITH_ROOM);
             str.append(roomNumber).append("'");
             ResultSet rset = stmt.executeQuery(str.toString());
 
@@ -209,6 +206,7 @@ public class RoomPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    //Thao TODO: Revise the SQL with SEMI Join instead of left join
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         // TODO add your handling code here:
         dtm.setRowCount(0);
@@ -296,9 +294,9 @@ public class RoomPanel extends javax.swing.JPanel {
                 String roomNumber = jTable1.getModel().getValueAt(selectedHotel, 0).toString();
                 Long hotelId = Long.parseLong(jTable1.getModel().getValueAt(selectedHotel, 1).toString());
 
-                StringBuilder sb = new StringBuilder("delete room where room_number = '");
+                StringBuilder sb = new StringBuilder(SQLStatement.DELETE_ROOM);
                 sb.append(roomNumber);
-                sb.append("' and hotel_id = ");
+                sb.append(SQLStatement.DELETE_ROOM_WITH_HOTEL);
                 sb.append(hotelId);
 
                 boolean deleteResult;

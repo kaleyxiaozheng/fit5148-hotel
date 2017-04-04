@@ -6,6 +6,7 @@
 package Customer;
 
 import Util.CustomerGuestUtil;
+import Util.SQLStatement;
 import Util.WarningMessage;
 import hotelappfit5148.Database;
 import java.sql.CallableStatement;
@@ -25,11 +26,7 @@ import javax.swing.JOptionPane;
  */
 public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
 
-    public final static String CHECK_CUST_EXISTANCE_B4INSERT = "SELECT COUNT(1) "
-            + "FROM CUSTOMER WHERE CITIZEN_ID = ";       
-    
     private static CallableStatement cstmt;
-    private final static String CALLSP_INSERTORUPDATECUSTOMER = "{call insertOrUpdateCustomer(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
     
     /**
      * Creates new form CustomerInsertUpdateDialog
@@ -330,7 +327,7 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
         }
         boolean citizenId_Numeric = citizenID.chars().allMatch(Character :: isDigit);
         if (citizenId_Numeric == true){
-            if (!CustomerGuestUtil.checkCitizenID(citizenID, CHECK_CUST_EXISTANCE_B4INSERT)){
+            if (!CustomerGuestUtil.checkCitizenID(citizenID, SQLStatement.CHECK_CUST_EXISTANCE_B4INSERT)){
                 boolean insertResult = performInsertOrUpdate(CustomerPanel.INSERT_CUST);
                 if (insertResult == true){
                     JOptionPane.showMessageDialog(null, WarningMessage.CUSTOMER_INSERT_UPDATE_S);
@@ -410,7 +407,7 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
         
         try{
             dbConnection = Database.getInstance().getDBConnection(dbName);
-            cstmt = dbConnection.prepareCall(CALLSP_INSERTORUPDATECUSTOMER);
+            cstmt = dbConnection.prepareCall(SQLStatement.CALLSP_INSERTORUPDATECUSTOMER);
             
             cstmt.setInt(1, customer.getCustomer_id());
             cstmt.setString(2, customer.getTitle());

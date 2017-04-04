@@ -5,11 +5,11 @@
  */
 package Room;
 
+import Util.SQLStatement;
 import hotelappfit5148.Database;
 import Util.WarningMessage;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
@@ -208,13 +208,10 @@ public class InsertUpdateHRoomDialog extends javax.swing.JDialog {
         }
 
         PreparedStatement preparedStatement = null;
-        Connection dbConnection = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
-        String insertTableSQL = "INSERT INTO room"
-                + "(room_number, hotel_id, room_type, price, description) VALUES"
-                + "(?,?,?,?,?)";
+        Connection dbConnection = Database.getInstance().getDBConnection(Database.DB_FIT5148B);        
 
         try {
-            preparedStatement = dbConnection.prepareStatement(insertTableSQL);
+            preparedStatement = dbConnection.prepareStatement(SQLStatement.INSERT_ROOM);
             preparedStatement.setString(1, room.getRoomNumber());
             preparedStatement.setLong(2, room.getHotelId());
             preparedStatement.setString(3, room.getRoomType());
@@ -263,11 +260,9 @@ public class InsertUpdateHRoomDialog extends javax.swing.JDialog {
 
         PreparedStatement preparedStatement = null;
         Connection dbConnection = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
-        String insertTableSQL = "update room set "
-                + "room_type = ?, price = ?, description = ? where "
-                + " room_number = ? and hotel_id = ? ";
+
         try {
-            preparedStatement = dbConnection.prepareStatement(insertTableSQL);
+            preparedStatement = dbConnection.prepareStatement(SQLStatement.UPDATE_ROOM);
          
             preparedStatement.setString(1, room.getRoomType());
             preparedStatement.setFloat(2, room.getPrice());
@@ -281,8 +276,8 @@ public class InsertUpdateHRoomDialog extends javax.swing.JDialog {
             Database.getInstance().closeDBConnection();
         } catch (SQLException ex) {
             
-ex.printStackTrace();
-if (ex.getErrorCode() == 1) {
+            ex.printStackTrace();
+            if (ex.getErrorCode() == 1) {
                 JOptionPane.showMessageDialog(null, WarningMessage.UNIQUE_CONSTRAINT_ROOM);
                 return;
 
@@ -302,47 +297,6 @@ if (ex.getErrorCode() == 1) {
         this.dispose();
     }//GEN-LAST:event_CancelButtonActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(InsertUpdateHRoomDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(InsertUpdateHRoomDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(InsertUpdateHRoomDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(InsertUpdateHRoomDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                InsertUpdateHRoomDialog dialog = new InsertUpdateHRoomDialog(new javax.swing.JFrame(), true);
-//                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-//                    @Override
-//                    public void windowClosing(java.awt.event.WindowEvent e) {
-//                        System.exit(0);
-//                    }
-//                });
-//                dialog.setVisible(true);
-//            }
-//        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CancelButton;

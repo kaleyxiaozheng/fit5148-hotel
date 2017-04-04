@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package Customer;
+import Util.SQLStatement;
 import Util.WarningMessage;
 import hotelappfit5148.Database;
 import javax.swing.table.DefaultTableModel;
@@ -26,28 +27,18 @@ public class CustomerPanel extends javax.swing.JPanel {
     Object data[][] = {{}};
     DefaultTableModel dtm = new DefaultTableModel(data, columnHeaders);
     public final static String ALL_TIER = "All Tier";
-    public final static String SELECT_CUSTOMER = "SELECT CUSTOMER_ID, TITLE, FIRST_NAME, LAST_NAME, "
-                    + "CITIZEN_ID, DOB, COUNTRY, CITY, STREET, POSTAL_CODE, "
-                    + "MEMBERSHIP_TIER, MEMBERSHIP_CREDITS, PHONE_NUM, EMAIL FROM CUSTOMER "
-            + "INNER JOIN MEMBERSHIP ON CUSTOMER.TIER_ID = MEMBERSHIP.TIER_ID";
-    public final static String SELECT_CUSTOMER_WITH_TIER = " AND MEMBERSHIP.MEMBERSHIP_TIER = '";
-    public final static String SELECT_MEMBERSHIP_TIER = "SELECT MEMBERSHIP_TIER FROM MEMBERSHIP";
-    public final static String DELETE_CUSTOMER = "DELETE CUSTOMER WHERE CUSTOMER_ID = ";
-    
+
     public final static String UPDATE_CUST = "UpdateCustomer";
     public final static String INSERT_CUST = "InsertCustomer";
     
-    
-    
-    
-    
+ 
     
     /**
      * Creates new form Customer
      */
     public CustomerPanel() {
         initComponents();
-        
+        showCustomers();
     }
 
     /**
@@ -175,7 +166,7 @@ public class CustomerPanel extends javax.swing.JPanel {
                     int selectedCustomer = jTable1.getSelectedRow();
                     int customerId = ((BigDecimal)jTable1.getModel().getValueAt(selectedCustomer, 0)).intValue();
                     
-                    StringBuffer sb = new StringBuffer(DELETE_CUSTOMER);
+                    StringBuffer sb = new StringBuffer(SQLStatement.DELETE_CUSTOMER);
                     sb.append(customerId);
                     
                     Database.getInstance().updateTable(Database.DB_FIT5148B, sb.toString());
@@ -191,7 +182,7 @@ public class CustomerPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButton5ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+    private void showCustomers(){
         try {
             // TODO add your handling code here:
             //Remove table content in case there's any
@@ -200,10 +191,10 @@ public class CustomerPanel extends javax.swing.JPanel {
             }
             
             String selectedMembershipTier = String.valueOf(jComboBox1.getSelectedItem());
-            StringBuffer sbSQL = new StringBuffer(SELECT_CUSTOMER);
+            StringBuffer sbSQL = new StringBuffer(SQLStatement.SELECT_CUSTOMER);
             String viewCustSQL = "";
             if (!ALL_TIER.equals(selectedMembershipTier)){
-                sbSQL.append(SELECT_CUSTOMER_WITH_TIER + selectedMembershipTier +"'");
+                sbSQL.append(SQLStatement.SELECT_CUSTOMER_WITH_TIER + selectedMembershipTier +"'");
             }    
             
             viewCustSQL = sbSQL.toString();
@@ -226,6 +217,9 @@ public class CustomerPanel extends javax.swing.JPanel {
             //Logger.getLogger(CustomerPanel.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
         }
+    }
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+        this.showCustomers();
     }
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -273,49 +267,11 @@ public class CustomerPanel extends javax.swing.JPanel {
         
         return customer;
     }
-
-    /**
-     * @param args the command line arguments
-     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(CustomerPanel.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(CustomerPanel.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(CustomerPanel.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(CustomerPanel.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//        //</editor-fold>
-//
-//        
-//      
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new CustomerPanel().setVisible(true);
-//            }
-//        });
-//    }
     
     public static String[] getMembershipTier(){        
         
         try{
-            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, SELECT_MEMBERSHIP_TIER);
+            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, SQLStatement.SELECT_MEMBERSHIP_TIER);
             
             List<String> membershipList = new ArrayList<String>();
             membershipList.add(ALL_TIER);

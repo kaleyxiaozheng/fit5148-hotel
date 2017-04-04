@@ -5,7 +5,8 @@
  */
 package Booking;
 
-import Booking.SearchingRoom;
+import Util.SQLStatement;
+import Util.WarningMessage;
 import hotelappfit5148.Database;
 import hotelappfit5148.MainFrame;
 import java.sql.CallableStatement;
@@ -40,7 +41,11 @@ public class BookingGuestInfo extends javax.swing.JPanel {
 
     private List<String> guest = new ArrayList();
     private static CallableStatement cstmt;
-    private final static String CALLSP_ADDCUSTOMERTOGUEST = "{call addCustomerToGuest(?,?)}";
+    
+    private final static String ROOMTYPE_SINGLE = "single";
+    private final static String ROOMTYPE_STUDIO = "studio";
+    private final static String ROOMTYPE_SUITE = "suite";
+    private final static String ROOMTYPE_DOUBLE = "double";
 
     /**
      * Creates new form Booking
@@ -64,16 +69,16 @@ public class BookingGuestInfo extends javax.swing.JPanel {
     public String totalGuest(String room_type) {
         String totalGuest = "";
         switch (room_type.toLowerCase()) {
-            case "single":
-            case "studio":
-            case "suite":
+            case ROOMTYPE_SINGLE:
+            case ROOMTYPE_STUDIO:
+            case ROOMTYPE_SUITE:
                 totalGuest = "1";
                 break;
-            case "double":
+            case ROOMTYPE_DOUBLE:
                 totalGuest = "2";
                 break;
             default:
-                System.out.println("Invalide number.");
+                //System.out.println(WarningMessage.INVALID_NUMBER);
                 break;
         }
         return totalGuest;
@@ -82,7 +87,7 @@ public class BookingGuestInfo extends javax.swing.JPanel {
     // Access guest information from table guest
     public List getGuestInfor(int citizen_id) {
 
-        List countriesAndCities = new ArrayList();
+        //List countriesAndCities = new ArrayList();
         try {
             DriverManager.registerDriver(new OracleDriver());
             Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
@@ -90,7 +95,7 @@ public class BookingGuestInfo extends javax.swing.JPanel {
 
             Statement stmt = conn.createStatement();
 
-            String search = "select title, first_name, last_name, citizen_id, dob, country, city, street, email from guest where citizen_id = " + citizen_id;
+            String search = SQLStatement.SELECT_GUEST_WITH_CITIZEN + citizen_id;
             //System.out.println(search);
 
             ResultSet rset = stmt.executeQuery(search);
@@ -127,7 +132,7 @@ public class BookingGuestInfo extends javax.swing.JPanel {
 
             }
         } catch (SQLException f) {
-            System.out.println(f.getMessage());
+            //System.out.println(f.getMessage());
             f.printStackTrace();
         }
         return guest;
@@ -233,12 +238,6 @@ public class BookingGuestInfo extends javax.swing.JPanel {
 
         jTextField7.setEditable(false);
         jTextField7.setText(" ");
-
-        jTextField8.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField8ActionPerformed(evt);
-            }
-        });
 
         jCheckBox1.setText("Add current customer as guest");
         jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
@@ -411,6 +410,7 @@ public class BookingGuestInfo extends javax.swing.JPanel {
         
         return 0;
     }
+    //Snow TODO : Revise this function
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
         if(!this.jCheckBox1.isSelected()){
@@ -427,19 +427,19 @@ public class BookingGuestInfo extends javax.swing.JPanel {
 
         //if not insert into guest table
         if (guestId == 0) {
-            String query = "select title, first_name, last_name, citizen_id, dob, country, city, street, email from customer where citizen_id=" + citizen_id;
+            String query = SQLStatement.SELECT_CUSTOMER_WITH_CITIZEN + citizen_id;
 
             Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
             try {
                 Statement stat = conn.createStatement();
                 ResultSet rset = stat.executeQuery(query);
                 if (rset.next()) {
-                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-                    String insert = "insert into guest (guest_id, title, first_name, last_name, citizen_id, dob, country, city, street, email) values(null, '" + rset.getString(2)
+                    SimpleDateFormat format = new SimpleDateFormat(Database.DB_DATE_FORMAT);
+                    String insert = SQLStatement.INSERT_GUEST + rset.getString(2)
                             + "','" + rset.getString(3) + "','" + rset.getString(4) + "'," + rset.getString(5) + ","
-                            + "TO_DATE('" + format.format(rset.getDate(6)) + "', 'DD/MM/YYYY'),'" + rset.getString(7)
+                            + "TO_DATE('" + format.format(rset.getDate(6)) + "', '" + Database.DB_DATE_FORMAT + "'),'" + rset.getString(7)
                             + "','" + rset.getString(8) + "','" + rset.getString(9) + "','" + rset.getString(14) + "')";
-                    System.out.println("insert into guest=== " + insert);
+                    //System.out.println("insert into guest=== " + insert);
                     Statement insertState = conn.createStatement();
                     insertState.executeUpdate(insert);
                 }
@@ -448,10 +448,6 @@ public class BookingGuestInfo extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
-
-    private void jTextField8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField8ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField8ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // search citizen ID from guest table
@@ -467,7 +463,7 @@ public class BookingGuestInfo extends javax.swing.JPanel {
         int guest_id = 0;
 
         try {
-            String search = "SELECT guest_id from guest WHERE citizen_id = " + citizen_id;
+            String search = SQLStatement.SELECT_GUESTID_FROM_CITIZEN + citizen_id;
 
             Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
             Statement stat = conn.createStatement();
@@ -486,7 +482,7 @@ public class BookingGuestInfo extends javax.swing.JPanel {
     private void addGuestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addGuestActionPerformed
 
         if (numberOfCurrentGuest == numberOfRoomGuest) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Can't add one more guest, sorry.");
+            javax.swing.JOptionPane.showMessageDialog(this, WarningMessage.MAXIMUM_GUEST_EXCEEDS);
         } else if (!guest.isEmpty()) {
             numberOfCurrentGuest++;
             this.jLabel14.setText(String.valueOf(numberOfCurrentGuest));
@@ -495,7 +491,7 @@ public class BookingGuestInfo extends javax.swing.JPanel {
             this.guests.add(gueID);
 
         } else if( !this.jCheckBox1.isSelected()){
-            javax.swing.JOptionPane.showMessageDialog(this, "Guest does not exists.");
+            javax.swing.JOptionPane.showMessageDialog(this, WarningMessage.GUEST_NOT_EXIST);
         }
 
         jTextField1.setText("");
@@ -509,7 +505,7 @@ public class BookingGuestInfo extends javax.swing.JPanel {
     }//GEN-LAST:event_addGuestActionPerformed
 
     private int getCustomerId(int citizenId) {
-        String sql = "select customer_id from customer where citizen_id = " + citizenId;
+        String sql = SQLStatement.SELECT_CUSTID_FROM_CITIZEN + citizenId;
 
         Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
         try {
@@ -525,23 +521,23 @@ public class BookingGuestInfo extends javax.swing.JPanel {
     }
 
     // synchronize
-    
+    //Snow TODO : Need to revise this function
     public synchronized void booking(){
         int citizenId = Integer.valueOf(citizen_id);
         String book_id = "";
         int cus = this.getCustomerId(citizenId);
         try {
-            String insertBooking = "INSERT INTO booking (booking_id, customer_id, check_in_date, check_out_date, total_amount, payment_status) VALUES(null, " + cus + ", TO_DATE('" + check_in + "', 'DD/MM/YYYY'), TO_DATE('" + check_out + "', 'DD/MM/YYYY'), " + price + ", 'U')";
-            System.out.println(insertBooking);
+            String insertBooking = SQLStatement.INSERT_BOOKING + cus + ", TO_DATE('" + check_in + "', '" + Database.DB_DATE_FORMAT 
+                    + "'), TO_DATE('" + check_out + "', '" + Database.DB_DATE_FORMAT + "'), " + price + ", 'U')";
+            //System.out.println(insertBooking);
 
             Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
             Statement stmt = conn.createStatement();
             //stmt.execute(insertBooking);
             stmt.executeUpdate(insertBooking);
-
-            String search = "SELECT booking_id FROM booking ORDER BY booking_id DESC";
+            
             stmt = conn.createStatement();
-            ResultSet rset = stmt.executeQuery(search);
+            ResultSet rset = stmt.executeQuery(SQLStatement.SELECT_BOOKING_ID);
             if (rset.next()) {
                 book_id = rset.getString(1);
             }
