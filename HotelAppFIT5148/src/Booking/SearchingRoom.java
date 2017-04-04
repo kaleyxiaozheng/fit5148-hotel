@@ -497,8 +497,8 @@ public class SearchingRoom extends javax.swing.JPanel {
                             return;
                         }
                         
-                        String check_IN = new SimpleDateFormat("dd/MM/yyyy").format(jXDatePicker1.getDate());
-                        String check_OUT = new SimpleDateFormat("dd/MM/yyyy").format(jXDatePicker2.getDate());
+                        String check_IN = Database.dateFormat.format(jXDatePicker1.getDate());
+                        String check_OUT = Database.dateFormat.format(jXDatePicker2.getDate());
                         
                         mf.bookingActionPerformed(room_type, check_IN, check_OUT, price, Integer.valueOf(citizen_id), rowData);
                     } else {
