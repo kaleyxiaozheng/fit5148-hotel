@@ -31,8 +31,8 @@ public class WarningMessage {
             + "Please double check the information";
     
     public final static String CONFIRM_DELETE_CUSTOMER = "The customer information will be deleted. Please click Yes to proceed.";
-    public final static String UPDATE_CUSTOMER_S = "Customer is deleted. Please refresh.";
-    public final static String UPDATE_CUSTOMER_F = "Fail to delete customer, please re-try later.";
+    public final static String DELETE_CUSTOMER_S = "Customer is deleted. Please refresh.";
+    public final static String DELETE_CUSTOMER_F = "Fail to delete customer, please remove the booking record for this customer first.";
     
     public final static String GUEST_INSERT_UPDATE_S = "Guest added/updated successfully. Please go back to Customer page and refresh.";
     public final static String GUEST_INSERT_UPDATE_F = "Failed to add/update guest. Other customer is using this citizen id."
@@ -40,8 +40,8 @@ public class WarningMessage {
     
     public final static String CONFIRM_DELETE_GUEST = "The guest information will be deleted. Please click Yes to proceed.";
     public final static String DELETE_GUEST = "DELETE GUEST WHERE GUEST_ID = ";
-    public final static String UPDATE_GUEST_S = "Membership is deleted. Please refresh.";
-    public final static String UPDATE_GUEST_F = "Fail to delete guest, there is booking for this guest in the system.";
+    public final static String DELETE_GUEST_S = "Membership is deleted. Please refresh.";
+    public final static String DELETE_GUEST_F = "Fail to delete guest, there is booking for this guest in the system.";
     
     public final static String MANDATORY_FIELD_EMPTY = "Please enter required fields.";
     
@@ -54,8 +54,8 @@ public class WarningMessage {
     public final static String UPDATE_S = "Update successfully.";
     
     public final static String CONFIRM_DELETE_MEMBERSHIP = "The membership information will be deleted. Please click Yes to proceed.";
-    public final static String UPDATE_MEMBERSHIP_S = "Membership is deleted. Please refresh.";
-    public final static String UPDATE_MEMBERSHIP_F = "Fail to delete membership, there is customer attached to this membership. "
+    public final static String DELETE_MEMBERSHIP_S = "Membership is deleted. Please refresh.";
+    public final static String DELETE_MEMBERSHIP_F = "Fail to delete membership, there is customer attached to this membership. "
             + "Please delete correpondent customer first";
     
     public final static String DIGIT_CREDIT_ONLY = "Please input digit for available credit only.";

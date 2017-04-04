@@ -241,9 +241,9 @@ public class GuestPanel extends javax.swing.JPanel {
                 try {
                     Database.getInstance().updateTable(Database.DB_FIT5148B, sb.toString());
                     Database.getInstance().closeDBConnection();
-                    JOptionPane.showMessageDialog(null, WarningMessage.UPDATE_GUEST_S);
+                    JOptionPane.showMessageDialog(null, WarningMessage.DELETE_GUEST_S);
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(null, WarningMessage.UPDATE_GUEST_F);
+                    JOptionPane.showMessageDialog(null, WarningMessage.DELETE_GUEST_F);
                 }
                 
             }

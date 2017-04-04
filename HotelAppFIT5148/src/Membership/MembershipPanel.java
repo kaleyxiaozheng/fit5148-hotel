@@ -182,7 +182,7 @@ public class MembershipPanel extends javax.swing.JPanel {
         membership.setTier_id(((BigDecimal)jTable1.getModel().getValueAt(selectedMembership, 0)).intValue());
         membership.setMembership_tier((String)jTable1.getModel().getValueAt(selectedMembership, 1));
         membership.setTier_credit(((BigDecimal)jTable1.getModel().getValueAt(selectedMembership, 2)).intValue());
-        membership.setDiscount(((BigDecimal)jTable1.getModel().getValueAt(selectedMembership, 3)).intValue());
+        membership.setDiscount(((BigDecimal)jTable1.getModel().getValueAt(selectedMembership, 3)).doubleValue());
         membership.setOther_rewards((String)jTable1.getModel().getValueAt(selectedMembership, 4));
         
         
@@ -253,9 +253,9 @@ public class MembershipPanel extends javax.swing.JPanel {
                 try {
                     Database.getInstance().updateTable(Database.DB_FIT5148B, sb.toString());
                     Database.getInstance().closeDBConnection();
-                    JOptionPane.showMessageDialog(null, WarningMessage.UPDATE_MEMBERSHIP_S);
+                    JOptionPane.showMessageDialog(null, WarningMessage.DELETE_MEMBERSHIP_S);
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(null, WarningMessage.UPDATE_MEMBERSHIP_F);
+                    JOptionPane.showMessageDialog(null, WarningMessage.DELETE_MEMBERSHIP_F);
                 }
                 
             }

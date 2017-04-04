@@ -172,11 +172,11 @@ public class CustomerPanel extends javax.swing.JPanel {
                     Database.getInstance().updateTable(Database.DB_FIT5148B, sb.toString());
                     
                     Database.getInstance().closeDBConnection();
-                    JOptionPane.showMessageDialog(null, WarningMessage.UPDATE_CUSTOMER_S);
+                    JOptionPane.showMessageDialog(null, WarningMessage.DELETE_CUSTOMER_S);
                     
                 } catch (SQLException ex) {
                     //Logger.getLogger(CustomerPanel.class.getName()).log(Level.SEVERE, null, ex);
-                    JOptionPane.showMessageDialog(null, WarningMessage.UPDATE_CUSTOMER_F);
+                    JOptionPane.showMessageDialog(null, WarningMessage.DELETE_CUSTOMER_F);
                 }
             }
         }

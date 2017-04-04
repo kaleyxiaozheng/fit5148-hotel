@@ -26,11 +26,11 @@ BEGIN
     :new.tier_id := membership_sequence.nextval;
 END;
 
-INSERT INTO membership VALUES (NULL, 'Bronze', 500, 90.00, 'Free breakfast');
-INSERT INTO membership VALUES (NULL, 'Silver', 1000, 95.00, 'Free buffet');
-INSERT INTO membership VALUES (NULL, 'Gold', 5000, 80.00, 'Access all facilities');
-INSERT INTO membership VALUES (NULL, 'Platinum', 10000, 85.00, 'Access all facilities + pick up');
-INSERT INTO membership VALUES (NULL, 'VIP', 20000, 70.00, 'Upgrade to Presidential suite');
+INSERT INTO membership VALUES (NULL, 'Bronze', 500, 0.9, 'Free breakfast');
+INSERT INTO membership VALUES (NULL, 'Silver', 1000, 0.95, 'Free buffet');
+INSERT INTO membership VALUES (NULL, 'Gold', 5000, 0.8, 'Access all facilities');
+INSERT INTO membership VALUES (NULL, 'Platinum', 10000, 0.85, 'Access all facilities + pick up');
+INSERT INTO membership VALUES (NULL, 'VIP', 20000, 0.7, 'Upgrade to Presidential suite');
 --End of creating table Membership
 
 --Start of creating table Customer
