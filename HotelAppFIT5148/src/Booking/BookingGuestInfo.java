@@ -11,10 +11,9 @@ import hotelappfit5148.Database;
 import hotelappfit5148.MainFrame;
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
+
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
+
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
@@ -22,7 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import oracle.jdbc.OracleDriver;
+import javax.swing.JOptionPane;
+
 
 /**
  *
@@ -87,24 +87,17 @@ public class BookingGuestInfo extends javax.swing.JPanel {
     // Access guest information from table guest
     public List getGuestInfor(int citizen_id) {
 
-        //List countriesAndCities = new ArrayList();
         try {
-            DriverManager.registerDriver(new OracleDriver());
-            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
-            DatabaseMetaData md = conn.getMetaData();
-
-            Statement stmt = conn.createStatement();
-
+            
             String search = SQLStatement.SELECT_GUEST_WITH_CITIZEN + citizen_id;
-            //System.out.println(search);
 
-            ResultSet rset = stmt.executeQuery(search);
-            ResultSetMetaData metadata = rset.getMetaData();
-
+            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, search);
+            
             guest.clear();
 
             while (rset.next()) {
 
+                //Clear last guest's information
                 jTextField1.setText("");
                 jTextField2.setText("");
                 jTextField3.setText("");
@@ -113,6 +106,7 @@ public class BookingGuestInfo extends javax.swing.JPanel {
                 jTextField6.setText("");
                 jTextField7.setText("");
 
+                //set current guest information
                 jTextField1.setText(rset.getString(1));
                 jTextField2.setText(rset.getString(2) + " " + rset.getString(3));
                 jTextField3.setText(rset.getString(5));
@@ -131,8 +125,10 @@ public class BookingGuestInfo extends javax.swing.JPanel {
                 guest.add(jTextField7.getText());
 
             }
+            rset.close();
+            Database.getInstance().closeDBConnection();
         } catch (SQLException f) {
-            //System.out.println(f.getMessage());
+            
             f.printStackTrace();
         }
         return guest;
@@ -429,20 +425,21 @@ public class BookingGuestInfo extends javax.swing.JPanel {
         if (guestId == 0) {
             String query = SQLStatement.SELECT_CUSTOMER_WITH_CITIZEN + citizen_id;
 
-            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
             try {
-                Statement stat = conn.createStatement();
-                ResultSet rset = stat.executeQuery(query);
+                
+                ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, query);
                 if (rset.next()) {
                     SimpleDateFormat format = new SimpleDateFormat(Database.DB_DATE_FORMAT);
                     String insert = SQLStatement.INSERT_GUEST + rset.getString(2)
                             + "','" + rset.getString(3) + "','" + rset.getString(4) + "'," + rset.getString(5) + ","
                             + "TO_DATE('" + format.format(rset.getDate(6)) + "', '" + Database.DB_DATE_FORMAT + "'),'" + rset.getString(7)
                             + "','" + rset.getString(8) + "','" + rset.getString(9) + "','" + rset.getString(14) + "')";
-                    //System.out.println("insert into guest=== " + insert);
-                    Statement insertState = conn.createStatement();
-                    insertState.executeUpdate(insert);
+                    
+                    Database.getInstance().updateTable(Database.DB_FIT5148B, insert);
+                    
                 }
+                rset.close();
+                Database.getInstance().closeDBConnection();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -463,17 +460,18 @@ public class BookingGuestInfo extends javax.swing.JPanel {
         int guest_id = 0;
 
         try {
-            String search = SQLStatement.SELECT_GUESTID_FROM_CITIZEN + citizen_id;
-
-            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
-            Statement stat = conn.createStatement();
-            ResultSet rset = stat.executeQuery(search);
-            ResultSetMetaData metadata = rset.getMetaData();
+            
+            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, 
+                    SQLStatement.SELECT_GUESTID_FROM_CITIZEN + citizen_id);
+            
             if (rset.next()) {
                 guest_id = Integer.valueOf(rset.getString(1));
             }
+            rset.close();
+            Database.getInstance().closeDBConnection();
         } catch (SQLException ex) {
-            Logger.getLogger(SearchingRoom.class.getName()).log(Level.SEVERE, null, ex);
+            
+            JOptionPane.showMessageDialog(null, WarningMessage.GUEST_NOT_EXIST);
         }
 
         return guest_id;
@@ -507,13 +505,13 @@ public class BookingGuestInfo extends javax.swing.JPanel {
     private int getCustomerId(int citizenId) {
         String sql = SQLStatement.SELECT_CUSTID_FROM_CITIZEN + citizenId;
 
-        Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
-        try {
-            Statement stmt = conn.createStatement();
-            ResultSet set = stmt.executeQuery(sql);
+        try {            
+            ResultSet set = Database.getInstance().selectRecords(Database.DB_FIT5148B, sql);
             if (set.next()) {
                 return set.getInt(1);
             }
+            set.close();
+            Database.getInstance().closeDBConnection();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -529,19 +527,16 @@ public class BookingGuestInfo extends javax.swing.JPanel {
         try {
             String insertBooking = SQLStatement.INSERT_BOOKING + cus + ", TO_DATE('" + check_in + "', '" + Database.DB_DATE_FORMAT 
                     + "'), TO_DATE('" + check_out + "', '" + Database.DB_DATE_FORMAT + "'), " + price + ", 'U')";
-            //System.out.println(insertBooking);
-
-            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
-            Statement stmt = conn.createStatement();
-            //stmt.execute(insertBooking);
-            stmt.executeUpdate(insertBooking);
             
-            stmt = conn.createStatement();
-            ResultSet rset = stmt.executeQuery(SQLStatement.SELECT_BOOKING_ID);
+            Database.getInstance().updateTable(Database.DB_FIT5148B, insertBooking);
+            
+            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, SQLStatement.SELECT_BOOKING_ID);
             if (rset.next()) {
                 book_id = rset.getString(1);
             }
 
+            rset.close();
+            Database.getInstance().closeDBConnection();
             mf.accessPaymentGUI(book_id, selectedRow, cus + "", guests);
         } catch (SQLException ex) {
             Logger.getLogger(BookingGuestInfo.class.getName()).log(Level.SEVERE, null, ex);

@@ -5,12 +5,12 @@
  */
 package Booking;
 
-import Booking.SearchingRoom;
+
 import hotelappfit5148.Database;
 import hotelappfit5148.MainFrame;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
+
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;

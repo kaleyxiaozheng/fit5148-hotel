@@ -74,4 +74,10 @@ public class SQLStatement {
     public final static String DELETE_ROOM = "delete room where room_number = '";
     
     public final static String DELETE_ROOM_WITH_HOTEL = "' and hotel_id = ";
+    
+    public final static String SELECT_DISTINCT_COUNTRY = "select DISTINCT country from hotel";
+    
+    public final static String SELECT_DISTINCT_CITY = "select DISTINCT city from hotel";
+    
+    public final static String SELECT_ROOM_TYPES = "select DISTINCT room_type from room";
 }

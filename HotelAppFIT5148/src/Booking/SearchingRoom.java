@@ -5,11 +5,11 @@
  */
 package Booking;
 
-import Util.WarningMessage;
+
+import Util.SQLStatement;
 import hotelappfit5148.Database;
 import hotelappfit5148.MainFrame;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -17,7 +17,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -81,18 +81,16 @@ public class SearchingRoom extends javax.swing.JPanel {
 
     // search country in order to add it into jComboBox1
     public List initCountries() {
-        String searchCountries = "select DISTINCT country from hotel";
+        
         List countries = new ArrayList();
         try {
-            DriverManager.registerDriver(new OracleDriver());
-            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148A);
-
-            Statement stmt = conn.createStatement();
-
-            ResultSet rset = stmt.executeQuery(searchCountries);
+            
+            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148A, SQLStatement.SELECT_DISTINCT_COUNTRY);
             while (rset.next()) {
                 countries.add(rset.getString(1));
             }
+            rset.close();
+            Database.getInstance().closeDBConnection();
         } catch (SQLException f) {
             System.out.println(f.getMessage());
             f.printStackTrace();
@@ -102,18 +100,16 @@ public class SearchingRoom extends javax.swing.JPanel {
 
     // search city in order to add it into jComboBox1
     public List initCities() {
-        String searchCities = "select DISTINCT city from hotel";
+        
         List cities = new ArrayList();
         try {
-            DriverManager.registerDriver(new OracleDriver());
-            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148A);
-
-            Statement stmt = conn.createStatement();
-
-            ResultSet rset = stmt.executeQuery(searchCities);
+            
+            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148A, SQLStatement.SELECT_DISTINCT_CITY);
             while (rset.next()) {
                 cities.add(rset.getString(1));
             }
+            rset.close();
+            Database.getInstance().closeDBConnection();
         } catch (SQLException f) {
             System.out.println(f.getMessage());
             f.printStackTrace();
@@ -123,20 +119,17 @@ public class SearchingRoom extends javax.swing.JPanel {
 
     // search room type in order to add it into jComboBox4
     public List initRoomType() {
-        String searchRoomTypes = "select DISTINCT room_type from room";
+        
         List roomType = new ArrayList();
         try {
-            DriverManager.registerDriver(new OracleDriver());
-            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
-            DatabaseMetaData md = conn.getMetaData();
-
-            Statement stmt = conn.createStatement();
-
-            ResultSet rset = stmt.executeQuery(searchRoomTypes);
-            ResultSetMetaData metadata = rset.getMetaData();
+            
+            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, SQLStatement.SELECT_ROOM_TYPES);
+            
             while (rset.next()) {
                 roomType.add(rset.getString(1));
             }
+            rset.close();
+            Database.getInstance().closeDBConnection();
         } catch (SQLException f) {
             System.out.println(f.getMessage());
             f.printStackTrace();

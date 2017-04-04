@@ -9,20 +9,18 @@ import Util.SQLStatement;
 import Util.WarningMessage;
 import hotelappfit5148.Database;
 import hotelappfit5148.MainFrame;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
+
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
+
 import java.sql.SQLException;
-import java.sql.Statement;
+
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import oracle.jdbc.OracleDriver;
+
 
 /**
  *
@@ -48,21 +46,16 @@ public class Dorepayment extends javax.swing.JPanel {
     }
 
     // get membership tire with customer id
+    //Snow TODO: The membership credit is incorrect
     public String[] getMembership(String customer_id) {
         String[] membership = new String[4];
 
         try {
-            DriverManager.registerDriver(new OracleDriver());
-            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
-            DatabaseMetaData md = conn.getMetaData();
-
-            Statement stmt = conn.createStatement();
-
+            
             String search = SQLStatement.GET_MEMBERSHIP_WITH_CUSTID + customer_id + ")";
-            //System.out.println(search);
-
-            ResultSet rset = stmt.executeQuery(search);
-            ResultSetMetaData metadata = rset.getMetaData();
+            
+            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, search);
+            //ResultSetMetaData metadata = rset.getMetaData();
             while (rset.next()) {
                 membership[0] = rset.getString(1);
                 membership[1] = rset.getString(2);
@@ -289,22 +282,19 @@ public class Dorepayment extends javax.swing.JPanel {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
             String insertPayment = SQLStatement.INSERT_PAYMENT + Integer.valueOf(jTextField1.getText()) + ", TO_DATE('" + jTextField2.getText() + "', '" + Database.DB_DATE_FORMAT + "'), '" + (String) jComboBox1.getSelectedItem() + "', " + jTextField3.getText() + " )";
-            //System.out.println(insertPayment);
-
-            DriverManager.registerDriver(new OracleDriver());
-            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
-            Statement stmt = conn.createStatement();
-            stmt.execute(insertPayment);
+            
+            Database.getInstance().updateTable(Database.DB_FIT5148B, insertPayment);
 
             String updateStatus = SQLStatement.UPDATE_PAYMENT_STATUS_WITH_BOOKING + this.bookedInfor[0];
-            stmt = conn.createStatement();
-            stmt.executeUpdate(updateStatus);
-
+            
+            Database.getInstance().updateTable(Database.DB_FIT5148B, updateStatus);
             
 
             javax.swing.JOptionPane.showMessageDialog(this, WarningMessage.PAYMENT_SUCCESSFUL);
 
             mf.removePanel2();
+            
+            Database.getInstance().closeDBConnection();
 
         } catch (SQLException ex) {
             Logger.getLogger(BookingGuestInfo.class.getName()).log(Level.SEVERE, null, ex);
