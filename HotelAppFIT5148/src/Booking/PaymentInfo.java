@@ -6,6 +6,8 @@
 package Booking;
 
 
+import Util.SQLStatement;
+import Util.WarningMessage;
 import hotelappfit5148.Database;
 import hotelappfit5148.MainFrame;
 import java.sql.Connection;
@@ -29,7 +31,6 @@ public class PaymentInfo extends javax.swing.JPanel {
     private boolean mode;
     private String customer_id;
     private MainFrame mf;
-    private String book_id;
     String[] bookedInfor;
     private List<Integer> customerIds = new ArrayList();
 
@@ -39,7 +40,7 @@ public class PaymentInfo extends javax.swing.JPanel {
     /**
      * Creates new form Payment
      */
-    public PaymentInfo(String book_id, String[] selectedRow, String customer_id, List<Integer> guests, MainFrame mf) {
+    public PaymentInfo(int book_id, String[] selectedRow, String customer_id, List<Integer> guests, MainFrame mf) {
         initComponents();
         initCurrentBooking(book_id, selectedRow);
         mode = false;
@@ -60,25 +61,25 @@ public class PaymentInfo extends javax.swing.JPanel {
     
     // set visiable 
     public void setVisiable(boolean mode){
-            jLabel5.setVisible(mode);
-            jTextField4.setVisible(mode);
-            jLabel1.setVisible(mode);
-            jTextField2.setVisible(mode);
-            jLabel2.setVisible(mode);
-            jTextField3.setVisible(mode);
-            jCheckBox2.setVisible(mode);
-            search.setVisible(mode);
+        jLabel5.setVisible(mode);
+        jTextField4.setVisible(mode);
+        jLabel1.setVisible(mode);
+        jTextField2.setVisible(mode);
+        jLabel2.setVisible(mode);
+        jTextField3.setVisible(mode);
+        jCheckBox2.setVisible(mode);
+        search.setVisible(mode);
     }
 
     // Initial payment GUI with current booking order
-    public void initCurrentBooking(String book_id, String[] selectedRow) {
+    public void initCurrentBooking(int book_id, String[] selectedRow) {
 
         bookedInfor = new String[5];
 
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
 
-        bookedInfor[0] = book_id;
+        bookedInfor[0] = String.valueOf(book_id);
         bookedInfor[1] = selectedRow[0];
         bookedInfor[2] = selectedRow[1];
         bookedInfor[3] = selectedRow[2];
@@ -137,11 +138,6 @@ public class PaymentInfo extends javax.swing.JPanel {
     jLabel4.setText("Booking Information");
 
     jCheckBox2.setText("Unpaid");
-    jCheckBox2.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jCheckBox2ActionPerformed(evt);
-        }
-    });
 
     jTextField2.setText(" ");
 
@@ -155,11 +151,6 @@ public class PaymentInfo extends javax.swing.JPanel {
     });
 
     jTextField4.setText(" ");
-    jTextField4.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jTextField4ActionPerformed(evt);
-        }
-    });
 
     jLabel5.setText("Customer ID");
 
@@ -246,9 +237,9 @@ public class PaymentInfo extends javax.swing.JPanel {
         try {
             Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
             Statement stat = conn.createStatement();
-            ResultSet rset = stat.executeQuery("select booking_id, payment_day, payment_method, payment_amount from payment where booking_id=" + bookid_price[0]);
+            ResultSet rset = stat.executeQuery(SQLStatement.SELECT_PAYMENT_WITH_BOOKINGID + bookid_price[0]);
             if (rset.next()) {
-                JOptionPane.showMessageDialog(this, "Already Paid.");
+                JOptionPane.showMessageDialog(this, WarningMessage.BOOKING_IS_PAYED);
                 return;
             }
         } catch (SQLException ex) {
@@ -263,7 +254,8 @@ public class PaymentInfo extends javax.swing.JPanel {
         }
         try {
             for (int i = 0; i < guests.size(); i++) {
-                String insertBookGuests = "INSERT INTO bookingroomguest (booking_id, hotel_id, room_number, guest_id) VALUES(" + this.bookedInfor[0] + ", " + getHotelId(this.bookedInfor[1]) + ", '" + this.bookedInfor[2] + "', " + guests.get(i) + ")";
+                String insertBookGuests = SQLStatement.INSERT_BOOKINGROOMGUEST + this.bookedInfor[0] 
+                        + ", " + getHotelId(this.bookedInfor[1]) + ", '" + this.bookedInfor[2] + "', " + guests.get(i) + ")";
 
                 Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
                 //System.out.println(insertBookGuests);
@@ -289,7 +281,7 @@ public class PaymentInfo extends javax.swing.JPanel {
         int hotelID = 0;
 
         try {
-            String search = "SELECT hotel_id from hotel WHERE hotel_name = '" + hotelName + "'";
+            String search = SQLStatement.SELECT_HOTELID_WITH_NAME + hotelName + "'";
 
             Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148A);
             Statement stat = conn.createStatement();
@@ -304,10 +296,6 @@ public class PaymentInfo extends javax.swing.JPanel {
 
         return hotelID;
     }
-    private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox2ActionPerformed
-
     private void deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteActionPerformed
         // TODO add your handling code here:
         int row = jTable1.getSelectedRow();
@@ -315,8 +303,8 @@ public class PaymentInfo extends javax.swing.JPanel {
             return;
         }
         String bookId = (String) jTable1.getModel().getValueAt(row, 0);
-        String deleteSql = "delete from booking where booking_id = " + bookId;
-        String deleteRelSql = "delete from bookingroomguest where booking_id = " + bookId;
+        String deleteSql = SQLStatement.DELETE_BOOKING + bookId;
+        String deleteRelSql = SQLStatement.DELETE_BOOKINGROOMGUEST + bookId;
         try {
             Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
             Statement stat = conn.createStatement();
@@ -327,10 +315,6 @@ public class PaymentInfo extends javax.swing.JPanel {
             e.printStackTrace();
         }
     }//GEN-LAST:event_deleteActionPerformed
-
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
 
     private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
         boolean unpaid = this.jCheckBox2.isSelected();
@@ -356,34 +340,33 @@ public class PaymentInfo extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) this.jTable1.getModel();
         model.setRowCount(0);
         try {
-            String search = "select DISTINCT b.booking_id, brm.room_number, r.room_type, b.total_amount, brm.hotel_id, b.customer_id\n"
-                    + "from booking b, bookingroomguest brm, room r, customer cus \n"
-                    + "where b.booking_id = brm.booking_id and brm.room_number = r.room_number and cus.customer_id = b.customer_id";
+            StringBuffer sb = new StringBuffer(SQLStatement.SEARCH_BOOKING);
+            //String search = SQLStatement.SEARCH_BOOKING;
             if (customerId > 0) {
-                search += " and b.customer_id = " + customerId + " ";
+                sb.append(SQLStatement.SEARCH_BOOKING_WITH_CUSTID + customerId + " ");
             }
             if (firstName != null && !firstName.trim().isEmpty()) {
-                search += " and cus.first_name like '%" + firstName.trim() + "%' ";
+                sb.append(SQLStatement.SEARCH_BOOKING_WITH_CUSTFNAME + firstName.trim() + "%' ");
             }
             if (lastName != null && !lastName.trim().isEmpty()) {
-                search += " and cus.last_name like '%" + lastName.trim() + "%' ";
+                sb.append(SQLStatement.SEARCH_BOOKING_WITH_CUSTLNAME + lastName.trim() + "%' ");
             }
             if(unPaid){
-                search += " and b.payment_status = 'U'";
+                sb.append(SQLStatement.SEARCH_BOOKING_WITH_UPAID);
             }
             
             //System.out.println("search "+search);
             Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
             Statement stat = conn.createStatement();
-            ResultSet rset = stat.executeQuery(search);
+            ResultSet rset = stat.executeQuery(sb.toString());
             while (rset.next()) {
                 String[] rsets = new String[5];
                 rsets[0] = rset.getString(1);
-
-                search = "select hotel_name from hotel where hotel_id = '" + rset.getString(5) + "'";
+                sb = new StringBuffer(SQLStatement.SELECT_HOTELNAME_WITH_ID);
+                sb.append(rset.getString(5) + "'");
                 conn = Database.getInstance().getDBConnection(Database.DB_FIT5148A);
                 stat = conn.createStatement();
-                ResultSet hrset = stat.executeQuery(search);
+                ResultSet hrset = stat.executeQuery(sb.toString());
                 if (hrset.next()) {
                     rsets[1] = hrset.getString(1);
                 }

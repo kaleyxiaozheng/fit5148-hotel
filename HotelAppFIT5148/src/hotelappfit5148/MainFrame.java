@@ -289,7 +289,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
     
     // PaymentInfo GUI
-    public void accessPaymentGUI(String booking_id, String[] selectedRow, String customer_id, List<Integer> guests) {                                           
+    public void accessPaymentGUI(int booking_id, String[] selectedRow, String customer_id, List<Integer> guests) {                                           
 
         jPanel2.removeAll();
 

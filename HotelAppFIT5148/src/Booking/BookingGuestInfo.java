@@ -12,6 +12,7 @@ import hotelappfit5148.Database;
 import hotelappfit5148.MainFrame;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -51,6 +52,8 @@ public class BookingGuestInfo extends javax.swing.JPanel {
 
     private final static int WITH_CITIZEN_ID_FLAG = 1;
     private final static int WITH_GUEST_ID_FLAG = 2;
+
+    private final static String BOOKING_ID = "booking_id";
     /**
      * Creates new form Booking
      */
@@ -89,7 +92,6 @@ public class BookingGuestInfo extends javax.swing.JPanel {
     }
 
     // Access guest information from table guest
-    //Snow TODO: Change the guest to GuestBean here
     public GuestBean getGuestInfor(int id, int flag) {
 
         try {
@@ -566,27 +568,30 @@ public class BookingGuestInfo extends javax.swing.JPanel {
     }
 
     // synchronize
-    //Snow TODO : Need to revise this function
     public synchronized void booking(){
         
-        String book_id = "";
+        int book_id = 0;
         int cus = this.getCustomerId(customerCitizenId);
         try {
+            PreparedStatement preparedStatement = null;
+            Connection dbConnection = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
             String insertBooking = SQLStatement.INSERT_BOOKING + cus + ", TO_DATE('" + check_in + "', '" + Database.DB_DATE_FORMAT 
                     + "'), TO_DATE('" + check_out + "', '" + Database.DB_DATE_FORMAT + "'), " + price + ", 'U')";
-            
-            Database.getInstance().updateTable(Database.DB_FIT5148B, insertBooking);
-            
-            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, SQLStatement.SELECT_BOOKING_ID);
-            if (rset.next()) {
-                book_id = rset.getString(1);
+            preparedStatement = dbConnection.prepareStatement(insertBooking, new String[]{BOOKING_ID});
+            preparedStatement.executeUpdate();
+            ResultSet booking_id_set = preparedStatement.getGeneratedKeys();
+            if (booking_id_set != null && booking_id_set.next()) {
+                book_id = booking_id_set.getInt(1);
             }
 
-            rset.close();
+            booking_id_set.close();
+            preparedStatement.close();
             Database.getInstance().closeDBConnection();
+              
             mf.accessPaymentGUI(book_id, selectedRow, cus + "", bookingGuests);
         } catch (SQLException ex) {
-            Logger.getLogger(BookingGuestInfo.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(BookingGuestInfo.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
     

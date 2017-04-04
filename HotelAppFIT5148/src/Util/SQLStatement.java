@@ -75,7 +75,8 @@ public class SQLStatement {
     
     public final static String INSERT_GUEST = "INSERT INTO GUEST (guest_id, title, first_name, last_name, citizen_id, dob, country, city, street, email) values(null, '";
     
-    public final static String GET_MEMBERSHIP_WITH_CUSTID = "SELECT membership_tier, tier_credit, discount, other_rewards FROM membership WHERE tier_id = (SELECT tier_id FROM customer WHERE customer_id = ";
+    public final static String GET_MEMBERSHIP_WITH_CUSTID = "SELECT c.MEMBERSHIP_TIER, c.MEMBERSHIP_CREDITS, b.DISCOUNT, b.OTHER_REWARDS\n" +
+"FROM CUSTOMER c, MEMBERSHIP b WHERE c.TIER_ID = b.TIER_ID AND c.CUSTOMER_ID = ";
     
     public final static String INSERT_PAYMENT = "INSERT INTO PAYMENT (booking_id, payment_day, payment_method, payment_amount) VALUES(";
     
@@ -119,4 +120,24 @@ public class SQLStatement {
     
     public final static String ORDER_ROOM_DESC = " order by room_number DESC";
     
+    public final static String NEW_HOTEL = "INSERT INTO hotel"
+                + "(hotel_name, hotel_type, construction_year, country, city, address, contact_number, email) VALUES"
+                + "(?,?,?,?,?,?,?,?)";
+    
+    public final static String SELECT_PAYMENT_WITH_BOOKINGID = "select booking_id, payment_day, payment_method, payment_amount from payment where booking_id=";
+    
+    public final static String INSERT_BOOKINGROOMGUEST = "INSERT INTO bookingroomguest (booking_id, hotel_id, room_number, guest_id) VALUES(";
+    
+    public final static String SELECT_HOTELID_WITH_NAME = "SELECT hotel_id from hotel WHERE hotel_name = '";
+    public final static String DELETE_BOOKING = "delete from booking where booking_id = ";
+    public final static String DELETE_BOOKINGROOMGUEST = "delete from bookingroomguest where booking_id = ";
+    public final static String SEARCH_BOOKING = "select DISTINCT b.booking_id, brm.room_number, r.room_type, b.total_amount, brm.hotel_id, b.customer_id\n"
+                    + "from booking b, bookingroomguest brm, room r, customer cus \n"
+                    + "where b.booking_id = brm.booking_id and brm.room_number = r.room_number and cus.customer_id = b.customer_id";
+    public final static String SEARCH_BOOKING_WITH_CUSTID = " and b.customer_id = ";
+    public final static String SEARCH_BOOKING_WITH_CUSTFNAME = " and cus.first_name like '%";
+    public final static String SEARCH_BOOKING_WITH_CUSTLNAME = " and cus.last_name like '%";
+    public final static String SEARCH_BOOKING_WITH_UPAID = " and b.payment_status = 'U'";
+    
+    public final static String SELECT_HOTELNAME_WITH_ID = "select hotel_name from hotel where hotel_id = '";
 }
