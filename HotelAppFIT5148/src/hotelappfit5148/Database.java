@@ -19,8 +19,8 @@ public class Database {
     private static final String DB_CONNECTION_FIT5148B
             = "jdbc:oracle:thin:@hippo.its.monash.edu.au:1521:FIT5148B";
     
-    //private static final String DB_USER = "S27146073";
-    private static final String DB_USER = "S27530264";
+    private static final String DB_USER = "S27146073";
+    //private static final String DB_USER = "S27530264";
     private static final String DB_PASSWORD = "student";
 
     //Global variable

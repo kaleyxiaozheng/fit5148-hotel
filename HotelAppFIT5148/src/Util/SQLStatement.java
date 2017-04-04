@@ -38,7 +38,7 @@ public class SQLStatement {
             + "TIER_CREDIT, DISCOUNT, OTHER_REWARDS FROM MEMBERSHIP";
     public final static String SELECT_MEMBERSHIP_BY_CREDIT = " WHERE TIER_CREDIT <= ";
     
-    public final static String SELECT_ROOM = "select room_number, hotel_id, room_type, "
+    public final static String SELECT_ALL_ROOM = "select room_number, hotel_id, room_type, "
                     + "price, description from room  order by room_number DESC";
     
     public final static String INSERT_ROOM = "INSERT INTO room"
@@ -91,4 +91,14 @@ public class SQLStatement {
     
     public final static String CHECK_MEMBERSHIP_EXISTANCE_B4INSERT = "SELECT COUNT(1) "
             + "FROM MEMBERSHIP WHERE MEMBERSHIP_TIER = '";
+    
+    public final static String SELECT_ROOM_INFO = "select room.room_number, room.hotel_id, room.room_type, room.price, room.description  "
+                    + "from room ";
+    
+    public final static String SELECT_ROOM_INFO_WITH_FACILITY = "where exists(select * from facility "
+                        + " where room.room_number = facility.room_number and room.hotel_id = facility.hotel_id"
+                        + " and lower(facility.description) like '%";
+    
+    public final static String ORDER_ROOM_DESC = " order by room_number DESC";
+    
 }

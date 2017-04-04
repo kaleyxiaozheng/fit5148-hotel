@@ -43,7 +43,7 @@ public class RoomPanel extends javax.swing.JPanel {
         try {
             DriverManager.registerDriver(new OracleDriver());
             stmt = conn.createStatement();
-            ResultSet rset = stmt.executeQuery(SQLStatement.SELECT_ROOM);
+            ResultSet rset = stmt.executeQuery(SQLStatement.SELECT_ALL_ROOM);
 
             ResultSetMetaData mdata = rset.getMetaData();
             int numberOfColumns = mdata.getColumnCount();
@@ -212,18 +212,15 @@ public class RoomPanel extends javax.swing.JPanel {
             // TODO add your handling code here:
 
             String facility = this.facilityTextField1.getText().trim();
-            StringBuilder sbSQL = new StringBuilder("select room.room_number, room.hotel_id, room.room_type, room.price, room.description  "
-                    + "from room ");
+            StringBuilder sbSQL = new StringBuilder(SQLStatement.SELECT_ROOM_INFO);
 
             if (!"".equals(facility)) {
-                sbSQL.append("where exists(select * from facility "
-                        + " where room.room_number = facility.room_number and room.hotel_id = facility.hotel_id"
-                        + " and lower(facility.description) like '%");
+                sbSQL.append(SQLStatement.SELECT_ROOM_INFO_WITH_FACILITY);
                 sbSQL.append(facility.toLowerCase()).append("%' )");
 
             }
-            sbSQL.append(" order by room_number DESC");
-            System.out.print(sbSQL);
+            sbSQL.append(SQLStatement.ORDER_ROOM_DESC);
+            //System.out.print(sbSQL);
             ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, sbSQL.toString());
             ResultSetMetaData mdata = rset.getMetaData();
             int numberOfColumns = mdata.getColumnCount() + 1;
