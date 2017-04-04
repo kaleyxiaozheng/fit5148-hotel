@@ -67,6 +67,7 @@ public class SQLStatement {
     
     public final static String SELECT_CUSTOMER_WITH_CITIZEN = "select title, first_name, last_name, citizen_id, dob, country, city, street, email from customer where citizen_id=";
     
+    public final static String SELECT_GUEST_WITH_GUESTID = "select title, first_name, last_name, citizen_id, dob, country, city, street, email from guest where guest_id = ";
     public final static String SELECT_GUESTID_FROM_CITIZEN = "SELECT guest_id from guest WHERE citizen_id = ";
     public final static String SELECT_CUSTID_FROM_CITIZEN = "select customer_id from customer where citizen_id = ";
     public final static String SELECT_BOOKING_ID = "SELECT booking_id FROM booking ORDER BY booking_id DESC";

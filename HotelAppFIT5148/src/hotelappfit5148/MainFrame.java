@@ -263,7 +263,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
     // BookingGuestInfo GUI
-    public void bookingActionPerformed(String room_type, String check_in, String check_out, double price, String citizen_id, String[] selectedRow){
+    public void bookingActionPerformed(String room_type, String check_in, String check_out, double price, int citizen_id, String[] selectedRow){
         jPanel2.removeAll();
         
         javax.swing.GroupLayout jPanel2Layout = (javax.swing.GroupLayout) jPanel2.getLayout();

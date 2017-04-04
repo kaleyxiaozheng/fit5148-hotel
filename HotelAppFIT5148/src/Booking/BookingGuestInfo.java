@@ -5,6 +5,7 @@
  */
 package Booking;
 
+import Guest.GuestBean;
 import Util.SQLStatement;
 import Util.WarningMessage;
 import hotelappfit5148.Database;
@@ -13,10 +14,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 
 import java.sql.ResultSet;
-
 import java.sql.SQLException;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -31,15 +29,19 @@ import javax.swing.JOptionPane;
 public class BookingGuestInfo extends javax.swing.JPanel {
 
     private String[] selectedRow;
-    private String citizen_id;
+    private int customerCitizenId;
     private double price;
     private String check_in;
     private String check_out;
     private MainFrame mf;
-    private int numberOfCurrentGuest;
+    //private int numberOfCurrentGuest;
     private int numberOfRoomGuest;
-
-    private List<String> guest = new ArrayList();
+    
+    private List<Integer> bookingGuests = new ArrayList();
+    
+    //TODO: Change to GuestBean
+    //private List<String> guest = new ArrayList();
+    private GuestBean currGuest;
     private static CallableStatement cstmt;
     
     private final static String ROOMTYPE_SINGLE = "single";
@@ -47,25 +49,27 @@ public class BookingGuestInfo extends javax.swing.JPanel {
     private final static String ROOMTYPE_SUITE = "suite";
     private final static String ROOMTYPE_DOUBLE = "double";
 
+    private final static int WITH_CITIZEN_ID_FLAG = 1;
+    private final static int WITH_GUEST_ID_FLAG = 2;
     /**
      * Creates new form Booking
      */
-    public BookingGuestInfo(String room_type, MainFrame mf, String check_in, String check_out, double price, String citizen_id, String[] selectedRow) {
+    public BookingGuestInfo(String room_type, MainFrame mf, String check_in, String check_out, double price, int citizen_id, String[] selectedRow) {
         initComponents();
         jLabel12.setText(totalGuest(room_type));
         jLabel14.setText("0");
         numberOfRoomGuest = Integer.valueOf(jLabel12.getText());
-        numberOfCurrentGuest = 0;
+        //numberOfCurrentGuest = 0;
 
         this.selectedRow = selectedRow;
-        this.citizen_id = citizen_id;
+        this.customerCitizenId = citizen_id;
         this.price = price;
         this.check_in = check_in;
         this.check_out = check_out;
         this.mf = mf;
     }
 
-    // check number of guests a specific room allows
+    // check number of bookingGuests a specific room allows
     public String totalGuest(String room_type) {
         String totalGuest = "";
         switch (room_type.toLowerCase()) {
@@ -85,44 +89,35 @@ public class BookingGuestInfo extends javax.swing.JPanel {
     }
 
     // Access guest information from table guest
-    public List getGuestInfor(int citizen_id) {
+    //Snow TODO: Change the guest to GuestBean here
+    public GuestBean getGuestInfor(int id, int flag) {
 
         try {
-            
-            String search = SQLStatement.SELECT_GUEST_WITH_CITIZEN + citizen_id;
+            String search = "";
+            if (flag == WITH_CITIZEN_ID_FLAG){
+                search = SQLStatement.SELECT_GUEST_WITH_CITIZEN + id;
+            }else{
+                search = SQLStatement.SELECT_GUEST_WITH_GUESTID + id;
+            }
 
             ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, search);
             
-            guest.clear();
+            currGuest = new GuestBean();
 
             while (rset.next()) {
 
-                //Clear last guest's information
-                jTextField1.setText("");
-                jTextField2.setText("");
-                jTextField3.setText("");
-                jTextField5.setText("");
-                jTextField4.setText("");
-                jTextField6.setText("");
-                jTextField7.setText("");
-
-                //set current guest information
-                jTextField1.setText(rset.getString(1));
-                jTextField2.setText(rset.getString(2) + " " + rset.getString(3));
-                jTextField3.setText(rset.getString(5));
-                jTextField5.setText(rset.getString(9));
-                jTextField4.setText(rset.getString(8));
-                jTextField6.setText(rset.getString(7));
-                jTextField7.setText(rset.getString(6));
-
-                guest.add(jTextField8.getText());
-                guest.add(jTextField1.getText());
-                guest.add(jTextField2.getText());
-                guest.add(jTextField3.getText());
-                guest.add(jTextField5.getText());
-                guest.add(jTextField4.getText());
-                guest.add(jTextField6.getText());
-                guest.add(jTextField7.getText());
+                currGuest.setTitle(rset.getString(1));                
+                currGuest.setFirstName(rset.getString(2));
+                currGuest.setLastName(rset.getString(3));
+                currGuest.setCitizenID(rset.getInt(4));
+                if (rset.getDate(5) != null){
+                    currGuest.setDOB(Database.dateFormat.format(rset.getDate(5)));
+                }
+                currGuest.setCountry(rset.getString(6));
+                currGuest.setCity(rset.getString(7));
+                currGuest.setStreet(rset.getString(8));
+                currGuest.setEmail(rset.getString(9));
+                
 
             }
             rset.close();
@@ -131,7 +126,7 @@ public class BookingGuestInfo extends javax.swing.JPanel {
             
             f.printStackTrace();
         }
-        return guest;
+        return currGuest;
     }
 
     /**
@@ -148,7 +143,6 @@ public class BookingGuestInfo extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -183,8 +177,6 @@ public class BookingGuestInfo extends javax.swing.JPanel {
 
         jLabel6.setText("Date of Birth:");
 
-        jLabel7.setText("Address information:");
-
         jLabel8.setText("Street:");
 
         jLabel9.setText("Country:");
@@ -216,24 +208,31 @@ public class BookingGuestInfo extends javax.swing.JPanel {
         });
 
         jTextField1.setEditable(false);
+        jTextField1.setEnabled(false);
 
         jTextField2.setEditable(false);
         jTextField2.setText(" ");
+        jTextField2.setEnabled(false);
 
         jTextField3.setEditable(false);
         jTextField3.setText(" ");
+        jTextField3.setEnabled(false);
 
         jTextField4.setEditable(false);
         jTextField4.setText(" ");
+        jTextField4.setEnabled(false);
 
         jTextField5.setEditable(false);
         jTextField5.setText(" ");
+        jTextField5.setEnabled(false);
 
         jTextField6.setEditable(false);
         jTextField6.setText(" ");
+        jTextField6.setEnabled(false);
 
         jTextField7.setEditable(false);
         jTextField7.setText(" ");
+        jTextField7.setEnabled(false);
 
         jCheckBox1.setText("Add current customer as guest");
         jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
@@ -310,7 +309,6 @@ public class BookingGuestInfo extends javax.swing.JPanel {
                                                         .addComponent(jLabel10)
                                                         .addGap(66, 66, 66)
                                                         .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                    .addComponent(jLabel7)
                                                     .addGroup(layout.createSequentialGroup()
                                                         .addComponent(jLabel6)
                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -357,8 +355,7 @@ public class BookingGuestInfo extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel7))
+                    .addComponent(jLabel2))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -400,60 +397,109 @@ public class BookingGuestInfo extends javax.swing.JPanel {
         mf.removePanel2();
     }//GEN-LAST:event_cancelActionPerformed
 
-    private int callSPAddCustomerAsGuest(int citizen_id){
+    private int callSPAddCustomerAsGuest(String dbName, int citizen_id){
         Connection dbConnection = null;
-        
+        try{
+            dbConnection = Database.getInstance().getDBConnection(dbName);
+            cstmt = dbConnection.prepareCall(SQLStatement.CALLSP_INSERTORUPDATEMEMBERSHIP);
+            
+            cstmt.setInt(1, citizen_id);
+            cstmt.registerOutParameter(2, java.sql.JDBCType.INTEGER);
+
+            cstmt.executeUpdate();
+
+            int guestId = cstmt.getInt(2);
+            cstmt.close();
+            
+            return guestId;
+            
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            
+        }
         
         return 0;
     }
-    //Snow TODO : Revise this function
+    
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
         if(!this.jCheckBox1.isSelected()){
-            numberOfCurrentGuest--;
-            this.jLabel14.setText(String.valueOf(numberOfCurrentGuest));
-
+            bookingGuests.remove(customerCitizenId);
+            this.jLabel14.setText(String.valueOf(bookingGuests.size()));
             return;
         }
-        numberOfCurrentGuest++;
-        this.jLabel14.setText(String.valueOf(numberOfCurrentGuest));
+        
+        int guestId = callSPAddCustomerAsGuest(Database.DB_FIT5148B, customerCitizenId);
+        bookingGuests.add(guestId);
+        
+        this.jLabel14.setText(String.valueOf(bookingGuests.size()));
 
-        //check whether customer citizen id exist in guest table
-        int guestId = this.getGuestID(this.citizen_id);
-
-        //if not insert into guest table
-        if (guestId == 0) {
-            String query = SQLStatement.SELECT_CUSTOMER_WITH_CITIZEN + citizen_id;
-
-            try {
-                
-                ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, query);
-                if (rset.next()) {
-                    SimpleDateFormat format = new SimpleDateFormat(Database.DB_DATE_FORMAT);
-                    String insert = SQLStatement.INSERT_GUEST + rset.getString(2)
-                            + "','" + rset.getString(3) + "','" + rset.getString(4) + "'," + rset.getString(5) + ","
-                            + "TO_DATE('" + format.format(rset.getDate(6)) + "', '" + Database.DB_DATE_FORMAT + "'),'" + rset.getString(7)
-                            + "','" + rset.getString(8) + "','" + rset.getString(9) + "','" + rset.getString(14) + "')";
-                    
-                    Database.getInstance().updateTable(Database.DB_FIT5148B, insert);
-                    
-                }
-                rset.close();
-                Database.getInstance().closeDBConnection();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        JOptionPane.showMessageDialog(null, WarningMessage.ADD_CUSTOMER_TO_GUEST_S);
+        
+        //Get Guest all info
+        currGuest = getGuestInfor(guestId, WITH_GUEST_ID_FLAG);
+        
+        //Display Guest
+        displayGuest();
+        
+//        //check whether customer citizen id exist in guest table
+//        int guestId = this.getGuestID(this.customerCitizenId);
+//
+//        //if not insert into guest table
+//        if (guestId == 0) {
+//            String query = SQLStatement.SELECT_CUSTOMER_WITH_CITIZEN + customerCitizenId;
+//
+//            try {
+//                
+//                ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, query);
+//                if (rset.next()) {
+//                    
+//                    String insert = SQLStatement.INSERT_GUEST + rset.getString(2)
+//                            + "','" + rset.getString(3) + "','" + rset.getString(4) + "'," + rset.getString(5) + ","
+//                            + "TO_DATE('" + Database.dateFormat.format(rset.getDate(6)) + "', '" + Database.DB_DATE_FORMAT + "'),'" + rset.getString(7)
+//                            + "','" + rset.getString(8) + "','" + rset.getString(9) + "','" + rset.getString(14) + "')";
+//                    
+//                    Database.getInstance().updateTable(Database.DB_FIT5148B, insert);
+//                    
+//                }
+//                rset.close();
+//                Database.getInstance().closeDBConnection();
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
+    private void displayGuest(){
+        //Clear last guest's information
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
+        jTextField5.setText("");
+        jTextField4.setText("");
+        jTextField6.setText("");
+        jTextField7.setText("");
+        
+        //set current guest information
+        jTextField1.setText(currGuest.getTitle());
+        jTextField2.setText(currGuest.getFirstName() + " " + currGuest.getLastName());
+        jTextField3.setText(currGuest.getDOB());
+        jTextField4.setText(currGuest.getStreet());
+        jTextField5.setText(currGuest.getEmail());
+        jTextField6.setText(currGuest.getCity());
+        jTextField7.setText(currGuest.getCountry());
+        jTextField8.setText(String.valueOf(currGuest.getCitizenID()));
+    }
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // search citizen ID from guest table
         int citizen_id = Integer.valueOf(jTextField8.getText());
-        //System.out.println(citizen_id);
-        guest = getGuestInfor(citizen_id);
-    }//GEN-LAST:event_jButton1ActionPerformed
+        
+        GuestBean currGuest = getGuestInfor(citizen_id, WITH_CITIZEN_ID_FLAG);
 
-    private List<Integer> guests = new ArrayList();
+        displayGuest();
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     // get guest id
     public int getGuestID(String citizen_id) {
@@ -470,7 +516,7 @@ public class BookingGuestInfo extends javax.swing.JPanel {
             rset.close();
             Database.getInstance().closeDBConnection();
         } catch (SQLException ex) {
-            
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(null, WarningMessage.GUEST_NOT_EXIST);
         }
 
@@ -479,14 +525,15 @@ public class BookingGuestInfo extends javax.swing.JPanel {
 
     private void addGuestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addGuestActionPerformed
 
-        if (numberOfCurrentGuest == numberOfRoomGuest) {
+        if (numberOfRoomGuest == bookingGuests.size()) {
             javax.swing.JOptionPane.showMessageDialog(this, WarningMessage.MAXIMUM_GUEST_EXCEEDS);
-        } else if (!guest.isEmpty()) {
-            numberOfCurrentGuest++;
-            this.jLabel14.setText(String.valueOf(numberOfCurrentGuest));
+        } else if (!"".equals(jTextField2.getText())) {
+            //numberOfCurrentGuest++;
+            bookingGuests.add(currGuest.getGuest_id());
+            this.jLabel14.setText(String.valueOf(bookingGuests.size()));
 
-            int gueID = getGuestID(jTextField8.getText());
-            this.guests.add(gueID);
+            int guestID = getGuestID(jTextField8.getText());
+            this.bookingGuests.add(guestID);
 
         } else if( !this.jCheckBox1.isSelected()){
             javax.swing.JOptionPane.showMessageDialog(this, WarningMessage.GUEST_NOT_EXIST);
@@ -521,9 +568,9 @@ public class BookingGuestInfo extends javax.swing.JPanel {
     // synchronize
     //Snow TODO : Need to revise this function
     public synchronized void booking(){
-        int citizenId = Integer.valueOf(citizen_id);
+        
         String book_id = "";
-        int cus = this.getCustomerId(citizenId);
+        int cus = this.getCustomerId(customerCitizenId);
         try {
             String insertBooking = SQLStatement.INSERT_BOOKING + cus + ", TO_DATE('" + check_in + "', '" + Database.DB_DATE_FORMAT 
                     + "'), TO_DATE('" + check_out + "', '" + Database.DB_DATE_FORMAT + "'), " + price + ", 'U')";
@@ -537,7 +584,7 @@ public class BookingGuestInfo extends javax.swing.JPanel {
 
             rset.close();
             Database.getInstance().closeDBConnection();
-            mf.accessPaymentGUI(book_id, selectedRow, cus + "", guests);
+            mf.accessPaymentGUI(book_id, selectedRow, cus + "", bookingGuests);
         } catch (SQLException ex) {
             Logger.getLogger(BookingGuestInfo.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -568,7 +615,6 @@ public class BookingGuestInfo extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JTextField jTextField1;

@@ -15,7 +15,6 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,7 +52,7 @@ public class GuestInsertUpdateDialog extends javax.swing.JDialog {
         
         try {
             if (guest.getDOB()!= null && !"".equals(guest.getDOB())){
-                Date dob = new SimpleDateFormat(Database.DB_DATE_FORMAT).parse(guest.getDOB());
+                Date dob = Database.dateFormat.parse(guest.getDOB());
                 jXDatePicker1.setDate(dob);
             }
         } catch (ParseException ex) {
@@ -430,8 +429,8 @@ public class GuestInsertUpdateDialog extends javax.swing.JDialog {
         
         if (jXDatePicker1.getDate() != null){
             Date dob = jXDatePicker1.getDate();
-            SimpleDateFormat dateFormat = new SimpleDateFormat(Database.DB_DATE_FORMAT);
-            guest.setDOB(dateFormat.format(dob));
+            
+            guest.setDOB(Database.dateFormat.format(dob));
         }
         
         guest.setCountry(jTextField5.getText());

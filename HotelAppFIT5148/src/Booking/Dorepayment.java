@@ -9,13 +9,9 @@ import Util.SQLStatement;
 import Util.WarningMessage;
 import hotelappfit5148.Database;
 import hotelappfit5148.MainFrame;
-
 import java.sql.ResultSet;
-
 import java.sql.SQLException;
-
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -71,7 +67,7 @@ public class Dorepayment extends javax.swing.JPanel {
 
     // initial current booking payment 
     public void initRepayment(String customer_id, String[] bookid_price) {
-        String timeStamp = new SimpleDateFormat(Database.DB_DATE_FORMAT).format(new Timestamp(System.currentTimeMillis()));
+        String timeStamp = Database.dateFormat.format(new Timestamp(System.currentTimeMillis()));
         jTextField2.setText(timeStamp);
         jTextField1.setText(bookid_price[0]);
         jTextField4.setText(customer_id);
