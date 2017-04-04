@@ -255,7 +255,7 @@ BEGIN
   END IF;
 END;
 
-CREATE OR REPLACE PROCEDURE addCustomerToGuest(
+create or replace PROCEDURE addCustomerToGuest(
   in_cust_id IN CUSTOMER.CUSTOMER_ID%Type,
   out_guest_id OUT GUEST.GUEST_ID%TYPE
 )
@@ -266,7 +266,7 @@ BEGIN
   
   SELECT COUNT(1), GUEST.CITIZEN_ID INTO temp, t_citizen_id FROM GUEST WHERE EXISTS (
     SELECT * FROM CUSTOMER WHERE GUEST.CITIZEN_ID = CUSTOMER.CITIZEN_ID
-    AND CUSTOMER_ID = in_cust_id);
+    AND CUSTOMER_ID = in_cust_id) group by GUEST.CITIZEN_ID;
     
   IF temp = 1 THEN
     SELECT GUEST_ID INTO out_guest_id FROM GUEST WHERE GUEST.CITIZEN_ID = t_citizen_id;

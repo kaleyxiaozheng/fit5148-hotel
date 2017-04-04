@@ -405,7 +405,7 @@ public class BookingGuestInfo extends javax.swing.JPanel {
             cstmt = dbConnection.prepareCall(SQLStatement.CALLSP_ADDCUSTOMERTOGUEST);
             
             cstmt.setInt(1, citizen_id);
-            cstmt.registerOutParameter(2, java.sql.JDBCType.INTEGER);
+            cstmt.registerOutParameter(2, java.sql.Types.INTEGER);
 
             cstmt.executeUpdate();
 
