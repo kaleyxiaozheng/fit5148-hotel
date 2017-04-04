@@ -108,19 +108,10 @@ public class Database {
 
     public boolean updateTable(String dbName, String sqlStatement) throws SQLException {
         Connection dbConnection = null;
-
-//        try{
         dbConnection = getDBConnection(dbName);
-//            
         pstmt = dbConnection.prepareStatement(sqlStatement);
-
         pstmt.executeUpdate(sqlStatement);
-
         return true;
-//        } catch (SQLException ex) {
-//            ex.printStackTrace();
-//        } 
-//        return false;
     }
 
     public Long getSequenceNextval(String dbName, String sequenceName) {
