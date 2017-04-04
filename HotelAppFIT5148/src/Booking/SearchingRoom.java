@@ -66,7 +66,6 @@ public class SearchingRoom extends javax.swing.JPanel {
         this.mf = mf;
     }
 
-    
     public List[] initValueOfComponents() {
         List[] valueOfComponents = new List[4];
 
@@ -86,7 +85,7 @@ public class SearchingRoom extends javax.swing.JPanel {
             System.out.println(f.getMessage());
             f.printStackTrace();
         }
-        
+
         // search city in order to add it into jComboBox1
         try {
             ResultSet rset_city = Database.getInstance().selectRecords(Database.DB_FIT5148A, SQLStatement.SELECT_DISTINCT_CITY);
@@ -99,7 +98,7 @@ public class SearchingRoom extends javax.swing.JPanel {
             System.out.println(f.getMessage());
             f.printStackTrace();
         }
-        
+
         // search room type in order to add it into jComboBox4
         try {
             ResultSet rset_roomType = Database.getInstance().selectRecords(Database.DB_FIT5148B, SQLStatement.SELECT_ROOM_TYPES);
@@ -112,9 +111,9 @@ public class SearchingRoom extends javax.swing.JPanel {
             System.out.println(f.getMessage());
             f.printStackTrace();
         }
-        
+
         // get room price order by ASC
-        try{
+        try {
             ResultSet rset_roomPrice = Database.getInstance().selectRecords(Database.DB_FIT5148B, SQLStatement.SELECT_DISTINCT_ROOM_PIRCE);
             while (rset_roomPrice.next()) {
                 valueOfComponents[3].add(rset_roomPrice.getString(1));
@@ -125,9 +124,10 @@ public class SearchingRoom extends javax.swing.JPanel {
             System.out.println(f.getMessage());
             f.printStackTrace();
         }
-        
-    return valueOfComponents;
+
+        return valueOfComponents;
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -144,7 +144,6 @@ public class SearchingRoom extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
         jComboBox2 = new javax.swing.JComboBox<>();
         jComboBox4 = new javax.swing.JComboBox<>();
@@ -152,7 +151,6 @@ public class SearchingRoom extends javax.swing.JPanel {
         jXDatePicker2 = new org.jdesktop.swingx.JXDatePicker();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jCheckBox1 = new javax.swing.JCheckBox();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -179,8 +177,6 @@ public class SearchingRoom extends javax.swing.JPanel {
 
         jLabel6.setText("Rate range:");
 
-        jLabel7.setText("Room:");
-
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -196,8 +192,6 @@ public class SearchingRoom extends javax.swing.JPanel {
         {public boolean isCellEditable(int row, int column) {return false;}}
     );
     jScrollPane1.setViewportView(jTable1);
-
-    jCheckBox1.setText("available");
 
     jLabel8.setForeground(new java.awt.Color(255, 0, 51));
     jLabel8.setText("*");
@@ -228,9 +222,6 @@ public class SearchingRoom extends javax.swing.JPanel {
                             .addGap(0, 45, Short.MAX_VALUE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel3)
-                                    .addGap(129, 129, 129))
-                                .addGroup(layout.createSequentialGroup()
                                     .addComponent(jLabel2)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(jLabel9)
@@ -238,30 +229,31 @@ public class SearchingRoom extends javax.swing.JPanel {
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jXDatePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel5)
-                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jXDatePicker2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(layout.createSequentialGroup()
+                                                    .addGap(44, 44, 44)
+                                                    .addComponent(jLabel11)
+                                                    .addGap(17, 17, 17))
+                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                    .addComponent(jLabel10)
+                                                    .addGap(18, 18, 18)))
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(jTextField1)
+                                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabel5)
+                                            .addGap(27, 27, 27)
+                                            .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jLabel6)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel4)
-                                            .addComponent(jLabel7)
-                                            .addComponent(jLabel10)
-                                            .addComponent(jLabel11))
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(30, 30, 30)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(jXDatePicker2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(18, 18, 18)
-                                                .addComponent(jCheckBox1))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(17, 17, 17)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
-                                                    .addComponent(jTextField2)))))
-                                    .addComponent(jLabel6)))))
+                                            .addComponent(jLabel3)
+                                            .addComponent(jLabel4)))
+                                    .addGap(10, 10, 10)))))
                     .addGap(39, 39, 39))
                 .addGroup(layout.createSequentialGroup()
                     .addGap(98, 98, 98)
@@ -278,44 +270,40 @@ public class SearchingRoom extends javax.swing.JPanel {
                 .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(jLabel8)
                 .addComponent(jLabel1))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addGap(18, 18, 18)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(jLabel2))
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(12, 12, 12)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel3)
                 .addComponent(jXDatePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(18, 18, 18)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jLabel4)
-                .addComponent(jXDatePicker2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(29, 29, 29)
+            .addGap(15, 15, 15)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                .addComponent(jXDatePicker2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(36, 36, 36)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel5)
                 .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(24, 24, 24)
+            .addGap(30, 30, 30)
             .addComponent(jLabel6)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGap(17, 17, 17)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel10)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(15, 15, 15)
+            .addGap(20, 20, 20)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel11)
                 .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(23, 23, 23)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jLabel7)
-                .addComponent(jCheckBox1))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+            .addGap(39, 39, 39)
             .addComponent(search)
             .addGap(44, 44, 44))
         .addGroup(layout.createSequentialGroup()
             .addContainerGap()
-            .addComponent(jScrollPane1)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
             .addContainerGap())
     );
     }// </editor-fold>//GEN-END:initComponents
@@ -376,14 +364,14 @@ public class SearchingRoom extends javax.swing.JPanel {
                 return;
             }
         }
-        
+
         // search room type
-        if(String.valueOf(this.jComboBox4.getSelectedItem()) != "All"){
+        if (String.valueOf(this.jComboBox4.getSelectedItem()) != "All") {
             sb.append(" and r.room_type = '");
             sb.append(String.valueOf(this.jComboBox4.getSelectedItem()));
             sb.append("'");
         }
-        
+
         // set minmum pirce
         if (!this.jTextField1.getText().isEmpty()) {
             try {
@@ -399,7 +387,7 @@ public class SearchingRoom extends javax.swing.JPanel {
                 javax.swing.JOptionPane.showMessageDialog(this, WarningMessage.INVALID_NUMBER);
             }
         }
-        
+
         // set maximum pirce
         if (!this.jTextField2.getText().isEmpty()) {
             try {
@@ -414,13 +402,26 @@ public class SearchingRoom extends javax.swing.JPanel {
                 javax.swing.JOptionPane.showMessageDialog(this, WarningMessage.INVALID_NUMBER);
             }
         }
-        
+
+        if (!this.jTextField1.getText().isEmpty() && !this.jTextField2.getText().isEmpty()) {
+            try {
+                Double min = Double.valueOf(this.jTextField1.getText());
+                Double max = Double.valueOf(this.jTextField2.getText());
+
+                if (min >= max) {
+                    javax.swing.JOptionPane.showMessageDialog(this, WarningMessage.INVALID_PRICE_COMPARISON);
+                    return;
+                }
+            }catch(NumberFormatException nfe){
+                 javax.swing.JOptionPane.showMessageDialog(this, WarningMessage.INVALID_NUMBER);
+            }
+
+        }
+
 //        if(this.jCheckBox1.isSelected()){
 //            
 //        }
-        
         //System.out.println(sb.toString());
-        
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
 //
@@ -516,7 +517,6 @@ public class SearchingRoom extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JComboBox<String> jComboBox4;
@@ -528,7 +528,6 @@ public class SearchingRoom extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
