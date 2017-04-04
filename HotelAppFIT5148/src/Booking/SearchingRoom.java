@@ -7,17 +7,13 @@ package Booking;
 
 
 import Util.SQLStatement;
+import Util.WarningMessage;
 import hotelappfit5148.Database;
 import hotelappfit5148.MainFrame;
-
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,7 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import oracle.jdbc.OracleDriver;
+
 
 /**
  *
@@ -190,11 +186,6 @@ public class SearchingRoom extends javax.swing.JPanel {
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox2ActionPerformed(evt);
-            }
-        });
 
         jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "1-200", "200-400", "400-600", "600-800", "800-1000", ">1000" }));
 
@@ -303,27 +294,23 @@ public class SearchingRoom extends javax.swing.JPanel {
     );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox2ActionPerformed
-
-    // get citizen id from customer tablem
-    public boolean whetherExistCitizenId(String citizenId) {
-        int cusid = 0;
+    // get citizen id from customer table
+    public boolean whetherExistCitizenId(String citizenId) {        
         boolean flag = false;
-
         // search customer in customer table with customer id
-        StringBuffer sb = new StringBuffer("SELECT citizen_id from customer where citizen_id = ");
+        StringBuffer sb = new StringBuffer(SQLStatement.SELECT_CUSTOMERID_WITH_CITIZEN);
         sb.append(Integer.valueOf(citizenId));
-        //System.out.println(search);
+        
         try {
-            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
-            Statement stmt = conn.createStatement();
-
-            ResultSet rset = stmt.executeQuery(sb.toString());
+            
+            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, sb.toString());
             flag = rset.next();
+            
+            rset.close();
+            Database.getInstance().closeDBConnection();
         } catch (SQLException ex) {
-            Logger.getLogger(SearchingRoom.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(SearchingRoom.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
 
         return flag;
@@ -334,12 +321,12 @@ public class SearchingRoom extends javax.swing.JPanel {
         String country = String.valueOf(jComboBox2.getSelectedItem());
         String city = String.valueOf(jComboBox1.getSelectedItem());
 
-// Searching room with value of country and city
-            StringBuffer sb = new StringBuffer("SELECT h.hotel_name, r.room_number, r.room_type, r.price from room@FIT5148B r, hotel@FIT5148A h WHERE h.country = '");
-            sb.append(country);
-            sb.append("' and h.city = '");
-            sb.append(city);
-            sb.append("' and r.hotel_id = h.hotel_id");
+        // Searching room with value of country and city
+        StringBuffer sb = new StringBuffer(SQLStatement.LOOKUP_ROOMS);
+        sb.append(country);
+        sb.append(SQLStatement.LOOKUP_ROOMS_WITH_CITY);
+        sb.append(city);
+        sb.append(SQLStatement.LOOKUP_ROOMS_JOIN_HOTEL);
          
 // check check-in and check-out date
         if (this.jXDatePicker1.getDate() != null && this.jXDatePicker2.getDate() != null) {
@@ -352,14 +339,14 @@ public class SearchingRoom extends javax.swing.JPanel {
             Date checkoutDate = this.jXDatePicker2.getDate();
             Date todayDate = Calendar.getInstance().getTime();
             if (checkinDate.before(todayDate)) {
-                JOptionPane.showMessageDialog(this, "CHECKIN_DATE_AFTER_TODAY");
+                JOptionPane.showMessageDialog(this, WarningMessage.CHECKIN_DATE_AFTER_TODAY);
             }
             if (checkoutDate.before(todayDate)) {
-                JOptionPane.showMessageDialog(this, "CHECKOUT_DATE_AFTER_TODAY");
+                JOptionPane.showMessageDialog(this, WarningMessage.CHECKOUT_DATE_AFTER_TODAY);
                 return;
             }
             if (checkoutDate.before(checkinDate)) {
-                JOptionPane.showMessageDialog(this, "CHECKOUT_DATE_AFTER_CHECKIN_DATE");
+                JOptionPane.showMessageDialog(this, WarningMessage.CHECKOUT_DATE_AFTER_CHECKIN_DATE);
                 return;
             }
             
