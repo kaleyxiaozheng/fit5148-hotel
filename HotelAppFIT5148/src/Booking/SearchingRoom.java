@@ -410,24 +410,19 @@ public class SearchingRoom extends javax.swing.JPanel {
                     sb.append(" and r.price < ");
                     sb.append(max);
                 }
-                
-                System.out.println(sb.toString());
             } catch (NumberFormatException nfe) {
                 javax.swing.JOptionPane.showMessageDialog(this, WarningMessage.INVALID_NUMBER);
             }
         }
         
+//        if(this.jCheckBox1.isSelected()){
+//            
+//        }
+        
+        //System.out.println(sb.toString());
+        
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
-//
-//        String country = String.valueOf(jComboBox2.getSelectedItem());
-//        String city = String.valueOf(jComboBox1.getSelectedItem());
-//        String room_type = String.valueOf(jComboBox4.getSelectedItem());
-//        String rate_range = String.valueOf(jComboBox3.getSelectedItem());
-//
-//        SimpleDateFormat formater = new SimpleDateFormat(Database.DB_DATE_FORMAT);
-//        String check_in = formater.format(jXDatePicker1.getDate());
-//        String check_out = formater.format(jXDatePicker2.getDate());
 //
 //        boolean avaliable = jCheckBox1.isSelected();
 //        String avail = "";
