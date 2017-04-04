@@ -5,7 +5,6 @@
  */
 package Booking;
 
-
 import Util.SQLStatement;
 import Util.WarningMessage;
 import hotelappfit5148.Database;
@@ -24,7 +23,6 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-
 /**
  *
  * @author Kaley
@@ -41,10 +39,9 @@ public class SearchingRoom extends javax.swing.JPanel {
      */
     public SearchingRoom(MainFrame mf) {
         initComponents();
-        initDate();
-        countries = initCountries();
-        cities = initCities();
-        roomTypes = initRoomType();
+        countries = initValueOfComponents()[0];
+        cities = initValueOfComponents()[1];
+        roomTypes = initValueOfComponents()[2];
 
         jComboBox2.removeAllItems();
         jComboBox1.removeAllItems();
@@ -69,66 +66,68 @@ public class SearchingRoom extends javax.swing.JPanel {
         this.mf = mf;
     }
 
-    // Set current date as value of check-in and check-out
-    public void initDate() {
-        //jXDatePicker1.setDate(Calendar.getInstance().getTime());
-        //jXDatePicker2.setDate(Calendar.getInstance().getTime());
-    }
+    
+    public List[] initValueOfComponents() {
+        List[] valueOfComponents = new List[4];
 
-    // search country in order to add it into jComboBox1
-    public List initCountries() {
-        
-        List countries = new ArrayList();
+        for (int i = 0; i < valueOfComponents.length; i++) {
+            valueOfComponents[i] = new ArrayList();
+        }
+
+        // search country in order to add it into jComboBox1
         try {
-            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148A, SQLStatement.SELECT_DISTINCT_COUNTRY);
-            while (rset.next()) {
-                countries.add(rset.getString(1));
+            ResultSet rset_country = Database.getInstance().selectRecords(Database.DB_FIT5148A, SQLStatement.SELECT_DISTINCT_COUNTRY);
+            while (rset_country.next()) {
+                valueOfComponents[0].add(rset_country.getString(1));
             }
-            rset.close();
+            rset_country.close();
             Database.getInstance().closeDBConnection();
         } catch (SQLException f) {
             System.out.println(f.getMessage());
             f.printStackTrace();
         }
-        return countries;
-    }
-
-    // search city in order to add it into jComboBox1
-    public List initCities() {
         
-        List cities = new ArrayList();
+        // search city in order to add it into jComboBox1
         try {
-            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148A, SQLStatement.SELECT_DISTINCT_CITY);
-            while (rset.next()) {
-                cities.add(rset.getString(1));
+            ResultSet rset_city = Database.getInstance().selectRecords(Database.DB_FIT5148A, SQLStatement.SELECT_DISTINCT_CITY);
+            while (rset_city.next()) {
+                valueOfComponents[1].add(rset_city.getString(1));
             }
-            rset.close();
+            rset_city.close();
             Database.getInstance().closeDBConnection();
         } catch (SQLException f) {
             System.out.println(f.getMessage());
             f.printStackTrace();
         }
-        return cities;
-    }
-
-    // search room type in order to add it into jComboBox4
-    public List initRoomType() {
         
-        List roomType = new ArrayList();
+        // search room type in order to add it into jComboBox4
         try {
-            ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, SQLStatement.SELECT_ROOM_TYPES);
-            while (rset.next()) {
-                roomType.add(rset.getString(1));
+            ResultSet rset_roomType = Database.getInstance().selectRecords(Database.DB_FIT5148B, SQLStatement.SELECT_ROOM_TYPES);
+            while (rset_roomType.next()) {
+                valueOfComponents[2].add(rset_roomType.getString(1));
             }
-            rset.close();
+            rset_roomType.close();
             Database.getInstance().closeDBConnection();
         } catch (SQLException f) {
             System.out.println(f.getMessage());
             f.printStackTrace();
         }
-        return roomType;
+        
+        // get room price order by ASC
+        try{
+            ResultSet rset_roomPrice = Database.getInstance().selectRecords(Database.DB_FIT5148B, SQLStatement.SELECT_DISTINCT_ROOM_PIRCE);
+            while (rset_roomPrice.next()) {
+                valueOfComponents[3].add(rset_roomPrice.getString(1));
+            }
+            rset_roomPrice.close();
+            Database.getInstance().closeDBConnection();
+        } catch (SQLException f) {
+            System.out.println(f.getMessage());
+            f.printStackTrace();
+        }
+        
+    return valueOfComponents;
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -157,6 +156,9 @@ public class SearchingRoom extends javax.swing.JPanel {
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JTextField();
 
         search.setLabel("Search");
         search.addActionListener(new java.awt.event.ActionListener() {
@@ -204,64 +206,70 @@ public class SearchingRoom extends javax.swing.JPanel {
     jLabel9.setText("*");
     jLabel9.setToolTipText("");
 
-    jLabel10.setText("jLabel10");
+    jLabel10.setText("Min");
+
+    jLabel11.setText("Max");
+
+    jTextField1.setText(" ");
+
+    jTextField2.setText(" ");
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
     this.setLayout(layout);
     layout.setHorizontalGroup(
         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(layout.createSequentialGroup()
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addGap(33, 33, 33)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(95, 95, 95)
-                                    .addComponent(search)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addGap(0, 0, Short.MAX_VALUE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jLabel5)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                                        .addComponent(jLabel1)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                        .addComponent(jLabel4)
-                                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                                            .addComponent(jLabel2)
-                                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                            .addComponent(jLabel9))
-                                                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING))))
-                                            .addGap(30, 30, 30)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jXDatePicker2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                            .addComponent(jCheckBox1)
-                                            .addGap(47, 47, 47))))))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addGap(15, 15, 15)
-                            .addComponent(jXDatePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 2, Short.MAX_VALUE))
-                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addGap(63, 63, 63)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel6)
-                                .addComponent(jLabel7)))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addGap(37, 37, 37)
-                            .addComponent(jLabel10)))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(49, 49, 49)
+                            .addComponent(jLabel1)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+                            .addGap(102, 102, 102))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(0, 45, Short.MAX_VALUE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel3)
+                                    .addGap(129, 129, 129))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel2)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jLabel9)
+                                    .addGap(27, 27, 27)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jXDatePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel4)
+                                            .addComponent(jLabel7)
+                                            .addComponent(jLabel10)
+                                            .addComponent(jLabel11))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(30, 30, 30)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(jXDatePicker2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jCheckBox1))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(17, 17, 17)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                                                    .addComponent(jTextField2)))))
+                                    .addComponent(jLabel6)))))
+                    .addGap(39, 39, 39))
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(98, 98, 98)
+                    .addComponent(search)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addContainerGap(7, Short.MAX_VALUE))
@@ -269,18 +277,18 @@ public class SearchingRoom extends javax.swing.JPanel {
     layout.setVerticalGroup(
         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-            .addGap(36, 36, 36)
+            .addGap(21, 21, 21)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(jLabel8)
                 .addComponent(jLabel1))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
-                    .addComponent(jLabel2)))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(jLabel2))
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(12, 12, 12)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel3)
                 .addComponent(jXDatePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -288,40 +296,46 @@ public class SearchingRoom extends javax.swing.JPanel {
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel4)
                 .addComponent(jXDatePicker2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(18, 18, 18)
+            .addGap(29, 29, 29)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel5)
                 .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addGap(24, 24, 24)
             .addComponent(jLabel6)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jLabel10)
-            .addGap(25, 25, 25)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jCheckBox1)
-                .addComponent(jLabel7))
-            .addGap(18, 18, 18)
+                .addComponent(jLabel10)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(15, 15, 15)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jLabel11)
+                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(23, 23, 23)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jLabel7)
+                .addComponent(jCheckBox1))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
             .addComponent(search)
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-            .addContainerGap(17, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 404, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(17, 17, 17))
+            .addGap(44, 44, 44))
+        .addGroup(layout.createSequentialGroup()
+            .addContainerGap()
+            .addComponent(jScrollPane1)
+            .addContainerGap())
     );
     }// </editor-fold>//GEN-END:initComponents
 
     // get citizen id from customer table
-    public boolean whetherExistCitizenId(String citizenId) {        
+    public boolean whetherExistCitizenId(String citizenId) {
         boolean flag = false;
         // search customer in customer table with customer id
         StringBuffer sb = new StringBuffer(SQLStatement.SELECT_CUSTOMERID_WITH_CITIZEN);
         sb.append(Integer.valueOf(citizenId));
-        
+
         try {
-            
+
             ResultSet rset = Database.getInstance().selectRecords(Database.DB_FIT5148B, sb.toString());
             flag = rset.next();
-            
+
             rset.close();
             Database.getInstance().closeDBConnection();
         } catch (SQLException ex) {
@@ -343,7 +357,7 @@ public class SearchingRoom extends javax.swing.JPanel {
         sb.append(SQLStatement.LOOKUP_ROOMS_WITH_CITY);
         sb.append(city);
         sb.append(SQLStatement.LOOKUP_ROOMS_JOIN_HOTEL);
-         
+
 // check check-in and check-out date
         if (this.jXDatePicker1.getDate() != null && this.jXDatePicker2.getDate() != null) {
             Date checkinDate = this.jXDatePicker1.getDate();
@@ -365,12 +379,12 @@ public class SearchingRoom extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, WarningMessage.CHECKOUT_DATE_AFTER_CHECKIN_DATE);
                 return;
             }
-            
+
             // sb= sb
         }
 //
-            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-            model.setRowCount(0);
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
 //
 //        String country = String.valueOf(jComboBox2.getSelectedItem());
 //        String city = String.valueOf(jComboBox1.getSelectedItem());
@@ -390,7 +404,7 @@ public class SearchingRoom extends javax.swing.JPanel {
 //            avail = "false";
 //        }
 //
-            try {
+        try {
 //            String search = "SELECT hotel_name, r.room_number, r.room_type, r.price from room@FIT5148B r, hotel@FIT5148A h WHERE h.country =  '"
 //                    + country + "' and h.city = '" + city + "'" + " and h.hotel_id = r.hotel_id and r.room_type = '"
 //                    + room_type + "' ";
@@ -409,24 +423,24 @@ public class SearchingRoom extends javax.swing.JPanel {
 //            }
 //
 //            System.out.println(search);
-                Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148A);
-                Statement stat = conn.createStatement();
-                ResultSet rset = stat.executeQuery(sb.toString());
-                while (rset.next()) {
-                    String[] rsets = new String[4];
-                    rsets[0] = rset.getString(1);
-                    rsets[1] = rset.getString(2);
-                    rsets[2] = rset.getString(3);
-                    rsets[3] = rset.getString(4);
+            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148A);
+            Statement stat = conn.createStatement();
+            ResultSet rset = stat.executeQuery(sb.toString());
+            while (rset.next()) {
+                String[] rsets = new String[4];
+                rsets[0] = rset.getString(1);
+                rsets[1] = rset.getString(2);
+                rsets[2] = rset.getString(3);
+                rsets[3] = rset.getString(4);
 
-                    //System.out.println(rsets[0] + ", " + rsets[1] + ", " + rsets[2] + ", " + rsets[3]);
-                    model.addRow(rsets);
-                }
-
-            } catch (SQLException ex) {
-                Logger.getLogger(SearchingRoom.class.getName()).log(Level.SEVERE, null, ex);
+                //System.out.println(rsets[0] + ", " + rsets[1] + ", " + rsets[2] + ", " + rsets[3]);
+                model.addRow(rsets);
             }
-        
+
+        } catch (SQLException ex) {
+            Logger.getLogger(SearchingRoom.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
 //
 //        // double click a row and go to the booking GUI
 //        jTable1.addMouseListener(new MouseAdapter() {
@@ -479,6 +493,7 @@ public class SearchingRoom extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> jComboBox4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -489,6 +504,8 @@ public class SearchingRoom extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     private org.jdesktop.swingx.JXDatePicker jXDatePicker1;
     private org.jdesktop.swingx.JXDatePicker jXDatePicker2;
     private javax.swing.JButton search;

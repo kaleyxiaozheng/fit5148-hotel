@@ -81,6 +81,8 @@ public class SQLStatement {
     
     public final static String SELECT_ROOM_TYPES = "select DISTINCT room_type from room";
     
+    public final static String SELECT_DISTINCT_ROOM_PIRCE = "select DISTINCT price from room";
+    
     public final static String SELECT_CUSTOMERID_WITH_CITIZEN = "SELECT citizen_id from customer where citizen_id = ";
     
     public final static String LOOKUP_ROOMS = "SELECT h.hotel_name, r.room_number, r.room_type, r.price from room@FIT5148B r, hotel@FIT5148A h WHERE h.country = '";
