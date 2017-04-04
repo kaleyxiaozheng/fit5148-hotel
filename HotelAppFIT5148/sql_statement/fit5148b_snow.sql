@@ -55,6 +55,7 @@ CREATE TABLE Customer (
 );
 
 CREATE SEQUENCE customer_sequence START WITH 1 INCREMENT BY 1 MINVALUE 1 NOMAXVALUE NOCYCLE CACHE 2;
+CREATE INDEX idx_customer_name ON Customer (first_name, last_name);
 
 CREATE OR REPLACE TRIGGER customer_auto_increment_insert
   BEFORE INSERT ON Customer

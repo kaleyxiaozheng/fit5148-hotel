@@ -406,7 +406,7 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, WarningMessage.EMPTY_CITIZEN_ID);
             return false;
         }
-        
+
         //invalid citizen id
         boolean citizenId_Numeric = citizenID.chars().allMatch(Character :: isDigit);
         if (citizenId_Numeric == false){
@@ -414,6 +414,11 @@ public class CustomerInsertUpdateDialog extends javax.swing.JDialog {
             return false;
         }
         
+        String postalCode = jTextField8.getText();
+        if (!postalCode.chars().allMatch(Character :: isDigit) || postalCode.length() != 4){
+            JOptionPane.showMessageDialog(null, WarningMessage.INVALID_POSTAL_CODE);
+            return false;
+        }
         return true;
     }
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
