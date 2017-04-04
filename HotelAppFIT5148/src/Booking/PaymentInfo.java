@@ -157,11 +157,6 @@ public class PaymentInfo extends javax.swing.JPanel {
     });
 
     jTextField4.setText(" ");
-    jTextField4.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jTextField4ActionPerformed(evt);
-        }
-    });
 
     jLabel5.setText("Customer ID");
 
@@ -330,10 +325,6 @@ public class PaymentInfo extends javax.swing.JPanel {
             e.printStackTrace();
         }
     }//GEN-LAST:event_deleteActionPerformed
-
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
 
     private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
         boolean unpaid = this.jCheckBox2.isSelected();
