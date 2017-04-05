@@ -255,7 +255,7 @@ BEGIN
   END IF;
 END;
 
-CREATE OR REPLACE PROCEDURE addCustomerToGuest(
+create or replace PROCEDURE addCustomerToGuest(
   in_cust_id IN CUSTOMER.CUSTOMER_ID%Type,
   out_guest_id OUT GUEST.GUEST_ID%TYPE
 )
@@ -266,7 +266,7 @@ BEGIN
   
   SELECT COUNT(1), GUEST.CITIZEN_ID INTO temp, t_citizen_id FROM GUEST WHERE EXISTS (
     SELECT * FROM CUSTOMER WHERE GUEST.CITIZEN_ID = CUSTOMER.CITIZEN_ID
-    AND CUSTOMER_ID = in_cust_id);
+    AND CUSTOMER_ID = in_cust_id) group by GUEST.CITIZEN_ID;
     
   IF temp = 1 THEN
     SELECT GUEST_ID INTO out_guest_id FROM GUEST WHERE GUEST.CITIZEN_ID = t_citizen_id;
@@ -282,4 +282,39 @@ BEGIN
     END LOOP;  
   END IF;
 END;
+
+
+
+create or replace PROCEDURE upgradeCustomer(
+  in_booking_id IN BOOKING.BOOKING_ID%Type
+)
+AS
+  cur_credit NUMBER;
+  new_credit NUMBER;
+  cust_id CUSTOMER.CUSTOMER_ID%TYPE;
+  total_amt NUMBER;
+  --cur_membership NUMBER;
+  tier_credit NUMBER;
+  tmp NUMBER;
+  new_tier NUMBER;
+BEGIN
+  
+  SELECT CUSTOMER_ID, TOTAL_AMOUNT INTO cust_id, total_amt FROM BOOKING WHERE BOOKING_ID = in_booking_id;
+  
+  SELECT c.MEMBERSHIP_CREDITS INTO cur_credit 
+  FROM CUSTOMER c WHERE c.CUSTOMER_ID = cust_id;
+  
+  new_credit := cur_credit + total_amt;
+  
+  SELECT COUNT(1) INTO tmp FROM MEMBERSHIP WHERE TIER_CREDIT <= new_credit AND TIER_CREDIT > cur_credit AND ROWNUM = 1 ORDER BY TIER_CREDIT DESC;
+  
+  IF tmp > 0 then
+    --update both credit and membership tier
+    SELECT TIER_ID INTO new_tier FROM MEMBERSHIP WHERE TIER_CREDIT <= new_credit AND TIER_CREDIT > cur_credit;
+    UPDATE customer set tier_id = new_tier, membership_credits = new_credit where customer_id = cust_id;
+  ELSE
+    --only update new credit
+    update customer set membership_credits = new_credit where customer_id = cust_id;
+  end if;
+END; 
 --End of stored procedure

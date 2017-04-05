@@ -389,7 +389,7 @@ and (TO_DATE('2017/03/31', 'yyyy/MM/dd') > b.check_in_date OR TO_DATE('2017/04/0
             sb.append(Database.dateFormat.format(this.jXDatePicker1.getDate()));
             sb.append("', 'yyyy/MM/dd)') < b.check_out_date))");
             
-            System.out.println(sb.toString());
+            //System.out.println(sb.toString());
         }
 
         // search room type
@@ -450,7 +450,7 @@ and (TO_DATE('2017/03/31', 'yyyy/MM/dd') > b.check_in_date OR TO_DATE('2017/04/0
         model.setRowCount(0);
         
         try {
-            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148A);
+            Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
             Statement stat = conn.createStatement();
             ResultSet rset = stat.executeQuery(sb.toString());
             while (rset.next()) {

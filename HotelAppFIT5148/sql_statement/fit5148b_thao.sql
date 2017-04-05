@@ -1,3 +1,4 @@
+
 begin 
   execute immediate 'drop table room';
 exception
@@ -7,7 +8,7 @@ exception
     end if;
 end;
 /
---create table room
+--create table room 
 CREATE TABLE  room (
   room_number varchar(20) not null,
   hotel_id number not null,
@@ -31,7 +32,6 @@ BEGIN
 --check foregin key from hotel
   select count(*) into hotel_id_count 
   from hotel@fit5148a tempt where tempt.hotel_id = :new.hotel_id;
-  
   if hotel_id_count = 0 then
    RAISE_APPLICATION_ERROR(-20001, 'hotel_id does not exist in hotel table');
   end if;
@@ -126,6 +126,7 @@ exception
     end if;
 end;
 /
+
 CREATE TABLE  facility (
   facility_number varchar(10) not null,
   room_number varchar(10) not null,
@@ -138,9 +139,6 @@ CREATE TABLE  facility (
 );
 CREATE SEQUENCE facility_seq START WITH 1 INCREMENT BY   1 NOCACHE NOCYCLE;
 
---select * from room;
-
-
 declare
  hotel_id_var number;
  room_number_var varchar(20);
@@ -152,11 +150,9 @@ WHERE rownum = 1;
 
 INSERT INTO facility (room_number, hotel_id, facility_number, description)
    VALUES (room_number_var ,hotel_id_var , to_char(facility_seq.nextval), 'Washing machine.');
-
 commit;
 end;
 /
-
 declare
  hotel_id_var number;
  room_number_var varchar(20);
@@ -168,7 +164,6 @@ WHERE rownum = 1;
 
 INSERT INTO facility (room_number, hotel_id, facility_number, description)
    VALUES (room_number_var ,hotel_id_var , to_char(facility_seq.nextval), 'Big tivi.');
-
 commit;
 end;
 /
@@ -184,11 +179,9 @@ WHERE rownum = 1;
 
 INSERT INTO facility (room_number, hotel_id, facility_number, description)
    VALUES (room_number_var ,hotel_id_var , to_char(facility_seq.nextval), '3D Game.');
-
 commit;
 end;
 /
-
 declare
  hotel_id_var number;
  room_number_var varchar(20);
@@ -200,23 +193,6 @@ WHERE rownum = 1;
 
 INSERT INTO facility (room_number, hotel_id, facility_number, description)
    VALUES (room_number_var ,hotel_id_var , to_char(facility_seq.nextval), 'Big tivi.');
-
-commit;
-end;
-/
-
-declare
- hotel_id_var number;
- room_number_var varchar(20);
-begin
-SELECT hotel_id, room_number into hotel_id_var, room_number_var FROM
-( SELECT hotel_id, room_number FROM room@FIT5148B
-ORDER BY dbms_random.value )
-WHERE rownum = 1;
-
-INSERT INTO facility (room_number, hotel_id, facility_number, description)
-   VALUES (room_number_var ,hotel_id_var , to_char(facility_seq.nextval), 'Washing machine.');
-
 commit;
 end;
 /
@@ -236,5 +212,4 @@ INSERT INTO facility (room_number, hotel_id, facility_number, description)
 commit;
 end;
 /
-
 commit;

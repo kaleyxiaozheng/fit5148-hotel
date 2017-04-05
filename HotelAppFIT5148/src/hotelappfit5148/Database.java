@@ -23,6 +23,7 @@ public class Database {
     //private static final String DB_USER = "student01";
     //private static final String DB_USER = "S27146073";
     private static final String DB_USER = "S27146073";
+    //private static final String DB_USER = "S27530264";
     private static final String DB_PASSWORD = "student";
 
     //Global variable
