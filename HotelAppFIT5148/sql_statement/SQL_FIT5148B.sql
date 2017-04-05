@@ -320,16 +320,16 @@ INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id, dob, count
     VALUES (NULL, 'Miss', 'Xuelin', 'Situ', 6, TO_date('2017/03/31','yyyy/mm/dd'), 
             'Australa', 'Melbourn','Caulfield', 'test@test.com');
 INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id, dob, country, city, street, email) 
-    VALUES (NULL, 'MR', 'Ryan', 'Reynolds', 5, TO_date('2017/03/31','yyyy/mm/dd'), 
+    VALUES (NULL, 'MR', 'Ryan', 'Reynolds', 7, TO_date('2017/03/31','yyyy/mm/dd'), 
             'Australa', 'Melbourn','Caulfield', 'test@test.com');
 INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id, dob, country, city, street, email) 
-    VALUES (NULL, 'MR', 'Eddie', 'Redmayne', 4, TO_date('2017/03/31','yyyy/mm/dd'), 
+    VALUES (NULL, 'MR', 'Eddie', 'Redmayne', 8, TO_date('2017/03/31','yyyy/mm/dd'), 
             'Australa', 'Melbourn','Caulfield', 'test@test.com');
 INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id, dob, country, city, street, email) 
-    VALUES (NULL, 'Miss', 'Thao', 'Thao', 4, TO_date('2017/03/31','yyyy/mm/dd'), 
+    VALUES (NULL, 'Miss', 'Thao', 'Thao', 9, TO_date('2017/03/31','yyyy/mm/dd'), 
             'Australa', 'Melbourn','Caulfield', 'test@test.com');
 INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id, dob, country, city, street, email) 
-    VALUES (NULL, 'Miss', 'Kaley', 'Kaley', 8, TO_date('2017/03/31','yyyy/mm/dd'), 
+    VALUES (NULL, 'Miss', 'Kaley', 'Kaley', 10, TO_date('2017/03/31','yyyy/mm/dd'), 
             'Australa', 'Melbourn','Caulfield', 'test@test.com');
 --End of creating table Guest
 
