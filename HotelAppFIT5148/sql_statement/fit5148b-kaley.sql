@@ -122,11 +122,6 @@ ADD CONSTRAINT FK_bookingroomguest_room
 FOREIGN KEY (room_number) REFERENCES room(room_number);
 
 ALTER TABLE bookingroomguest
-ADD CONSTRAINT FK_bookingroomguest_hotel
-FOREIGN KEY (hotel_id) REFERENCES hotel(hotel_id);
-
-
-ALTER TABLE bookingroomguest
 ADD CONSTRAINT FK_bookingroomguest_guest
 FOREIGN KEY (guest_id) REFERENCES guest(guest_id);
 

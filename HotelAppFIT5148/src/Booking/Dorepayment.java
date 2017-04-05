@@ -283,6 +283,8 @@ public class Dorepayment extends javax.swing.JPanel {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
             String insertPayment = SQLStatement.INSERT_PAYMENT + Integer.valueOf(jTextField1.getText()) + ", TO_DATE('" + jTextField2.getText() + "', '" + Database.DB_DATE_FORMAT + "'), '" + (String) jComboBox1.getSelectedItem() + "', " + jTextField3.getText() + " )";
+            System.out.println("payment: " + insertPayment);
+            
             
             Database.getInstance().updateTable(Database.DB_FIT5148B, insertPayment);
 

@@ -376,13 +376,6 @@ public class SearchingRoom extends javax.swing.JPanel {
                 return;
             }
             
-            /**
-             * select distinct h.hotel_id, r.* from Hotel@FIT5148A h, Room r
-where h.hotel_id = r.hotel_id 
-and r.room_number not in(
-select brg.room_number from BookingRoomGuest brg, booking b where b.booking_id = brg.booking_id
-and (TO_DATE('2017/03/31', 'yyyy/MM/dd') > b.check_in_date OR TO_DATE('2017/04/03', 'yyyy/MM/dd') < b.check_out_date));
-             */
             sb.append(" and r.room_number not in(SELECT brg.room_number FROM bookingroomguest brg, booking b WHERE b.booking_id = brg.booking_id and (TO_DATE('");
             sb.append(Database.dateFormat.format(this.jXDatePicker2.getDate()));
             sb.append("', 'yyyy/MM/dd') > b.check_in_date OR TO_DATE('");
@@ -444,7 +437,7 @@ and (TO_DATE('2017/03/31', 'yyyy/MM/dd') > b.check_in_date OR TO_DATE('2017/04/0
             }
 
         }
-        //System.out.println(sb.toString());
+        System.out.println(sb.toString());
         
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
