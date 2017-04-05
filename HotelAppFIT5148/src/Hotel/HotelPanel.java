@@ -196,33 +196,6 @@ public class HotelPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         NewHotel hotelForm = new NewHotel();
         hotelForm.setVisible(true);
-
-        //        NewHotelDialog newHotelDialog = new NewHotelDialog();
-        //        newHotelDialog.setVisible(true);
-        //
-        //        dtm.setRowCount(0);
-        //        conn = DBConnection.getDBConnection("Database.DB_FIT5148A");
-        //        try {
-        //            DriverManager.registerDriver(new OracleDriver());
-        //            stmt = conn.createStatement();
-        //            ResultSet rset = stmt.executeQuery("select hotel_id, hotel_name, hotel_type, "
-        //                    + "construction_year, country, city, address, "
-        //                    + "contact_number, email from hotel order by hotel_id DESC");
-        //
-        //            ResultSetMetaData mdata = rset.getMetaData();
-        //            int numberOfColumns = mdata.getColumnCount();
-        //            while (rset.next()) {
-        //                Object[] rowData = new Object[numberOfColumns];
-        //                for (int i = 0; i < rowData.length; i++) {
-        //                    rowData[i] = rset.getObject(i + 1);
-        //                }
-        //                dtm.addRow(rowData);
-        //            }
-        //            conn.close();
-        //
-        //        } catch (SQLException f) {
-        //            System.out.println(f.getMessage());
-        //        }
     }//GEN-LAST:event_newHotelActionPerformed
 
     private void updateHotelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateHotelActionPerformed

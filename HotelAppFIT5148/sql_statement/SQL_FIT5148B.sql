@@ -223,7 +223,9 @@ CREATE TABLE Membership (
   discount NUMBER(4,2) NOT NULL,
   other_rewards VARCHAR(255)
 );
+
 CREATE SEQUENCE membership_sequence START WITH 1 INCREMENT BY 1 MINVALUE 1 NOMAXVALUE NOCYCLE CACHE 2;
+
 CREATE INDEX idx_membership_tier_credit ON Membership (tier_credit);
 
 CREATE OR REPLACE TRIGGER membership_auto_increment
@@ -265,6 +267,7 @@ CREATE TABLE Customer (
 );
 
 CREATE SEQUENCE customer_sequence START WITH 1 INCREMENT BY 1 MINVALUE 1 NOMAXVALUE NOCYCLE CACHE 2;
+
 CREATE INDEX idx_customer_name ON Customer (first_name, last_name);
 
 CREATE OR REPLACE TRIGGER customer_auto_increment_insert
@@ -286,6 +289,52 @@ INSERT INTO CUSTOMER VALUES (NULL, 'MR', 'Ryan','Reynolds', 5, TO_date('1976/10/
 ,'Australa', 'Canberra','CBD',1234,5,25000,12345678,'ryan.reynolds@test.com');
 
 -----------------------------------------Ending CUSTOMER-----------------------------------------------
+
+-----------------------------------------Begin GUEST-----------------------------------------------
+
+--Start of creating table Guest
+CREATE TABLE Guest (
+  guest_id NUMBER(6) PRIMARY KEY,
+  title VARCHAR(10),
+  first_name VARCHAR(30),
+  last_name VARCHAR(30),
+  citizen_id NUMBER(20) UNIQUE NOT NULL,
+  dob DATE,
+  country VARCHAR(20),
+  city VARCHAR(20),
+  street VARCHAR(50),
+  email VARCHAR(50)
+);
+CREATE SEQUENCE guest_sequence START WITH 1 INCREMENT BY 1 MINVALUE 1 NOMAXVALUE NOCYCLE CACHE 2;
+CREATE INDEX idx_guest_name ON Guest (first_name, last_name);
+
+CREATE OR REPLACE TRIGGER guest_auto_increment_insert
+  BEFORE INSERT ON Guest
+  FOR EACH ROW
+BEGIN
+    :new.guest_id := guest_sequence.nextval;
+END;
+
+
+INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id, dob, country, city, street, email) 
+    VALUES (NULL, 'Miss', 'Xuelin', 'Situ', 6, TO_date('2017/03/31','yyyy/mm/dd'), 
+            'Australa', 'Melbourn','Caulfield', 'test@test.com');
+INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id, dob, country, city, street, email) 
+    VALUES (NULL, 'MR', 'Ryan', 'Reynolds', 5, TO_date('2017/03/31','yyyy/mm/dd'), 
+            'Australa', 'Melbourn','Caulfield', 'test@test.com');
+INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id, dob, country, city, street, email) 
+    VALUES (NULL, 'MR', 'Eddie', 'Redmayne', 4, TO_date('2017/03/31','yyyy/mm/dd'), 
+            'Australa', 'Melbourn','Caulfield', 'test@test.com');
+INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id, dob, country, city, street, email) 
+    VALUES (NULL, 'Miss', 'Thao', 'Thao', 4, TO_date('2017/03/31','yyyy/mm/dd'), 
+            'Australa', 'Melbourn','Caulfield', 'test@test.com');
+INSERT INTO Guest (guest_id,title, first_name, last_name, citizen_id, dob, country, city, street, email) 
+    VALUES (NULL, 'Miss', 'Kaley', 'Kaley', 8, TO_date('2017/03/31','yyyy/mm/dd'), 
+            'Australa', 'Melbourn','Caulfield', 'test@test.com');
+--End of creating table Guest
+
+-----------------------------------------Ending GUEST-----------------------------------------------
+
 
 -----------------------------------------Begin BOOKING AND BOOKING_ROOM_GUEST AND PAYMENT-----------------------------------------------
 -- Create booking table
