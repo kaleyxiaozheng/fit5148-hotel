@@ -36,7 +36,7 @@ public class SearchingRoom extends javax.swing.JPanel {
     private List cities;
     private List roomTypes;
     private MainFrame mf;
-    private  Date checkinDate;
+    private Date checkinDate;
     private Date checkoutDate;
 
     /**
@@ -361,7 +361,7 @@ public class SearchingRoom extends javax.swing.JPanel {
             calendar.set(Calendar.HOUR_OF_DAY, 23);
             calendar.set(Calendar.MINUTE, 58);
             checkinDate = calendar.getTime();
-            
+
             checkoutDate = this.jXDatePicker2.getDate();
             Date todayDate = Calendar.getInstance().getTime();
             if (checkinDate.before(todayDate)) {
@@ -375,13 +375,21 @@ public class SearchingRoom extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, WarningMessage.CHECKOUT_DATE_AFTER_CHECKIN_DATE);
                 return;
             }
-            
+
+            /**
+             * select distinct h.hotel_id, r.* from Hotel@FIT5148A h, Room r
+             * where h.hotel_id = r.hotel_id and r.room_number not in( select
+             * brg.room_number from BookingRoomGuest brg, booking b where
+             * b.booking_id = brg.booking_id and (TO_DATE('2017/03/31',
+             * 'yyyy/MM/dd') > b.check_in_date OR TO_DATE('2017/04/03',
+             * 'yyyy/MM/dd') < b.check_out_date));
+             */
             sb.append(" and r.room_number not in(SELECT brg.room_number FROM bookingroomguest brg, booking b WHERE b.booking_id = brg.booking_id and (TO_DATE('");
             sb.append(Database.dateFormat.format(this.jXDatePicker2.getDate()));
             sb.append("', 'yyyy/MM/dd') > b.check_in_date OR TO_DATE('");
             sb.append(Database.dateFormat.format(this.jXDatePicker1.getDate()));
             sb.append("', 'yyyy/MM/dd)') < b.check_out_date))");
-            
+
             //System.out.println(sb.toString());
         }
 
@@ -432,8 +440,8 @@ public class SearchingRoom extends javax.swing.JPanel {
                     javax.swing.JOptionPane.showMessageDialog(this, WarningMessage.INVALID_PRICE_COMPARISON);
                     return;
                 }
-            }catch(NumberFormatException nfe){
-                 javax.swing.JOptionPane.showMessageDialog(this, WarningMessage.INVALID_NUMBER);
+            } catch (NumberFormatException nfe) {
+                javax.swing.JOptionPane.showMessageDialog(this, WarningMessage.INVALID_NUMBER);
             }
 
         }
@@ -441,7 +449,7 @@ public class SearchingRoom extends javax.swing.JPanel {
         
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
-        
+
         try {
             Connection conn = Database.getInstance().getDBConnection(Database.DB_FIT5148B);
             Statement stat = conn.createStatement();
@@ -461,10 +469,15 @@ public class SearchingRoom extends javax.swing.JPanel {
             Logger.getLogger(SearchingRoom.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-
         // double click a row and go to the booking GUI
         jTable1.addMouseListener(new MouseAdapter() {
+
             public void mouseClicked(MouseEvent e) {
+
+                if (jXDatePicker1.getDate() == null || jXDatePicker2.getDate() == null) {
+                    JOptionPane.showMessageDialog(null, WarningMessage.NULL_DATE);
+                    return;
+                }
 
                 if (e.getClickCount() == 2) {
 
@@ -482,18 +495,12 @@ public class SearchingRoom extends javax.swing.JPanel {
 //                        System.out.print(rowData[i]);
 //                    }
 
-
-                     if(jXDatePicker1.getDate() == null || jXDatePicker2.getDate() == null){
-                            JOptionPane.showMessageDialog(null, WarningMessage.NULL_DATE);
-                            return;
-                        }
-
                     String citizen_id = javax.swing.JOptionPane.showInputDialog(WarningMessage.EMPTY_CITIZEN_ID);
                     //System.out.println(customer_id);
 
                     if (citizen_id == null) {
                         return;
-                    }else if (!citizen_id.chars().allMatch(Character :: isDigit)){
+                    } else if (!citizen_id.chars().allMatch(Character::isDigit)) {
                         JOptionPane.showMessageDialog(null, WarningMessage.INVALID_CITIZEN_ID);
                         return;
                     }
@@ -507,7 +514,7 @@ public class SearchingRoom extends javax.swing.JPanel {
                     if (whetherExistCitizenId(citizen_id)) {
                         String check_IN = Database.dateFormat.format(jXDatePicker1.getDate());
                         String check_OUT = Database.dateFormat.format(jXDatePicker2.getDate());
-                        
+
                         mf.bookingActionPerformed(room_type, check_IN, check_OUT, price, Integer.valueOf(citizen_id), rowData);
                     } else {
                         javax.swing.JOptionPane.showMessageDialog(SearchingRoom.this, "customer does not exist");

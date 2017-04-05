@@ -287,7 +287,7 @@ INSERT INTO CUSTOMER VALUES (NULL, 'MR', 'Ryan','Reynolds', 5, TO_date('1976/10/
 
 -----------------------------------------Ending CUSTOMER-----------------------------------------------
 
------------------------------------------Begin BOOKING AND BOOKING_ROOM_GUEST-----------------------------------------------
+-----------------------------------------Begin BOOKING AND BOOKING_ROOM_GUEST AND PAYMENT-----------------------------------------------
 -- Create booking table
 /*DELIMITER //
     begin 
@@ -352,7 +352,11 @@ CREATE TABLE  bookingRoomGuest (
   booking_id number(6),
   hotel_id number(6),
   room_number varchar(10),
-  guest_id number(6)
+  guest_id number(6),
+  CONSTRAINT FK_bookingroomguest_booking FOREIGN KEY (booking_id) REFERENCES booking(booking_id),
+  CONSTRAINT FK_bookingroomguest_room FOREIGN KEY (room_number, hotel_id) REFERENCES room(room_number, hotel_id),
+  CONSTRAINT FK_bookingroomguest_guest FOREIGN KEY (guest_id) REFERENCES guest(guest_id),
+  CONSTRAINT PK_Person PRIMARY KEY (booking_id, hotel_id, room_number,guest_id)
 );
 
 -------------------------------------------
@@ -400,28 +404,207 @@ INSERT INTO booking VALUES(null, 5, TO_DATE('19/03/2014', 'DD/MM/YYYY'), TO_DATE
 INSERT INTO booking VALUES(null, 5, TO_DATE('16/03/2016', 'DD/MM/YYYY'), TO_DATE('24/03/2016', 'DD/MM/YYYY'), 1590.00, 'P');
 INSERT INTO booking VALUES(null, 5, TO_DATE('01/02/2014', 'DD/MM/YYYY'), TO_DATE('05/02/2014', 'DD/MM/YYYY'), 440.00, 'S');
 
--- add foreign keys and primary key in table bookingroomguest
-ALTER TABLE bookingroomguest
-ADD CONSTRAINT FK_bookingroomguest_booking
-FOREIGN KEY (booking_id) REFERENCES booking(booking_id);
-
-
-ALTER TABLE bookingroomguest
-ADD CONSTRAINT FK_bookingroomguest_room
-FOREIGN KEY (room_number) REFERENCES room(room_number);
-
-ALTER TABLE bookingroomguest
-ADD CONSTRAINT FK_bookingroomguest_hotel
-FOREIGN KEY (hotel_id) REFERENCES hotel(hotel_id);
-
-
-ALTER TABLE bookingroomguest
-ADD CONSTRAINT FK_bookingroomguest_guest
-FOREIGN KEY (guest_id) REFERENCES guest(guest_id);
-
-ALTER TABLE bookingroomguest
-ADD CONSTRAINT PK_Person PRIMARY KEY (booking_id,room_number,guest_id);
-
------------------------------------------Ending BOOKING AND BOOKING_ROOM_GUEST-----------------------------------------------
+-----------------------------------------Ending BOOKING AND BOOKING_ROOM_GUEST  AND PAYMENT-----------------------------------------------
 
 commit;
+
+------------------------------------------Begin PROCEDURES------------------------------------------------------------------
+--Create stored procedure to update customer email
+CREATE OR REPLACE PROCEDURE updateCustomerEmail(
+  in_customer_id IN CUSTOMER.CUSTOMER_ID%TYPE,
+  in_email IN CUSTOMER.EMAIL%TYPE,
+  out_status OUT VARCHAR)
+AS
+  existFlag NUMBER;
+BEGIN
+  SELECT COUNT(1) INTO existFlag FROM CUSTOMER WHERE CUSTOMER_ID = in_customer_id;
+  IF existFlag = 1 THEN
+    UPDATE CUSTOMER SET EMAIL = in_email WHERE CUSTOMER_ID = in_customer_id;
+    UPDATE GUEST SET EMAIL = in_email WHERE CITIZEN_ID = 
+      (SELECT CITIZEN_ID FROM CUSTOMER WHERE CUSTOMER_ID = in_customer_id);
+    out_status := 'S';
+  ELSE
+    out_status := 'F';
+  END IF;
+END;
+
+CREATE OR REPLACE PROCEDURE insertOrUpdateCustomer(
+  in_cust_id IN CUSTOMER.CUSTOMER_ID%TYPE,
+  in_title IN CUSTOMER.TITLE%TYPE,
+  in_first_name IN CUSTOMER.FIRST_NAME%TYPE,
+  in_last_name IN CUSTOMER.LAST_NAME%TYPE,
+  in_citizen_id IN CUSTOMER.CITIZEN_ID%TYPE,
+  in_dob IN VARCHAR2,
+  in_country IN CUSTOMER.COUNTRY%TYPE,
+  in_city IN CUSTOMER.CITY%TYPE,
+  in_street IN CUSTOMER.STREET%TYPE,
+  in_postal_code IN CUSTOMER.POSTAL_CODE%TYPE,
+  in_phone IN CUSTOMER.PHONE_NUM%TYPE,
+  in_email IN CUSTOMER.EMAIL%TYPE,
+  in_action IN VARCHAR2,
+  out_result OUT VARCHAR2)
+AS
+  temp NUMBER;
+  t_count NUMBER;
+  t_first_name GUEST.FIRST_NAME%TYPE;
+  t_last_name GUEST.LAST_NAME%TYPE;
+BEGIN
+  --NEED TO CHECK CITIZEN_ID EXISTS IN GUEST WITH OTHER NAME OR NOT.
+  SELECT COUNT(1) INTO t_count FROM GUEST WHERE CITIZEN_ID = in_citizen_id;
+  IF t_count = 1 THEN
+    SELECT FIRST_NAME, LAST_NAME INTO t_first_name, t_last_name FROM GUEST WHERE CITIZEN_ID = in_citizen_id;
+    
+    IF t_first_name <> in_first_name OR t_last_name <> in_last_name THEN
+      --The citizen id is occupied by someone else
+      out_result := 'F';
+      RETURN;
+    END IF;
+  END IF;
+  
+  IF in_action = 'InsertCustomer' THEN
+    --By default, the membership is Bronze and credit is 0
+    SELECT TIER_ID INTO temp FROM MEMBERSHIP WHERE MEMBERSHIP_TIER = 'Bronze';
+  
+    INSERT INTO CUSTOMER VALUES (NULL, in_title, in_first_name,in_last_name, in_citizen_id, 
+    TO_DATE(in_dob,'yyyy/mm/dd') ,in_country, in_city, in_street, in_postal_code, temp, 0, 
+    in_phone, in_email);
+  ELSE
+    --Membership and credit is not allowed to update manually
+    UPDATE CUSTOMER SET TITLE = in_title, FIRST_NAME = in_first_name, LAST_NAME = in_last_name,
+    CITIZEN_ID = in_citizen_id, DOB = TO_date(in_dob,'yyyy/mm/dd'), COUNTRY = in_country,
+    CITY = in_city, STREET = in_street, POSTAL_CODE = in_postal_code, PHONE_NUM = in_phone,
+    EMAIL = in_email WHERE CUSTOMER_ID = in_cust_id;
+  END IF;
+  
+  out_result := 'S';
+END;
+
+CREATE OR REPLACE PROCEDURE insertOrUpdateGuest(
+  in_guest_id IN GUEST.GUEST_ID%TYPE,
+  in_title IN GUEST.TITLE%TYPE,
+  in_first_name IN GUEST.FIRST_NAME%TYPE,
+  in_last_name IN GUEST.LAST_NAME%TYPE,
+  in_citizen_id IN GUEST.CITIZEN_ID%TYPE,
+  in_dob IN VARCHAR2,
+  in_country IN GUEST.COUNTRY%TYPE,
+  in_city IN GUEST.CITY%TYPE,
+  in_street IN GUEST.STREET%TYPE,
+  in_email IN GUEST.EMAIL%TYPE,
+  in_action IN VARCHAR2,
+  out_result OUT VARCHAR2)
+AS
+  temp NUMBER;
+  t_count NUMBER;
+  t_first_name CUSTOMER.FIRST_NAME%TYPE;
+  t_last_name CUSTOMER.LAST_NAME%TYPE;
+BEGIN
+  --NEED TO CHECK CITIZEN_ID EXISTS IN CUSTOMER WITH OTHER NAME OR NOT.
+  SELECT COUNT(1) INTO t_count FROM CUSTOMER WHERE CITIZEN_ID = in_citizen_id;
+  IF t_count = 1 THEN
+    SELECT FIRST_NAME, LAST_NAME INTO t_first_name, t_last_name FROM CUSTOMER WHERE CITIZEN_ID = in_citizen_id;
+    
+    IF t_first_name <> in_first_name OR t_last_name <> in_last_name THEN
+      --The citizen id is occupied by someone else
+      out_result := 'F';
+      RETURN;
+    END IF;
+  END IF;
+  
+  IF in_action = 'InsertGuest' THEN
+    
+    INSERT INTO GUEST VALUES (NULL, in_title, in_first_name,in_last_name, in_citizen_id, 
+    TO_DATE(in_dob,'yyyy/mm/dd') ,in_country, in_city, in_street, in_email);
+  ELSE
+    --Membership and credit is not allowed to update manually
+    UPDATE GUEST SET TITLE = in_title, FIRST_NAME = in_first_name, LAST_NAME = in_last_name,
+    CITIZEN_ID = in_citizen_id, DOB = TO_date(in_dob,'yyyy/mm/dd'), COUNTRY = in_country,
+    CITY = in_city, STREET = in_street, EMAIL = in_email WHERE GUEST_ID = in_guest_id;
+  END IF;
+  
+  out_result := 'S';
+END;
+
+create or replace PROCEDURE insertOrUpdateMembership(
+  in_tier_id IN MEMBERSHIP.TIER_ID%TYPE,
+  in_membership_tier IN MEMBERSHIP.MEMBERSHIP_TIER%TYPE,
+  in_tier_credit IN MEMBERSHIP.TIER_CREDIT%TYPE,
+  in_discount IN MEMBERSHIP.DISCOUNT%TYPE,
+  in_other_rewards IN MEMBERSHIP.OTHER_REWARDS%TYPE,
+  in_action IN VARCHAR2)
+AS
+  temp NUMBER;
+BEGIN
+  IF in_action = 'InsertMembership' THEN
+    INSERT INTO MEMBERSHIP VALUES (NULL, in_membership_tier, in_tier_credit, in_discount, in_other_rewards);
+    
+  ELSE
+    
+      UPDATE MEMBERSHIP SET MEMBERSHIP_TIER = in_membership_tier, TIER_CREDIT = in_tier_credit,
+        DISCOUNT = in_discount, OTHER_REWARDS = in_other_rewards WHERE TIER_ID = in_tier_id;
+      
+  END IF;
+END;
+
+create or replace PROCEDURE addCustomerToGuest(
+  in_cust_id IN CUSTOMER.CUSTOMER_ID%Type,
+  out_guest_id OUT GUEST.GUEST_ID%TYPE
+)
+AS
+  temp NUMBER;
+  t_citizen_id NUMBER;
+BEGIN
+  
+  SELECT COUNT(1), GUEST.CITIZEN_ID INTO temp, t_citizen_id FROM GUEST WHERE EXISTS (
+    SELECT * FROM CUSTOMER WHERE GUEST.CITIZEN_ID = CUSTOMER.CITIZEN_ID
+    AND CUSTOMER_ID = in_cust_id) group by GUEST.CITIZEN_ID;
+    
+  IF temp = 1 THEN
+    SELECT GUEST_ID INTO out_guest_id FROM GUEST WHERE GUEST.CITIZEN_ID = t_citizen_id;
+  ELSE
+    --Due to the uniqueness of citizen_id, it will only insert one record into GUEST table
+    FOR cust_rec IN (SELECT TITLE, FIRST_NAME, LAST_NAME, CITIZEN_ID, DOB, COUNTRY, CITY, STREET, EMAIL
+      FROM CUSTOMER WHERE CUSTOMER_ID = in_cust_id) LOOP
+      
+      INSERT INTO GUEST(GUEST_ID, TITLE, FIRST_NAME, LAST_NAME, CITIZEN_ID, DOB, COUNTRY, CITY, STREET, EMAIL)
+        VALUES (NULL, cust_rec.TITLE, cust_rec.FIRST_NAME, cust_rec.LAST_NAME, cust_rec.CITIZEN_ID, cust_rec.DOB,
+        cust_rec.COUNTRY, cust_rec.CITY, cust_rec.STREET, cust_rec.EMAIL) RETURNING GUEST_ID INTO out_guest_id;
+      
+    END LOOP;  
+  END IF;
+END;
+
+
+
+create or replace PROCEDURE upgradeCustomer(
+  in_booking_id IN BOOKING.BOOKING_ID%Type
+)
+AS
+  cur_credit NUMBER;
+  new_credit NUMBER;
+  cust_id CUSTOMER.CUSTOMER_ID%TYPE;
+  total_amt NUMBER;
+  --cur_membership NUMBER;
+  tier_credit NUMBER;
+  tmp NUMBER;
+  new_tier NUMBER;
+BEGIN
+  
+  SELECT CUSTOMER_ID, TOTAL_AMOUNT INTO cust_id, total_amt FROM BOOKING WHERE BOOKING_ID = in_booking_id;
+  
+  SELECT c.MEMBERSHIP_CREDITS INTO cur_credit 
+  FROM CUSTOMER c WHERE c.CUSTOMER_ID = cust_id;
+  
+  new_credit := cur_credit + total_amt;
+  
+  SELECT COUNT(1) INTO tmp FROM MEMBERSHIP WHERE TIER_CREDIT <= new_credit AND TIER_CREDIT > cur_credit AND ROWNUM = 1 ORDER BY TIER_CREDIT DESC;
+  
+  IF tmp > 0 then
+    --update both credit and membership tier
+    SELECT TIER_ID INTO new_tier FROM MEMBERSHIP WHERE TIER_CREDIT <= new_credit AND TIER_CREDIT > cur_credit;
+    UPDATE customer set tier_id = new_tier, membership_credits = new_credit where customer_id = cust_id;
+  ELSE
+    --only update new credit
+    update customer set membership_credits = new_credit where customer_id = cust_id;
+  end if;
+END; 
+--End of stored procedure
