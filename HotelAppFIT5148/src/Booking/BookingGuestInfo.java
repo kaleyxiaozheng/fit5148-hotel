@@ -526,10 +526,16 @@ public class BookingGuestInfo extends javax.swing.JPanel {
 
     private void addGuestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addGuestActionPerformed
 
+        if(jTextField1.getText().isEmpty()){
+            javax.swing.JOptionPane.showMessageDialog(this, "Please click search");
+            
+            return;
+        }
+        
         if (numberOfRoomGuest == bookingGuests.size()) {
             javax.swing.JOptionPane.showMessageDialog(this, WarningMessage.MAXIMUM_GUEST_EXCEEDS);
         } else if (!"".equals(jTextField2.getText())) {
-            //numberOfCurrentGuest++;
+            //numberOfCurrentGuest++;   
             bookingGuests.add(currGuest.getGuest_id());
             this.jLabel14.setText(String.valueOf(bookingGuests.size()));
 

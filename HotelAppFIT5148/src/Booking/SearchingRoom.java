@@ -343,6 +343,11 @@ public class SearchingRoom extends javax.swing.JPanel {
 
 
     private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
+        
+        if (jXDatePicker1.getDate() == null || jXDatePicker2.getDate() == null) {
+                    JOptionPane.showMessageDialog(null, WarningMessage.NULL_DATE);
+                    return;
+        }
         String country = String.valueOf(jComboBox2.getSelectedItem());
         String city = String.valueOf(jComboBox1.getSelectedItem());
 
@@ -474,10 +479,7 @@ public class SearchingRoom extends javax.swing.JPanel {
 
             public void mouseClicked(MouseEvent e) {
 
-                if (jXDatePicker1.getDate() == null || jXDatePicker2.getDate() == null) {
-                    JOptionPane.showMessageDialog(null, WarningMessage.NULL_DATE);
-                    return;
-                }
+                
 
                 if (e.getClickCount() == 2) {
 
